@@ -15,55 +15,75 @@ class PermissionSeeder extends Seeder
     {
         $permissions = array(
             [
-                'name' => 'read companies',
+                'name' => 'Company Read',
                 'guard' => 'web',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
-                'name' => 'edit companies',
+                'name' => 'Company Add',
                 'guard' => 'web',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
-                'name' => 'delete companies',
+                'name' => 'Company Edit',
                 'guard' => 'web',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
-                'name' => 'read employees',
+                'name' => 'Company Delete',
+                'guard' => 'web',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+
+            [
+                'name' => 'Employee Read',
                 'guard' => 'web',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
-                'name' => 'edit employees',
+                'name' => 'Employee Add',
                 'guard' => 'web',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
-                'name' => 'delete employees',
+                'name' => 'Employee Edit',
                 'guard' => 'web',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
-                'name' => 'read projects',
+                'name' => 'Employee Delete',
+                'guard' => 'web',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+
+            [
+                'name' => 'Project Read',
                 'guard' => 'web',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
-                'name' => 'edit projects',
+                'name' => 'Project Add',
                 'guard' => 'web',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
-                'name' => 'delete projects',
+                'name' => 'Project Edit',
+                'guard' => 'web',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'name' => 'Project Delete',
                 'guard' => 'web',
                 'created_at' => now(),
                 'updated_at' => now()
