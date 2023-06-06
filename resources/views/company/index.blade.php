@@ -36,7 +36,7 @@
                         </div>
                         <div class="card card-preview">
                             <div class="card-inner">
-                                <table class="datatable-init nowrap table">
+                                <table class="nowrap table" id="datatable-init">
                                     <thead>
                                         <tr>
                                             <th>Company Logo</th>
@@ -47,31 +47,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>
-                                                <div class="user-avatar bg-primary" style="height: 28px; width: 28px;">
-                                                    <span>AB</span>
-                                                </div>
-                                            </td>
-                                            <td>Tiger Nixon</td>
-                                            <td>System Architect</td>
-                                            <td>Edinburgh</td>
-                                            <td>
-                                                <ul class="nk-tb-actions gx-1">
-                                                    <li>
-                                                        <div class="drodown">
-                                                            <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
-                                                            <div class="dropdown-menu dropdown-menu-right">
-                                                                <ul class="link-list-opt no-bdr">
-                                                                    <li><a href="#" data-toggle="modal" data-target="#edit-company"><em class="icon ni ni-edit"></em><span>Edit</span></a></li>
-                                                                    <li><a href="#"><em class="icon ni ni-trash"></em><span>Delete</span></a></li>
-                                                                </ul>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                            </td>
-                                        </tr>
+
                                     </tbody>
                                 </table>
                             </div>

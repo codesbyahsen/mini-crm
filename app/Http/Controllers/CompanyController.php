@@ -6,21 +6,27 @@ use App\Models\Company;
 use App\Http\Requests\StoreCompanyRequest;
 use App\Http\Requests\UpdateCompanyRequest;
 use App\Notifications\NewCompanyCreation;
-use Datatables;
+use Yajra\DataTables\Facades\DataTables;
 
 class CompanyController extends Controller
 {
-    const PATH_COMPANY_LOGO = 'company-logo';
-
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         $companies = Company::all();
+        $dt = Datatables::of($companies)
+                    ->addIndexColumn()
+                    ->addColumn('action', function($row){
+                           $btn = '<a href="#" data-toggle="modal" data-target="#edit-company-' . $row->id .'"><em class="icon ni ni-edit"></em><span>Edit</span></a>';
+
+                            return $btn;
+                    })
+                    ->rawColumns(['action'])
+                    ->make(true);
         $numberOfCompanies = Company::count();
-        // return Datatables::of($companies)->make();
-        return view('company.index', compact('companies', 'numberOfCompanies'));
+        return view('company.index', compact('numberOfCompanies'));
     }
 
     /**
@@ -30,7 +36,7 @@ class CompanyController extends Controller
     {
         $logoName = null;
         if ($request->hasFile('logo')) {
-            $logoName = image_upload($request->logo, 100, 100, self::PATH_COMPANY_LOGO, 'logo');
+            $logoName = saveResizeImage($request->logo, 'logo', 100, 100);
         }
 
         // replace logo value with custom logo name
@@ -53,7 +59,7 @@ class CompanyController extends Controller
     {
         $logoName = null;
         if ($request->hasFile('logo')) {
-            $logoName = image_upload($request->logo, 100, 100, self::PATH_COMPANY_LOGO, 'logo');
+            $logoName = saveResizeImage($request->logo, 'logo', 100, 100);
         } else {
             $logoName = $company->logo;
         }

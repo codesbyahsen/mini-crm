@@ -25,22 +25,34 @@
 //     });
 // }
 
+// $(document).ready(function() {
+//     var table = $('.datatable-init').DataTable();
+//     table.destroy();
 
-// $(function () {
-
-//     var table = $('.data-table').DataTable({
-//         processing: true,
-//         serverSide: true,
-//         ajax: "{{ route('users.index') }}",
-//         columns: [
-//             { data: 'id', name: 'id' },
-//             { data: 'name', name: 'name' },
-//             { data: 'email', name: 'email' },
-//             { data: 'action', name: 'action', orderable: false, searchable: false },
-//         ]
+//     $('.datatable-init').DataTable({
+//         // DataTable initialization options
 //     });
-
 // });
+
+$(function () {
+
+    var table = $('#datatable-init').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            type: "GET",
+            url: "companies",
+        },
+        columns: [
+            {data: 'logo', name: 'logo'},
+            {data: 'name', name: 'name'},
+            {data: 'email', name: 'email'},
+            {data: 'website', name: 'website'},
+            {data: 'action', name: 'action', orderable: false, searchable: false},
+        ]
+    });
+
+  });
 
 $('#add-company-form').submit(function (e) {
     e.preventDefault();
