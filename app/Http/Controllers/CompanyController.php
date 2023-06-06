@@ -6,6 +6,7 @@ use App\Models\Company;
 use App\Actions\FileUpload;
 use App\Http\Requests\StoreCompanyRequest;
 use App\Http\Requests\UpdateCompanyRequest;
+use App\Notifications\NewCompanyCreation;
 
 class CompanyController extends Controller
 {
@@ -41,6 +42,9 @@ class CompanyController extends Controller
         // replace logo value with custom logo name
         $company = array_replace($request->validated(), array('logo' => $logoName));
         $result = Company::create($company);
+
+        $message = 'The company {$result->name} has been created.';
+        $result->notify(new NewCompanyCreation($message));
 
         if (!$result) {
             return back()->with('error', 'Failed to create company, try again!');
