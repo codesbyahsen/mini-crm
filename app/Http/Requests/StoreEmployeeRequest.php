@@ -26,7 +26,8 @@ class StoreEmployeeRequest extends FormRequest
             'last_name' => ['required', 'max:120'],
             'email' => ['required', 'email', 'unique:employees,email'],
             'phone' => ['nullable'],
-            'company_id' => ['required']
+            'company_id' => ['required'],
+            'project_id' => ['nullable']
         ];
     }
 

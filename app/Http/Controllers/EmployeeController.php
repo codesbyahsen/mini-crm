@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StoreEmployeeRequest;
 use App\Http\Requests\UpdateEmployeeRequest;
 
@@ -32,10 +33,25 @@ class EmployeeController extends Controller
     {
         $result = Employee::create($request->validated());
 
+        if ($result && !empty($result)) {
+            $this->assignEmployeeTo($request->project_id, $result->id);
+        }
+
         if (!$result) {
             return back()->with('error', 'Failed to create employee, try again!');
         }
         // return route()->with('success', 'The employee created successfully.');
+    }
+
+    private function assignEmployeeTo(array $projectIds, string $employeeId)
+    {
+        foreach ($projectIds as $projectId) {
+            DB::table('project_employee')->updateOrInsert(
+                ['project_id' => $projectId, 'employee_id' => $employeeId],
+                ['project_id' => $projectId, 'employee_id' => $employeeId, 'created_at' => now(), 'updated_at' => now()]
+            );
+        }
+        DB::table('project_employee')->whereNotIn('project_id', $projectIds)->where('employee_id', $employeeId)->delete();
     }
 
     /**
