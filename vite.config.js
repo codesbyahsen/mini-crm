@@ -7,6 +7,10 @@ export default defineConfig({
             input: [
                 'resources/css/app.css',
                 'resources/js/app.js',
+                'resources/css/dashlite.css',
+                'resources/css/theme.css',
+                'resources/js/bundle.js',
+                'resources/js/scripts.js'
             ],
             refresh: true,
         }),
