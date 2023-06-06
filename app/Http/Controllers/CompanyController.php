@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Actions\FileUpload;
 use App\Http\Requests\StoreCompanyRequest;
 use App\Http\Requests\UpdateCompanyRequest;
 
 class CompanyController extends Controller
 {
+    const PATH_COMPANY_LOGO = 'company-logo';
+
     /**
      * Display a listing of the resource.
      */
@@ -30,7 +33,14 @@ class CompanyController extends Controller
      */
     public function store(StoreCompanyRequest $request)
     {
-        $result = Company::create($request->validated());
+        $logoName = null;
+        if ($request->hasFile('logo')) {
+            $logoName = FileUpload::handle($request->logo, self::PATH_COMPANY_LOGO, 'logo');
+        }
+
+        // replace logo value with custom logo name
+        $company = array_replace($request->validated(), array('logo' => $logoName));
+        $result = Company::create($company);
 
         if (!$result) {
             return back()->with('error', 'Failed to create company, try again!');
