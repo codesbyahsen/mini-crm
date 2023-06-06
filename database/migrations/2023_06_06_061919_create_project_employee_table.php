@@ -21,7 +21,6 @@ return new class extends Migration
         Schema::table('project_employee', function ($table) {
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
-            $table->unsignedBigInteger('employee_id')->nullable();
         });
     }
 

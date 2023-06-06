@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Company;
 use App\Http\Requests\StoreCompanyRequest;
 use App\Http\Requests\UpdateCompanyRequest;
+use App\Notifications\NewCompanyCreation;
 use Datatables;
 
 class CompanyController extends Controller
@@ -35,6 +36,9 @@ class CompanyController extends Controller
         // replace logo value with custom logo name
         $company = array_replace($request->validated(), array('logo' => $logoName));
         $result = Company::create($company);
+
+        $message = 'The company {$result->name} has been created.';
+        $result->notify(new NewCompanyCreation($message));
 
         if (!$result) {
             return response()->json(['success' => false, 'message', 'Failed to create company, try again!']);
