@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,6 +27,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+# company
+Route::controller(CompanyController::class)->prefix('companies')->group(function () {
+    Route::get('/', 'index')->name('companies');
+    // Route::get('/create', 'create')->name('companies.create');
+    Route::post('/store', 'store')->name('companies.store');
+    // Route::get('/show/{company}', 'show')->name('companies.show');
+    // Route::get('/edit/{company}', 'edit')->name('companies.edit');
+    Route::put('/update/{company}', 'update')->name('companies.update');
+    Route::delete('/destroy/{company}', 'destroy')->name('companies.destroy');
 });
 
 require __DIR__.'/auth.php';
