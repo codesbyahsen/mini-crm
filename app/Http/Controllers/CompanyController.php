@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
-use App\Actions\FileUpload;
 use App\Http\Requests\StoreCompanyRequest;
 use App\Http\Requests\UpdateCompanyRequest;
 use App\Notifications\NewCompanyCreation;
+use Datatables;
 
 class CompanyController extends Controller
 {
@@ -18,15 +18,9 @@ class CompanyController extends Controller
     public function index()
     {
         $companies = Company::all();
-        // return view();
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        // return view();
+        $numberOfCompanies = Company::count();
+        // return Datatables::of($companies)->make();
+        return view('company.index', compact('companies', 'numberOfCompanies'));
     }
 
     /**
@@ -36,7 +30,7 @@ class CompanyController extends Controller
     {
         $logoName = null;
         if ($request->hasFile('logo')) {
-            $logoName = FileUpload::handle($request->logo, self::PATH_COMPANY_LOGO, 'logo');
+            $logoName = image_upload($request->logo, 100, 100, self::PATH_COMPANY_LOGO, 'logo');
         }
 
         // replace logo value with custom logo name
@@ -47,25 +41,9 @@ class CompanyController extends Controller
         $result->notify(new NewCompanyCreation($message));
 
         if (!$result) {
-            return back()->with('error', 'Failed to create company, try again!');
+            return response()->json(['success' => false, 'message', 'Failed to create company, try again!']);
         }
-        // return route()->with('success', 'The company created successfully.');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Company $company)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Company $company)
-    {
-        // return view();
+        return response()->json(['success' => true, 'message', 'The company created successfully.', 'data' => $result], 200);
     }
 
     /**
@@ -73,12 +51,21 @@ class CompanyController extends Controller
      */
     public function update(UpdateCompanyRequest $request, Company $company)
     {
-        $result = $company->update($request->validated());
+        $logoName = null;
+        if ($request->hasFile('logo')) {
+            $logoName = image_upload($request->logo, 100, 100, self::PATH_COMPANY_LOGO, 'logo');
+        } else {
+            $logoName = $company->logo;
+        }
+
+        // replace logo value with custom logo name
+        $companyDetails = array_replace($request->validated(), array('logo' => $logoName));
+        $result = $company->update($companyDetails);
 
         if (!$result) {
-            return back()->with('error', 'Failed to update company, try again!');
+            return response()->json(['success' => false, 'message', 'Failed to update company, try again!']);
         }
-        // return route()->with('success', 'The company updated successfully.');
+        return response()->json(['success' => true, 'message', 'The company updated successfully.', 'data' => $result], 200);
     }
 
     /**
@@ -89,8 +76,8 @@ class CompanyController extends Controller
         $result = $company->delete();
 
         if (!$result) {
-            return back()->with('error', 'Failed to delete company, try again!');
+            return response()->json(['success' => false, 'message', 'Failed to delete company, try again!']);
         }
-        // return route()->with('success', 'The company deleted successfully.');
+        return response()->json(['success' => true, 'message', 'The company deleted successfully.']);
     }
 }
