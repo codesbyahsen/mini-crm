@@ -18,7 +18,8 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             SubAdminSeeder::class,
             CompanySeeder::class,
-            EmployeeSeeder::class
+            EmployeeSeeder::class,
+            ProjectSeeder::class
         ]);
         // \App\Models\User::factory(10)->create();
 
