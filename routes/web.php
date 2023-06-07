@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProjectController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,6 +39,14 @@ Route::controller(CompanyController::class)->prefix('companies')->group(function
     // Route::get('/edit/{company}', 'edit')->name('companies.edit');
     Route::put('/update/{company}', 'update')->name('companies.update');
     Route::delete('/destroy/{company}', 'destroy')->name('companies.destroy');
+});
+
+# project
+Route::controller(ProjectController::class)->prefix('projects')->group(function () {
+    Route::get('/', 'index')->name('projects');
+    Route::post('/store', 'store')->name('projects.store');
+    Route::put('/update/{project}', 'update')->name('projects.update');
+    Route::delete('/destroy/{project}', 'destroy')->name('projects.destroy');
 });
 
 require __DIR__.'/auth.php';

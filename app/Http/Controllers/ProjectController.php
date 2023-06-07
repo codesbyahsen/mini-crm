@@ -14,16 +14,8 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Project::with('employees')->get();
-        // return view();
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        // $projects = Project::with('employees')->get();
+        return view('project.index');
     }
 
     /**
@@ -38,9 +30,9 @@ class ProjectController extends Controller
         }
 
         if (!$result) {
-            return back()->with('error', 'Failed to create project, try again!');
+            return response()->json(['success' => false, 'message', 'Failed to create project, try again!']);
         }
-        // return route()->with('success', 'The project created successfully.');
+        return response()->json(['success' => true, 'message', 'The project created successfully.', 'data' => $result], 200);
     }
 
     private function assignProjectTo(string $projectId, array $employeeIds): void
@@ -55,22 +47,6 @@ class ProjectController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(Project $project)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Project $project)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(UpdateProjectRequest $request, Project $project)
@@ -82,9 +58,9 @@ class ProjectController extends Controller
         }
 
         if (!$result) {
-            return back()->with('error', 'Failed to update project, try again!');
+            return response()->json(['success' => false, 'message', 'Failed to update project, try again!']);
         }
-        // return route()->with('success', 'The project updated successfully.');
+        return response()->json(['success' => true, 'message', 'The project updated successfully.', 'data' => $result], 200);
     }
 
     /**
@@ -95,8 +71,8 @@ class ProjectController extends Controller
         $result = $project->delete();
 
         if (!$result) {
-            return back()->with('error', 'Failed to delete project, try again!');
+            return response()->json(['success' => false, 'message', 'Failed to delete project, try again!']);
         }
-        // return route()->with('success', 'The project deleted successfully.');
+        return response()->json(['success' => true, 'message', 'The project deleted successfully.', 'data' => $result], 200);
     }
 }
