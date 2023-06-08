@@ -10,13 +10,9 @@ use Illuminate\Support\Facades\Storage;
 if (! function_exists('saveResizeImage')) {
     function saveResizeImage(object $file, string $directory, int|string $width, int|string|null $height = null, string $type = 'jpg')
     {
-        if (!Storage::exists($directory)) {
-            Storage::makeDirectory("$directory");
-        }
-        $is_preview = strpos($directory, 'previews') !== false;
         $fileName = uniqid() . '_' . time() . '.' . $type;
         $path = "$directory/$fileName";
-        $img = \Image::make($file)->orientate()->encode($type, 80)->resize($width, $height, function ($constraint) use ($height) {
+        $img = Image::make($file)->orientate()->encode($type, 80)->resize($width, $height, function ($constraint) use ($height) {
             if (!$height) {
                 $constraint->aspectRatio();
             }
