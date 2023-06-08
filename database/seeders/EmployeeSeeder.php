@@ -11,8 +11,8 @@ class EmployeeSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(int $limit): void
+    public function run(): void
     {
-        Employee::factory()->count($limit)->create();
+        Employee::factory()->count(20)->create();
     }
 }

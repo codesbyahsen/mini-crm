@@ -5,24 +5,21 @@ use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 
 /**
- * Upload files and images in storage directory
+ * Upload image files in storage directory
  */
-if (!function_exists('file_upload')) {
-    function image_upload(object $image, int|string $width, int|string $height, string|null $path = null, string|null $prefix = null): string
+if (! function_exists('saveResizeImage')) {
+    function saveResizeImage(object $file, string $directory, int|string $width, int|string|null $height = null, string $type = 'jpg')
     {
-        $basePath = 'app/public/uploads/';
-
-        $imageName = null;
-        if (File::isFile($image) && !is_null($image)) {
-            $imageName = $prefix ? ($prefix . '_' . uniqid() . '_' . time() . '.' . $image->extension()) : (uniqid() . '_' . time() . '.' . $image->extension());
-            $path = storage_path($basePath . $path . '/' . $imageName);
-
-            $img = Image::make($image->getRealPath());
-            $img->resize($width, $height, function ($constraint) {
+        $fileName = uniqid() . '_' . time() . '.' . $type;
+        $path = "$directory/$fileName";
+        $img = Image::make($file)->orientate()->encode($type, 80)->resize($width, $height, function ($constraint) use ($height) {
+            if (!$height) {
                 $constraint->aspectRatio();
-            })->save($path);
-        }
-
-        return $imageName;
+            }
+            // $constraint->upsize();
+        });
+        $resource = $img->stream()->detach();
+        Storage::disk('public')->put($path, $resource, 'public');
+        return $path;
     }
 }

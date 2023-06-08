@@ -11,8 +11,8 @@ class CompanySeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(int $limit): void
+    public function run(): void
     {
-        Company::factory()->count($limit)->create();
+        Company::factory()->count(10)->create();
     }
 }

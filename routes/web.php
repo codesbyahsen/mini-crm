@@ -30,14 +30,6 @@ Route::middleware('auth')->group(function () {
 });
 
 # company
-Route::controller(CompanyController::class)->prefix('companies')->group(function () {
-    Route::get('/', 'index')->name('companies');
-    // Route::get('/create', 'create')->name('companies.create');
-    Route::post('/store', 'store')->name('companies.store');
-    // Route::get('/show/{company}', 'show')->name('companies.show');
-    // Route::get('/edit/{company}', 'edit')->name('companies.edit');
-    Route::put('/update/{company}', 'update')->name('companies.update');
-    Route::delete('/destroy/{company}', 'destroy')->name('companies.destroy');
-});
+Route::resource('companies', CompanyController::class);
 
 require __DIR__.'/auth.php';
