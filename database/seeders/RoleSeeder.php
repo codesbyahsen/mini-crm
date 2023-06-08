@@ -16,13 +16,13 @@ class RoleSeeder extends Seeder
         $roles = array(
             [
                 'name' => 'admin',
-                'guard' => 'web',
+                'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
                 'name' => 'sub-admin',
-                'guard' => 'web',
+                'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now()
             ]

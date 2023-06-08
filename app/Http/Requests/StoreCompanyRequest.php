@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rules\File;
 
 class StoreCompanyRequest extends FormRequest
@@ -28,5 +30,13 @@ class StoreCompanyRequest extends FormRequest
             'logo' => ['nullable', File::types(['png', 'jpg', 'jpeg'])->max(1024)],
             'website' => ['required']
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'errors' => $validator->errors(),
+            'success' => false
+        ]));
     }
 }

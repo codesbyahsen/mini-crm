@@ -36,7 +36,7 @@ class NewCompanyCreation extends Notification
     {
         return (new MailMessage)
                     ->line($this->message)
-                    ->action('Notification Action', url('/'))
+                    ->action('Notification Action', route('companies.index'))
                     ->line('Thank you for using our application!');
     }
 
