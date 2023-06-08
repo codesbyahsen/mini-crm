@@ -16,83 +16,81 @@ class PermissionSeeder extends Seeder
     {
         $permissions = array(
             [
-                'name' => 'Company Read',
+                'name' => 'Read Company',
                 'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
-                'name' => 'Company Add',
+                'name' => 'Create Company',
                 'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
-                'name' => 'Company Edit',
+                'name' => 'Edit Company',
                 'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
-                'name' => 'Company Delete',
-                'guard_name' => 'web',
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-
-            [
-                'name' => 'Employee Read',
-                'guard_name' => 'web',
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'name' => 'Employee Add',
-                'guard_name' => 'web',
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'name' => 'Employee Edit',
-                'guard_name' => 'web',
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'name' => 'Employee Delete',
+                'name' => 'Delete Company',
                 'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
 
             [
-                'name' => 'Project Read',
+                'name' => 'Read Employee',
                 'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
-                'name' => 'Project Add',
+                'name' => 'Create Employee',
                 'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
-                'name' => 'Project Edit',
+                'name' => 'Edit Employee',
                 'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
-                'name' => 'Project Delete',
+                'name' => 'Delete Employee',
+                'guard_name' => 'web',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+
+            [
+                'name' => 'Read Project',
+                'guard_name' => 'web',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'name' => 'Create Project',
+                'guard_name' => 'web',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'name' => 'Edit Project',
+                'guard_name' => 'web',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'name' => 'Delete Project',
                 'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now()
             ]
         );
-new Permission();
-        foreach ($permissions as $permission) {
-            DB::table('permissions')->insert($permission);
-        }
+
+            DB::table('permissions')->insert($permissions);
     }
 }
