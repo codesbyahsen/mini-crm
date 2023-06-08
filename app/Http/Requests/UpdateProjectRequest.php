@@ -28,7 +28,7 @@ class UpdateProjectRequest extends FormRequest
             'client' => ['required', 'max:120', Rule::unique('projects')->ignore($this->id)->where('name', $this->name)],
             'total_cost' => ['required', 'max:40'],
             'deadline' => ['required', 'date'],
-            'user_id' => ['nullable']
+            'employee_id' => ['nullable']
         ];
     }
 

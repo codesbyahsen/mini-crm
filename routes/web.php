@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use Illuminate\Support\Facades\Route;
@@ -33,12 +34,6 @@ Route::middleware('auth')->group(function () {
 # company
 Route::resource('companies', CompanyController::class);
 
-# project
-Route::controller(ProjectController::class)->prefix('projects')->group(function () {
-    Route::get('/', 'index')->name('projects');
-    Route::post('/store', 'store')->name('projects.store');
-    Route::put('/update/{project}', 'update')->name('projects.update');
-    Route::delete('/destroy/{project}', 'destroy')->name('projects.destroy');
 });
 
 require __DIR__.'/auth.php';
