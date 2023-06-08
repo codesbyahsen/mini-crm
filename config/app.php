@@ -160,6 +160,7 @@ return [
          * Package Service Providers...
          */
         Intervention\Image\ImageServiceProvider::class,
+        Yajra\DataTables\DataTablesServiceProvider::class,
         /*
          * Application Service Providers...
          */
