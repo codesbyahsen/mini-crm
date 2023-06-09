@@ -18,29 +18,37 @@ class CompanyController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->ajax()) {
-            $companies = Company::all();
-            return Datatables::of($companies)
-                ->addIndexColumn()
-                ->editColumn('logo', function ($row) {
-                    return '<div class="user-avatar bg-light"><img src=' . $row->logo . ' \/></div>';
-                })
-                ->addColumn('action', function ($row) {
+        try {
+            if ($request->ajax()) {
+                $companies = Company::all();
+                return Datatables::of($companies)
+                    ->addIndexColumn()
+                    ->editColumn('logo', function ($row) {
+                        return '<div class="user-avatar bg-light"><img src=' . $row->logo . ' \/></div>';
+                    })
+                    ->addColumn('action', function ($row) {
 
-                    return '<div class="drodown">
-                                <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <ul class="link-list-opt no-bdr">
-                                        <li><a href="javascript:void(0)" data-toggle="modal" data-target="#edit-company-' . $row->id . '"><em class="icon ni ni-repeat"></em><span>Edit</span></a></li>
-                                        <li><a href="javascript:void(0)" class="delete-button" data-url="' . route('companies.destroy', $row->id) . '"><em class="icon ni ni-activity-round"></em><span>Delete</span></a></li>
-                                    </ul>
-                                </div>
-                            </div>';
-                })
-                ->rawColumns(['logo', 'action'])
-                ->make(true);
+                        return '<div class="drodown">
+                                    <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <ul class="link-list-opt no-bdr">
+                                            <li><a href="javascript:void(0)" data-toggle="modal" data-target="#edit-company-' . $row->id . '"><em class="icon ni ni-repeat"></em><span>Edit</span></a></li>
+                                            <li><a href="javascript:void(0)" class="delete-button" data-url="' . route('companies.destroy', $row->id) . '"><em class="icon ni ni-activity-round"></em><span>Delete</span></a></li>
+                                        </ul>
+                                    </div>
+                                </div>';
+                    })
+                    ->rawColumns(['logo', 'action'])
+                    ->make(true);
+            }
+            $numberOfTotalCompanies = Company::count();
+        } catch (ModelNotFoundException $exception) {
+            if ($request->ajax()) {
+                return response()->json(['success' => false, 'message', 'The companies are not found'], Response::HTTP_NOT_FOUND);
+            }
+            return back()->with('error', 'The companies are not found');
         }
-        $numberOfTotalCompanies = Company::count();
+
         return view('company.index', compact('numberOfTotalCompanies'));
     }
 
@@ -63,7 +71,7 @@ class CompanyController extends Controller
 
             return response()->json(['success' => true, 'message', 'The company created successfully.'], Response::HTTP_OK);
         } catch (QueryException $exception) {
-            return response()->json(['success' => false, 'message', $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(['success' => false, 'message', 'The database not responed, failed to create company, try again!'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -85,7 +93,7 @@ class CompanyController extends Controller
             $company->update($companyDetails);
             return response()->json(['success' => true, 'message', 'The company updated successfully.'], Response::HTTP_OK);
         } catch (ModelNotFoundException $exception) {
-            return response()->json(['success' => false, 'message', $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(['success' => false, 'message', 'The ' . $request->name . 'you requested to update has not found.'], Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -99,7 +107,7 @@ class CompanyController extends Controller
 
             return response()->json(['success' => true, 'message', 'The company deleted successfully.'], Response::HTTP_OK);
         } catch (ModelNotFoundException $exception) {
-            return response()->json(['success' => false, 'message', $exception->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(['success' => false, 'message', 'The data you requested to delete has not found.'], Response::HTTP_NOT_FOUND);
         }
     }
 }

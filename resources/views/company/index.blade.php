@@ -38,7 +38,7 @@
                             </div>
                             <div class="card card-preview">
                                 <div class="card-inner">
-                                    <table class="nowrap table" id="init-company-datatable">
+                                    <table class="nowrap table" id="init-company-datatable" data-url="{{ route('companies.index') }}">
                                         <thead>
                                             <tr>
                                                 <th>Company Logo</th>

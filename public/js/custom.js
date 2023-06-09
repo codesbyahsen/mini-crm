@@ -12,7 +12,7 @@ var compantTable = $('#init-company-datatable').DataTable({
     serverSide: true,
     ajax: {
         type: "GET",
-        url: "companies",
+        url: $(this).attr('url'),
     },
     columns: [
         { data: 'logo', name: 'logo' },
