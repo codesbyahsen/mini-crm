@@ -9,7 +9,7 @@
     <link rel="shortcut icon" href="./images/favicon.png">
     <title> @yield('title') | Mini-CRM</title>
 
-    @vite(['resources/css/dashlite.css', 'resources/css/theme.css', 'resources/js/bundle.js', 'resources/js/scripts.js'])
+    @vite(['resources/css/dashlite.min.css', 'resources/css/theme.css', 'resources/js/bundle.js', 'resources/js/scripts.js'])
 </head>
 
 <body class="nk-body bg-white npc-general pg-auth">

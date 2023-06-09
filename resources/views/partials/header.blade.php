@@ -59,8 +59,8 @@
                                     <em class="icon ni ni-user-alt"></em>
                                 </div>
                                 <div class="user-info d-none d-md-block">
-                                    <div class="user-status">Administrator</div>
-                                    <div class="user-name dropdown-indicator">Abu Bin Ishityak</div>
+                                    <div class="user-status">{{ auth()?->user()?->roles()?->value('name') }}</div>
+                                    <div class="user-name dropdown-indicator">{{ auth()?->user()?->name }}</div>
                                 </div>
                             </div>
                         </a>
@@ -71,8 +71,8 @@
                                         <span>AB</span>
                                     </div>
                                     <div class="user-info">
-                                        <span class="lead-text">Abu Bin Ishtiyak</span>
-                                        <span class="sub-text">info@softnio.com</span>
+                                        <span class="lead-text">{{ auth()?->user()?->name }}</span>
+                                        <span class="sub-text">{{ auth()?->user()?->email }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -92,7 +92,12 @@
                             </div>
                             <div class="dropdown-inner">
                                 <ul class="link-list">
-                                    <li><a href="#"><em class="icon ni ni-signout"></em><span>Sign out</span></a>
+                                    <li>
+                                        <form method="POST" action="{{ route('logout') }}">
+                                            @csrf
+                                            <button type="submit" class="bg-transparent border-0"><em
+                                                    class="icon ni ni-signout"></em><span>{{ __('Sign out') }}</span></button>
+                                        </form>
                                     </li>
                                 </ul>
                             </div>
