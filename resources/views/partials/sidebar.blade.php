@@ -39,7 +39,7 @@
                     </li>
                     <!-- .nk-menu-item -->
                     <li class="nk-menu-item">
-                        <a href="html/hotel/index.html" class="nk-menu-link">
+                        <a href="{{ route('projects.index') }}" class="nk-menu-link">
                             <span class="nk-menu-icon"><em class="icon ni ni-tile-thumb"></em></span>
                             <span class="nk-menu-text">Projects</span>
                         </a>

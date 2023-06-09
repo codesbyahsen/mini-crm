@@ -3,36 +3,70 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Http\Requests\StoreProjectRequest;
-use App\Http\Requests\UpdateProjectRequest;
+use App\Http\Requests\ProjectRequest;
+use App\Models\Employee;
+use Yajra\DataTables\Facades\DataTables;
+use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 
 class ProjectController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        // $projects = Project::with('employees')->get();
-        return view('project.index');
+        try {
+            $projects = Project::get();
+            if ($request->ajax()) {
+                return Datatables::of($projects)
+                    ->addIndexColumn()
+                    ->addColumn('action', function ($row) {
+
+                        return '<div class="drodown">
+                                    <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <ul class="link-list-opt no-bdr">
+                                            <li><a href="javascript:void(0)" data-toggle="modal" class="edit-btn" data-id="' . $row->id . '" data-target="#edit-project-' . $row->id . '"><em class="icon ni ni-repeat"></em><span>Edit</span></a></li>
+                                            <li><a href="javascript:void(0)" class="delete-button" data-url="' . route('projects.destroy', $row->id) . '"><em class="icon ni ni-activity-round"></em><span>Delete</span></a></li>
+                                        </ul>
+                                    </div>
+                                </div>';
+                    })
+                    ->rawColumns(['action'])
+                    ->make(true);
+            }
+
+            $employees = Employee::get(['id', 'first_name', 'last_name']);
+            $numberOfTotalProjects = Project::count();
+        } catch (ModelNotFoundException $exception) {
+            if ($request->ajax()) {
+                return response()->json(['success' => false, 'message', 'The projects are not found'], Response::HTTP_NOT_FOUND);
+            }
+            return back()->with('error', 'The projects are not found');
+        }
+
+        return view('project.index', compact('employees', 'numberOfTotalProjects'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProjectRequest $request)
+    public function store(ProjectRequest $request)
     {
-        $result = Project::create($request->validated());
+        try {
+            $project = Project::create($request->validated());
 
-        if ($result && !empty($result)) {
-            $this->assignProjectTo($result->id, $request->employee_id);
+            if ($request->employee_id && count($request->employee_id) > 0) {
+                $this->assignProjectTo($project->id, $request->employee_id);
+            }
+            return response()->json(['success' => true, 'message', 'The project created successfully.'], Response::HTTP_OK);
+        } catch (QueryException $exception) {
+            return response()->json(['success' => false, 'message', 'The database not responed, failed to create project, try again!'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-
-        if (!$result) {
-            return response()->json(['success' => false, 'message', 'Failed to create project, try again!']);
-        }
-        return response()->json(['success' => true, 'message', 'The project created successfully.', 'data' => $result], 200);
     }
 
     private function assignProjectTo(string $projectId, array $employeeIds): void
@@ -49,18 +83,18 @@ class ProjectController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProjectRequest $request, Project $project)
+    public function update(ProjectRequest $request, Project $project)
     {
-        $result = $project->update($request->validated());
+        try {
+            $project->update($request->validated());
 
-        if ($result && !empty($result)) {
-            $this->assignProjectTo($project->id, $request->employee_id);
+            if ($request->employee_id && count($request->employee_id) > 0) {
+                $this->assignProjectTo($project->id, $request->employee_id);
+            }
+            return response()->json(['success' => true, 'message', 'The project updated successfully.'], Response::HTTP_OK);
+        } catch (ModelNotFoundException $exception) {
+            return response()->json(['success' => false, 'message', 'The ' . $request->name . 'you requested to update has not found.'], Response::HTTP_NOT_FOUND);
         }
-
-        if (!$result) {
-            return response()->json(['success' => false, 'message', 'Failed to update project, try again!']);
-        }
-        return response()->json(['success' => true, 'message', 'The project updated successfully.', 'data' => $result], 200);
     }
 
     /**
@@ -68,11 +102,12 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
-        $result = $project->delete();
+        try {
+            $project->delete();
 
-        if (!$result) {
-            return response()->json(['success' => false, 'message', 'Failed to delete project, try again!']);
+            return response()->json(['success' => true, 'message', 'The project deleted successfully.'], Response::HTTP_OK);
+        } catch (ModelNotFoundException $exception) {
+            return response()->json(['success' => false, 'message', 'The data you requested to delete has not found.'], Response::HTTP_NOT_FOUND);
         }
-        return response()->json(['success' => true, 'message', 'The project deleted successfully.', 'data' => $result], 200);
     }
 }

@@ -19,7 +19,7 @@ class ProjectFactory extends Factory
         return [
             'name' => fake()->unique()->randomElement(['CRM System', 'ERP System', 'Online Ordering and Delivery System', 'Restuarant Management System', 'Personal Portfolio', 'LMS System']),
             'detail' => fake()->text(),
-            'client' => fake()->name(),
+            'client_name' => fake()->name(),
             'total_cost' => fake()->randomDigit(),
             'deadline' => fake()->date()
         ];

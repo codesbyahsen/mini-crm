@@ -37,5 +37,7 @@ Route::resource('companies', CompanyController::class);
 # employee
 Route::resource('employees', EmployeeController::class);
 
+# project
+Route::resource('projects', ProjectController::class);
 
 require __DIR__.'/auth.php';

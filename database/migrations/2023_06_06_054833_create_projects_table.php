@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name')->nullable();
             $table->text('detail')->nullable();
-            $table->string('client')->nullable();
+            $table->string('client_name')->nullable();
             $table->string('total_cost', 50)->nullable();
             $table->date('deadline')->nullable();
             $table->timestamps();
