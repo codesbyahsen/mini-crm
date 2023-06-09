@@ -19,6 +19,11 @@ class Employee extends Model
         'company_id'
     ];
 
+    public function fullName(): string
+    {
+        return $this->first_name . ' ' . $this->last_name;
+    }
+
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class);

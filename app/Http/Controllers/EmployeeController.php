@@ -2,85 +2,73 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use App\Models\Employee;
-use Illuminate\Support\Facades\DB;
-use App\Http\Requests\StoreEmployeeRequest;
-use App\Http\Requests\UpdateEmployeeRequest;
+use Illuminate\Http\Request;
+use App\Http\Requests\EmployeeRequest;
+use Illuminate\Database\QueryException;
+use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class EmployeeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $employees = Employee::with('company')->get();
-        // return view();
-    }
+        if ($request->ajax()) {
+            return Datatables::of($employees)
+                ->addIndexColumn()
+                ->editColumn('fullname', function ($row) {
+                    return $row->fullName();
+                })
+                ->addColumn('action', function ($row) {
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+                    return '<div class="drodown">
+                                <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <ul class="link-list-opt no-bdr">
+                                        <li><a href="javascript:void(0)" data-toggle="modal" class="edit-btn" data-id="' . $row->id . '" data-target="#edit-employee-' . $row->id . '"><em class="icon ni ni-repeat"></em><span>Edit</span></a></li>
+                                        <li><a href="javascript:void(0)" class="delete-button" data-url="' . route('employees.destroy', $row->id) . '"><em class="icon ni ni-activity-round"></em><span>Delete</span></a></li>
+                                    </ul>
+                                </div>
+                            </div>';
+                })
+                ->rawColumns(['fullname', 'action'])
+                ->make(true);
+        }
+        $numberOfTotalEmployees = Employee::count();
+        $companies = Company::get(['id', 'name']);
+        return view('employee.index', compact('employees', 'numberOfTotalEmployees', 'companies'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreEmployeeRequest $request)
+    public function store(EmployeeRequest $request)
     {
-        $result = Employee::create($request->validated());
+        try {
+            Employee::create($request->validated());
 
-        if ($result && !empty($result)) {
-            $this->assignEmployeeTo($request->project_id, $result->id);
+            return response()->json(['success' => true, 'message', 'The employee created successfully.'], 200);
+        } catch (QueryException $exception) {
+            return response()->json(['success' => false, 'message', $exception->getMessage()]);
         }
-
-        if (!$result) {
-            return back()->with('error', 'Failed to create employee, try again!');
-        }
-        // return route()->with('success', 'The employee created successfully.');
-    }
-
-    private function assignEmployeeTo(array $projectIds, string $employeeId)
-    {
-        foreach ($projectIds as $projectId) {
-            DB::table('project_employee')->updateOrInsert(
-                ['project_id' => $projectId, 'employee_id' => $employeeId],
-                ['project_id' => $projectId, 'employee_id' => $employeeId, 'created_at' => now(), 'updated_at' => now()]
-            );
-        }
-        DB::table('project_employee')->whereNotIn('project_id', $projectIds)->where('employee_id', $employeeId)->delete();
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Employee $employee)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Employee $employee)
-    {
-        //
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateEmployeeRequest $request, Employee $employee)
+    public function update(EmployeeRequest $request, Employee $employee)
     {
-        $result = $employee->update($request->validated());
-
-        if (!$result) {
-            return back()->with('error', 'Failed to update employee, try again!');
+        try {
+            $employee->update($request->validated());
+            return response()->json(['success' => true, 'message', 'The employee updated successfully.'], 200);
+        } catch (ModelNotFoundException $exception) {
+            return response()->json(['success' => false, 'message', $exception->getMessage()], 404);
         }
-        // return route()->with('success', 'The employee updated successfully.');
     }
 
     /**
@@ -88,11 +76,12 @@ class EmployeeController extends Controller
      */
     public function destroy(Employee $employee)
     {
-        $result = $employee->delete();
+        try {
+            $employee->delete();
 
-        if (!$result) {
-            return back()->with('error', 'Failed to delete employee, try again!');
+            return response()->json(['success' => true, 'message', 'The employee deleted successfully.']);
+        } catch (ModelNotFoundException $exception) {
+            return response()->json(['success' => false, 'message', $exception->getMessage()], 404);
         }
-        // return route()->with('success', 'The employee deleted successfully.');
     }
 }
