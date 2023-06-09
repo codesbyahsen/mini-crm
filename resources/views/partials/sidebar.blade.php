@@ -25,14 +25,14 @@
                     </li>
                     <!-- .nk-menu-item -->
                     <li class="nk-menu-item">
-                        <a href="html/crm/index.html" class="nk-menu-link">
+                        <a href="{{ route('companies.index') }}" class="nk-menu-link">
                             <span class="nk-menu-icon"><em class="icon ni ni-building"></em></span>
                             <span class="nk-menu-text">Companies</span>
                         </a>
                     </li>
                     <!-- .nk-menu-item -->
                     <li class="nk-menu-item">
-                        <a href="html/hotel/index.html" class="nk-menu-link">
+                        <a href="{{ route('employees.index') }}" class="nk-menu-link">
                             <span class="nk-menu-icon"><em class="icon ni ni-users"></em></span>
                             <span class="nk-menu-text">Employees</span>
                         </a>

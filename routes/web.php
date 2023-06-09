@@ -34,6 +34,8 @@ Route::middleware('auth')->group(function () {
 # company
 Route::resource('companies', CompanyController::class);
 
-});
+# employee
+Route::resource('employees', EmployeeController::class);
+
 
 require __DIR__.'/auth.php';
