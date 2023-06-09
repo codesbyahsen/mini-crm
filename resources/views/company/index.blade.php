@@ -73,7 +73,7 @@
                     </a>
                 </div>
                 <div class="modal-body">
-                    <form class="form-validate is-alter" id="create-company-form"
+                    <form action="{{ route('companies.store') }}" class="form-validate is-alter" id="create-company-form"
                         enctype="multipart/form-data">
                         <div class="form-group">
                             <label class="form-label">Logo</label>
@@ -90,7 +90,7 @@
                             <label class="form-label" for="company-name">Company Name</label>
                             <div class="form-control-wrap">
                                 <input type="text" class="form-control field-name" id="company-name" name="name"
-                                    value="{{ old('name') }}" required />
+                                    value="{{ old('name') }}" />
                             </div>
                                 <span class="text-danger small error-name"></span>
                         </div>
@@ -98,7 +98,7 @@
                             <label class="form-label" for="email-address">Email Address</label>
                             <div class="form-control-wrap">
                                 <input type="email" class="form-control field-email" id="email-address" name="email"
-                                    value="{{ old('email') }}" required />
+                                    value="{{ old('email') }}" />
                             </div>
                                 <span class="text-danger small error-email"></span>
                         </div>
@@ -106,7 +106,7 @@
                             <label class="form-label" for="website-url">Website URL</label>
                             <div class="form-control-wrap">
                                 <input type="text" class="form-control field-website" id="website-url" name="website"
-                                    value="{{ old('website') }}" required />
+                                    value="{{ old('website') }}" />
                             </div>
                                 <span class="text-danger small error-website"></span>
                         </div>

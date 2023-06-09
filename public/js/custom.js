@@ -33,7 +33,6 @@ var compantTable = $('#init-company-datatable').DataTable({
  */
 $('#create-company-form').submit(function (e) {
     e.preventDefault();
-    let formData = new FormData(this);
 
     $.ajaxSetup({
         headers: {
@@ -44,8 +43,8 @@ $('#create-company-form').submit(function (e) {
 
     $.ajax({
         type: 'POST',
-        url: 'companies',
-        data: formData,
+        url: $(this).attr('action'),
+        data: new FormData(this),
         contentType: false,
         processData: false,
         success: function (response) {
@@ -55,6 +54,7 @@ $('#create-company-form').submit(function (e) {
                 $('.field-name').val(null);
                 $('.field-email').val(null);
                 $('.field-website').val(null);
+                $('#create-company-modal').modal('hide');
                 compantTable.ajax.reload();
             } else {
                 if (response.errors) {
@@ -70,8 +70,6 @@ $('#create-company-form').submit(function (e) {
             console.log(error);
         }
     });
-
-    $('#create-company-modal').modal('hide');
 });
 
 /**
@@ -148,7 +146,7 @@ $('.cancel').click(function () {
  | Send ajax request to delete company and refresh the datatable
  |
  */
-const deleteCompany = (url) => {
+$('#init-company-datatable').on('click', '.delete-button', function () {
     Swal.fire({
         title: 'Are you sure?',
         text: "You won't be able to revert this!",
@@ -169,7 +167,7 @@ const deleteCompany = (url) => {
 
             $.ajax({
                 type: 'DELETE',
-                url: url,
+                url: $(this).attr('data-url'),
                 success: function (response) {
                     if (response.success == true) {
                         Swal.fire({
@@ -189,7 +187,7 @@ const deleteCompany = (url) => {
             });
         }
     })
-};
+});
 
 /**
  | ----------------------------------------------------------------
