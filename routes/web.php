@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('companies', CompanyController::class);
     # employee
     Route::resource('employees', EmployeeController::class);
+    Route::get('/total/employees', [EmployeeController::class, 'totalEmployees'])->name('employees.total');
     # project
     Route::resource('projects', ProjectController::class);
 });

@@ -1,3 +1,5 @@
+// ============================== |> Module One <| ============================== //
+
 /**
  | ----------------------------------------------------------------
  |  List of companies
@@ -189,6 +191,8 @@ $('#init-company-datatable').on('click', '.delete-button', function () {
     })
 });
 
+// ============================== |> Module Two <| ============================== //
+
 /**
  | ----------------------------------------------------------------
  |  List of employees
@@ -216,15 +220,114 @@ var employeeTable = $('#init-employee-datatable').DataTable({
 
 /**
  | ----------------------------------------------------------------
+ |  Refresh number of employees
+ | ----------------------------------------------------------------
+ |
+ | Sends ajax request to fetch number of employees
+ |
+ */
+const fetchTotalEmployees = () => {
+    $.ajaxSetup({
+        headers: {
+            'Accepts': 'application/json',
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        }
+    });
+
+    $.ajax({
+        type: 'GET',
+        url: $('#total-employees-url').data('total-employees-url'),
+        success: function (response) {
+            if (response.success === true) {
+                console.log(response);
+                $('.total-employees').text(response.data);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr);
+            console.log(status);
+            console.log(error);
+        }
+    });
+}
+fetchTotalEmployees();
+
+/**
+ | ----------------------------------------------------------------
+ |  Show employee errors
+ | ----------------------------------------------------------------
+ |
+ | It accepts the object parameter and shows the input
+ | field errors of employee form
+ |
+ */
+const showEmployeeErrors = (response) => {
+    $('.error-first-name').html(response.errors.first_name ?? '');
+    $('.error-last-name').html(response.errors.last_name ?? '');
+    $('.error-phone').html(response.errors.phone ?? '');
+    $('.error-email').html(response.errors.email ?? '');
+    $('.error-company').html(response.errors.company_id ?? '');
+}
+
+/**
+ | ----------------------------------------------------------------
+ |  Reset employee errors
+ | ----------------------------------------------------------------
+ |
+ | It resets the input field errors of employee form
+ |
+ */
+const resetEmployeeErrors = () => {
+    $('.error-first-name').html(null);
+    $('.error-last-name').html(null);
+    $('.error-phone').html(null);
+    $('.error-email').html(null);
+    $('.error-company').html(null);
+}
+
+/**
+ | ----------------------------------------------------------------
+ |  Show employee fields
+ | ----------------------------------------------------------------
+ |
+ | It accepts the object parameter and shows the input
+ | field data of employee
+ |
+ */
+const showEmployeeFields = (response) => {
+    $('#edit-employee .field-first-name').attr('value', response?.data?.first_name);
+    $('#edit-employee .field-last-name').attr('value', response?.data?.last_name);
+    $('#edit-employee .field-phone').attr('value', response?.data?.phone);
+    $('#edit-employee .field-email').attr('value', response?.data?.email);
+    $('#edit-employee .field-company').select2().val(response?.data?.company?.id).trigger('change');
+}
+
+/**
+ | ----------------------------------------------------------------
+ |  Reset employee fields
+ | ----------------------------------------------------------------
+ |
+ | It resets the input field of employee form
+ |
+ */
+const resetEmployeeFields = () => {
+    $('#create-employee .field-first-name').val(null);
+    $('#create-employee .field-last-name').val(null);
+    $('#create-employee .field-phone').val(null);
+    $('#create-employee .field-email').val(null);
+    $('#create-employee .field-company').val(null);
+}
+
+/**
+ | ----------------------------------------------------------------
  |  Create employee
  | ----------------------------------------------------------------
  |
  | Send ajax request to store employee
  |
  */
-$('#create-employee-form').submit(function (e) {
+$('#create-employee form').submit(function (e) {
     e.preventDefault();
-    let form = $('#create-employee-form');
 
     $.ajaxSetup({
         headers: {
@@ -235,28 +338,23 @@ $('#create-employee-form').submit(function (e) {
 
     $.ajax({
         type: 'POST',
-        url: form.attr('action'),
-        data: form.serialize(),
+        url: $(this).attr('action'),
+        data: $(this).serialize(),
         success: function (response) {
             if (response.success === true) {
-                $('.field-first-name').val(null);
-                $('.field-last-name').val(null);
-                $('.field-phone').val(null);
-                $('.field-email').val(null);
-                $('.field-company').val(null);
-                $('#create-employee-modal').modal('hide');
+                resetEmployeeFields();
+                $('#create-employee').modal('hide');
+                fetchTotalEmployees();
                 employeeTable.ajax.reload();
             } else {
                 if (response) {
-                    $('.error-first-name').html(response.errors.first_name ?? '');
-                    $('.error-last-name').html(response.errors.last_name ?? '');
-                    $('.error-phone').html(response.errors.phone ?? '');
-                    $('.error-email').html(response.errors.email ?? '');
-                    $('.error-company').html(response.errors.company_id ?? '');
+                    showEmployeeErrors(response);
                 }
             }
         },
-        error: function (error) {
+        error: function (xhr, status, error) {
+            console.log(xhr);
+            console.log(status);
             console.log(error);
         }
     });
@@ -264,24 +362,46 @@ $('#create-employee-form').submit(function (e) {
 
 /**
  | ----------------------------------------------------------------
- |  Cancel employee form
+ |  Cancel create employee form
  | ----------------------------------------------------------------
  |
- | Remove errors, labels and empty the fields
+ | Remove errors, labels and empty the fields in
+ | create employee form
  |
  */
-$('.cancel-employee-form').click(function () {
-    $('.field-first-name').val(null);
-    $('.field-last-name').val(null);
-    $('.field-phone').val(null);
-    $('.field-email').val(null);
-    $('.field-company').val(null);
+$('.cancel-create-employee-form').click(function () {
+    resetEmployeeFields();
+    resetEmployeeErrors();
+});
 
-    $('.error-first-name').html(null);
-    $('.error-last-name').html(null);
-    $('.error-phone').html(null);
-    $('.error-email').html(null);
-    $('.error-company').html(null);
+/**
+ | ----------------------------------------------------------------
+ |  Edit employee
+ | ----------------------------------------------------------------
+ |
+ | It shows the edit form and sends ajax request
+ | against the specific employee
+ |
+ */
+$('#init-employee-datatable').on('click', '.edit-button', function () {
+    $('#edit-employee form').attr('action', $(this).data('update-url'));
+    $.ajax({
+        type: 'GET',
+        url: $(this).data('url'),
+        success: function (response) {
+            if (response.success === true) {
+                showEmployeeFields(response);
+                $('#edit-employee').modal('show');
+            } else {
+                console.log(response);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr);
+            console.log(status);
+            console.log(error);
+        }
+    });
 });
 
 /**
@@ -292,67 +412,48 @@ $('.cancel-employee-form').click(function () {
  | Send ajax request to store employee
  |
  */
-// $('#init-employee-datatable').on('click', '.edit-btn', function () {
-//     var id = $(this).attr('data-id');
+$('#edit-employee form').submit(function (e) {
+    e.preventDefault();
 
-//     ('#' + id).submit(function (e) {
-//         e.preventDefault();
-//         console.log($('.field-first-name').val());
-//     });
-// var formId = 'edit-employee-form' + id;
-// alert(formId);
-// e.preventDefault();
-// var id = $('.edit-employee').attr('data-id');
-// console.log(id);
-// });
+    $.ajaxSetup({
+        headers: {
+            'Accepts': 'application/json',
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        }
+    });
 
-// var formId = 'edit-employee-form-' + id;
-// $('.close').click(function () {
-//     console.log(formId);
-// });
+    $.ajax({
+        type: 'PUT',
+        url: $(this).attr('action'),
+        data: $(this).serialize(),
+        success: function (response) {
+            if (response.success === true) {
+                console.log(response);
+                $('#edit-employee').modal('hide');
+                employeeTable.ajax.reload();
+            } else {
+                showEmployeeErrors(response);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr);
+            console.log(status);
+            console.log(error);
+        }
+    });
+});
 
-
-// const updateEmplyee = (e) => {
-//     e.preventDefault();
-//     console.log(e);
-// e.preventDefault();
-// let form = $('#edit-employee-form');
-
-// $.ajaxSetup({
-//     headers: {
-//         'Accepts': 'application/json',
-//         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-//     }
-// });
-
-// $.ajax({
-//     type: 'POST',
-//     url: form.attr('action'),
-//     data: form.serialize(),
-//     success: function (response) {
-//         if (response.success === true) {
-//             $('.field-first-name').val(null);
-//             $('.field-last-name').val(null);
-//             $('.field-phone').val(null);
-//             $('.field-email').val(null);
-//             $('.field-company').val(null);
-//             $('#create-employee-modal').modal('hide');
-//             employeeTable.ajax.reload();
-//         } else {
-//             if (response) {
-//                 $('.error-first-name').html(response.errors.first_name ?? '');
-//                 $('.error-last-name').html(response.errors.last_name ?? '');
-//                 $('.error-phone').html(response.errors.phone ?? '');
-//                 $('.error-email').html(response.errors.email ?? '');
-//                 $('.error-company').html(response.errors.company_id ?? '');
-//             }
-//         }
-//     },
-//     error: function (error) {
-//         console.log(error);
-//     }
-// });
-// }
+/**
+ | ----------------------------------------------------------------
+ |  Cancel edit employee form
+ | ----------------------------------------------------------------
+ |
+ | Remove errors and labels in edit employee form
+ |
+ */
+$('.cancel-edit-employee-form').click(function () {
+    resetEmployeeErrors();
+});
 
 /**
  | ----------------------------------------------------------------
@@ -383,7 +484,7 @@ $('#init-employee-datatable').on('click', '.delete-button', function () {
 
             $.ajax({
                 type: 'DELETE',
-                url: $(this).attr('data-url'),
+                url: $(this).data('url'),
                 success: function (response) {
                     if (response.success == true) {
                         Swal.fire({
@@ -391,6 +492,7 @@ $('#init-employee-datatable').on('click', '.delete-button', function () {
                             title: 'Deleted!',
                             text: response.message
                         })
+                        fetchTotalEmployees();
                         employeeTable.ajax.reload();
                     } else {
                         Swal.fire({
@@ -399,11 +501,18 @@ $('#init-employee-datatable').on('click', '.delete-button', function () {
                             text: response.message,
                         })
                     }
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr);
+                    console.log(status);
+                    console.log(error);
                 }
             });
         }
     })
 });
+
+// ============================== |> Module Three <| ============================== //
 
 /**
  | ----------------------------------------------------------------
