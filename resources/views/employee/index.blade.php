@@ -13,7 +13,10 @@
                                     <div class="nk-block-head-content">
                                         <h3 class="nk-block-title page-title">Employees</h3>
                                         <div class="nk-block-des text-soft">
-                                            <p>You have total {{ $numberOfTotalEmployees ?? '' }} employees.</p>
+                                            <p id="total-employees-url"
+                                                data-total-employees-url="{{ route('employees.total') }}">You have total
+                                                <span class="total-employees"></span> employees.
+                                            </p>
                                         </div>
                                     </div>
                                     <div class="nk-block-head-content">
@@ -25,9 +28,10 @@
                                                     <li class="nk-block-tools-opt">
                                                         <div class="drodown">
                                                             <a href="javascript:void(0)" data-toggle="modal"
-                                                                data-target="#create-employee-modal"
+                                                                data-target="#create-employee"
                                                                 class="btn btn-icon btn-primary"><em
-                                                                    class="icon ni ni-plus"></em></a>
+                                                                    class="icon ni ni-plus"></em>
+                                                            </a>
                                                         </div>
                                                     </li>
                                                 </ul>
@@ -63,8 +67,8 @@
 @endsection
 
 @section('modals')
-    <!-- Add Employee Modal Form -->
-    <div class="modal fade" id="create-employee-modal" data-backdrop="static">
+    <!-- Create Employee Modal Form -->
+    <div class="modal fade" id="create-employee" data-backdrop="static">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -74,7 +78,89 @@
                     </a>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('employees.store') }}" class="form-validate is-alter" id="create-employee-form">
+                    <form action="{{ route('employees.store') }}" class="form-validate is-alter">
+                        <div class="row">
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <label class="form-label" for="first-name">First Name</label>
+                                    <div class="form-control-wrap">
+                                        <input type="text" class="form-control field-first-name" id="first-name"
+                                            name="first_name" value="{{ old('first_name') }}" />
+                                    </div>
+                                    <span class="text-danger small error-first-name"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-12">
+                                <div class="form-group">
+                                    <label class="form-label" for="last-name">Last Name</label>
+                                    <div class="form-control-wrap">
+                                        <input type="text" class="form-control field-last-name" id="last-name"
+                                            name="last_name" value="{{ old('last_name') }}" />
+                                    </div>
+                                    <span class="text-danger small error-last-name"></span>
+                                </div>
+                            </div>
+                            <div class="col-12 mt-2">
+                                <div class="form-group">
+                                    <label class="form-label" for="email-address">Email Address</label>
+                                    <div class="form-control-wrap">
+                                        <input type="email" class="form-control field-email" id="email-address"
+                                            name="email" value="{{ old('email') }}" />
+                                    </div>
+                                    <span class="text-danger small error-email"></span>
+                                </div>
+                            </div>
+                            <div class="col-12 mt-2">
+                                <div class="form-group">
+                                    <label class="form-label" for="phone-number">Phone Number</label>
+                                    <div class="form-control-wrap">
+                                        <input type="text" class="form-control field-phone" id="phone-number"
+                                            name="phone" value="{{ old('phone') }}" />
+                                    </div>
+                                    <span class="text-danger small error-phone"></span>
+                                </div>
+                            </div>
+                            <div class="col-12 mt-2">
+                                <div class="form-group">
+                                    <label class="form-label">Company <span class="text-muted small">&#40;Employed
+                                            at&#41;</span></label>
+                                    <div class="form-control-wrap">
+                                        <select class="form-select field-company" data-search="on" name="company_id">
+                                            <option value="" selected>Select company</option>
+                                            @foreach ($companies as $company)
+                                                <option value="{{ $company?->id }}">{{ $company?->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <span class="text-danger small error-company"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 mt-2">
+                                <div class="form-group float-right">
+                                    <button type="reset" class="btn btn-lg btn-light mr-1 cancel-create-employee-form"
+                                        data-dismiss="modal" aria-label="Close">Cancel</button>
+                                    <button type="submit" class="btn btn-lg btn-primary">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Employee Modal Form -->
+    <div class="modal fade" id="edit-employee">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Employee</h5>
+                    <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                        <em class="icon ni ni-cross"></em>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <form class="form-validate is-alter edit-employee" id="edit-employee-form">
                         <div class="row">
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
@@ -124,7 +210,8 @@
                                         <select class="form-select field-company" data-search="on" name="company_id">
                                             <option value="">Select company</option>
                                             @foreach ($companies as $company)
-                                                <option value="{{ $company?->id }}">{{ $company?->name }}</option>
+                                                <option value="{{ $company?->id }}">
+                                                    {{ $company?->name }}</option>
                                             @endforeach
                                         </select>
                                         <span class="text-danger small error-company"></span>
@@ -133,7 +220,7 @@
                             </div>
                             <div class="col-12 mt-2">
                                 <div class="form-group float-right">
-                                    <button type="reset" class="btn btn-lg btn-light mr-1 cancel-employee-form"
+                                    <button type="reset" class="btn btn-lg btn-light mr-1 cancel-edit-employee-form"
                                         data-dismiss="modal" aria-label="Close">Cancel</button>
                                     <button type="submit" class="btn btn-lg btn-primary">Save</button>
                                 </div>
@@ -144,93 +231,4 @@
             </div>
         </div>
     </div>
-
-    <!-- Edit Employee Modal Form -->
-    @foreach ($employees as $employee)
-        <div class="modal fade" id="edit-employee-{{ $employee?->id }}">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Edit Employee</h5>
-                        <a href="#" class="close" data-dismiss="modal" aria-label="Close" onclick="abc()">
-                            <em class="icon ni ni-cross"></em>
-                        </a>
-                    </div>
-                    <div class="modal-body">
-                        <form action="{{ route('employees.update', $employee?->id) }}"
-                            class="form-validate is-alter edit-employee" id="edit-employee-form-{{ $employee?->id }}"
-                            data-id="">
-                            <div class="row">
-                                <div class="col-md-6 col-12">
-                                    <div class="form-group">
-                                        <label class="form-label" for="first-name">First Name</label>
-                                        <div class="form-control-wrap">
-                                            <input type="text" class="form-control field-first-name" id="first-name"
-                                                name="first_name"
-                                                value="{{ old('first_name', $employee?->first_name) }}" />
-                                        </div>
-                                        <span class="text-danger small error-first-name"></span>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-12">
-                                    <div class="form-group">
-                                        <label class="form-label" for="last-name">Last Name</label>
-                                        <div class="form-control-wrap">
-                                            <input type="text" class="form-control field-last-name" id="last-name"
-                                                name="last_name" value="{{ old('last_name', $employee?->last_name) }}" />
-                                        </div>
-                                        <span class="text-danger small error-last-name"></span>
-                                    </div>
-                                </div>
-                                <div class="col-12 mt-2">
-                                    <div class="form-group">
-                                        <label class="form-label" for="email-address">Email Address</label>
-                                        <div class="form-control-wrap">
-                                            <input type="email" class="form-control field-email" id="email-address"
-                                                name="email" value="{{ old('email', $employee?->email) }}" />
-                                        </div>
-                                        <span class="text-danger small error-email"></span>
-                                    </div>
-                                </div>
-                                <div class="col-12 mt-2">
-                                    <div class="form-group">
-                                        <label class="form-label" for="phone-number">Phone Number</label>
-                                        <div class="form-control-wrap">
-                                            <input type="text" class="form-control field-phone" id="phone-number"
-                                                name="phone" value="{{ old('phone', $employee?->phone) }}" />
-                                        </div>
-                                        <span class="text-danger small error-phone"></span>
-                                    </div>
-                                </div>
-                                <div class="col-12 mt-2">
-                                    <div class="form-group">
-                                        <label class="form-label">Company <span class="text-muted small">&#40;Employed
-                                                at&#41;</span></label>
-                                        <div class="form-control-wrap">
-                                            <select class="form-select field-company" data-search="on" name="company_id">
-                                                <option value="">Select company</option>
-                                                @foreach ($companies as $company)
-                                                    <option value="{{ $company?->id }}" @selected($company?->id == old('company_id', $employee?->company_id))>
-                                                        {{ $company?->name }}</option>
-                                                @endforeach
-                                            </select>
-                                            <span class="text-danger small error-company"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 mt-2">
-                                    <div class="form-group float-right">
-                                        <button type="reset" class="btn btn-lg btn-light mr-1" data-dismiss="modal"
-                                            aria-label="Close">Cancel</button>
-                                        <button type="submit" class="btn btn-lg btn-primary">Save</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endforeach
 @endsection
-

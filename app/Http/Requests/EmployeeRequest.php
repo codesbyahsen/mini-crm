@@ -36,18 +36,13 @@ class EmployeeRequest extends FormRequest
                 return [
                     'first_name' => ['required', 'max:120'],
                     'last_name' => ['required', 'max:120'],
-                    'email' => ['nullable', 'email', 'unique:employees,email,' . $this->id],
+                    'email' => ['nullable', 'email', 'unique:employees,email,' . $this->employee->id],
                     'phone' => ['nullable'],
                     'company_id' => ['nullable']
                 ];
+            default:
+                return [];
         }
-    }
-
-    public function messages(): array
-    {
-        return [
-            'company_id.required' => __('Please mention the company where employee worked.'),
-        ];
     }
 
     protected function failedValidation(Validator $validator)
