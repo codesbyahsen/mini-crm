@@ -11,16 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('project_employee', function (Blueprint $table) {
+        Schema::create('employee_project', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('project_id')->nullable();
             $table->unsignedBigInteger('employee_id')->nullable();
+            $table->unsignedBigInteger('project_id')->nullable();
             $table->timestamps();
         });
 
-        Schema::table('project_employee', function ($table) {
-            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
+        Schema::table('employee_project', function ($table) {
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
+            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
         });
     }
 

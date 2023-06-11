@@ -35,7 +35,7 @@ class EmployeeController extends Controller
                                 <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
                                 <div class="dropdown-menu dropdown-menu-right">
                                     <ul class="link-list-opt no-bdr">
-                                        <li><a href="javascript:void(0)" data-toggle="modal" class="edit-button" data-id="' . $row->id . '" data-url="' . route('employees.edit', $row->id) . '" data-update-url="' . route('employees.update', $row->id) . '"><em class="icon ni ni-repeat"></em><span>Edit</span></a></li>
+                                        <li><a href="javascript:void(0)" data-toggle="modal" class="edit-button" data-url="' . route('employees.edit', $row->id) . '" data-update-url="' . route('employees.update', $row->id) . '"><em class="icon ni ni-repeat"></em><span>Edit</span></a></li>
                                         <li><a href="javascript:void(0)" class="delete-button" data-url="' . route('employees.destroy', $row->id) . '"><em class="icon ni ni-activity-round"></em><span>Delete</span></a></li>
                                     </ul>
                                 </div>
@@ -62,9 +62,9 @@ class EmployeeController extends Controller
     {
         try {
             $numberOfTotalEmployees = Employee::count();
-            return $this->success('The total employees fetched successfully.', $numberOfTotalEmployees, Response::HTTP_OK);
+            return $this->success('The total employees fetched successfully.', $numberOfTotalEmployees);
         } catch (ModelNotFoundException $exception) {
-            return $this->error('not_found.', Response::HTTP_NOT_FOUND);
+            return $this->error('not_found', Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -82,6 +82,9 @@ class EmployeeController extends Controller
         }
     }
 
+    /**
+     * Show the form for editing the specified resource.
+     */
     public function edit($id)
     {
         try {
@@ -101,7 +104,7 @@ class EmployeeController extends Controller
             $employee->update($request->validated());
             return $this->success('The employee updated successfully.', Response::HTTP_NO_CONTENT);
         } catch (ModelNotFoundException $exception) {
-            return $this->error('not_found_update.', Response::HTTP_NOT_FOUND);
+            return $this->error('not_found_update', Response::HTTP_NOT_FOUND);
         }
     }
 
@@ -115,7 +118,7 @@ class EmployeeController extends Controller
 
             return $this->success('The employee deleted successfully.');
         } catch (ModelNotFoundException $exception) {
-            return $this->error('not_found_delete.', Response::HTTP_NOT_FOUND);
+            return $this->error('not_found_delete', Response::HTTP_NOT_FOUND);
         }
     }
 }

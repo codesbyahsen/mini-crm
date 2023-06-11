@@ -26,16 +26,21 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    # profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
     # company
     Route::resource('companies', CompanyController::class);
+
     # employee
     Route::resource('employees', EmployeeController::class);
     Route::get('/total/employees', [EmployeeController::class, 'totalEmployees'])->name('employees.total');
+
     # project
     Route::resource('projects', ProjectController::class);
+    Route::get('/total/projects', [ProjectController::class, 'totalProjects'])->name('projects.total');
 });
 
 

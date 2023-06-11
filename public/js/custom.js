@@ -207,7 +207,7 @@ var employeeTable = $('#init-employee-datatable').DataTable({
     serverSide: true,
     ajax: {
         type: "GET",
-        url: $('#init-employee-datatable').attr('url'),
+        url: $('#init-employee-datatable').data('url'),
     },
     columns: [
         { data: 'fullname', name: 'fullname' },
@@ -239,7 +239,6 @@ const fetchTotalEmployees = () => {
         url: $('#total-employees-url').data('total-employees-url'),
         success: function (response) {
             if (response.success === true) {
-                console.log(response);
                 $('.total-employees').text(response.data);
             }
         },
@@ -540,13 +539,120 @@ var projectTable = $('#init-project-datatable').DataTable({
 
 /**
  | ----------------------------------------------------------------
+ |  Refresh number of projects
+ | ----------------------------------------------------------------
+ |
+ | Sends ajax request to fetch number of projects
+ |
+ */
+const fetchTotalProjects = () => {
+    $.ajaxSetup({
+        headers: {
+            'Accepts': 'application/json',
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        }
+    });
+
+    $.ajax({
+        type: 'GET',
+        url: $('#total-projects-url').data('total-projects-url'),
+        success: function (response) {
+            if (response.success === true) {
+                $('.total-projects').text(response.data);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr);
+            console.log(status);
+            console.log(error);
+        }
+    });
+}
+fetchTotalProjects();
+
+/**
+ | ----------------------------------------------------------------
+ |  Show project errors
+ | ----------------------------------------------------------------
+ |
+ | It accepts the object parameter and shows the input
+ | field errors of project form
+ |
+ */
+const showProjectErrors = (response) => {
+    $('.error-name').html(response.errors.name ?? '');
+    $('.error-detail').html(response.errors.detail ?? '');
+    $('.error-client-name').html(response.errors.client_name ?? '');
+    $('.error-total-cost').html(response.errors.total_cost ?? '');
+    $('.error-deadline').html(response.errors.deadline ?? '');
+    $('.error-employee-id').html(response.errors.employee_id ?? '');
+}
+
+/**
+ | ----------------------------------------------------------------
+ |  Reset project errors
+ | ----------------------------------------------------------------
+ |
+ | It resets the input field errors of project form
+ |
+ */
+const resetProjectErrors = () => {
+    $('.error-name').html(null);
+    $('.error-detail').html(null);
+    $('.error-client-name').html(null);
+    $('.error-total-cost').html(null);
+    $('.error-deadline').html(null);
+    $('.error-project-id').html(null);
+}
+
+/**
+ | ----------------------------------------------------------------
+ |  Show project fields
+ | ----------------------------------------------------------------
+ |
+ | It accepts the object parameter and shows the input
+ | field data of project
+ |
+ */
+const showProjectFields = (response) => {
+    $('#edit-project .field-name').attr('value', response?.data?.name);
+    $('#edit-project .field-detail').html(response?.data?.detail);
+    $('#edit-project .field-client-name').attr('value', response?.data?.client_name);
+    $('#edit-project .field-total-cost').attr('value', response?.data?.total_cost);
+    $('#edit-project .field-deadline').attr('value', changeDateFormat(response?.data?.deadline));
+    var employeeIds = [];
+    response.data.employees.map(function (item) {
+        employeeIds.push(item.id);
+    });
+    $('#edit-project .field-employee-id').select2().val(employeeIds).trigger('change');
+}
+
+/**
+ | ----------------------------------------------------------------
+ |  Reset project fields
+ | ----------------------------------------------------------------
+ |
+ | It resets the input field of project form
+ |
+ */
+const resetProjectFields = () => {
+    $('#create-project .field-name').val(null);
+    $('#create-project .field-detail').val(null);
+    $('#create-project .field-client-name').val(null);
+    $('#create-project .field-total-cost').val(null);
+    $('#create-project .field-deadline').val(null);
+    $('#create-project .field-employee-id').val(null).trigger('change');
+}
+
+/**
+ | ----------------------------------------------------------------
  |  Create project
  | ----------------------------------------------------------------
  |
  | Send ajax request to store project
  |
  */
-$('#create-project-form').submit(function (e) {
+$('#create-project form').submit(function (e) {
     e.preventDefault();
 
     $.ajaxSetup({
@@ -562,26 +668,19 @@ $('#create-project-form').submit(function (e) {
         data: $(this).serialize(),
         success: function (response) {
             if (response.success === true) {
-                $('.field-name').val(null);
-                $('.field-detail').val(null);
-                $('.field-client-name').val(null);
-                $('.field-total-cost').val(null);
-                $('.field-deadline').val(null);
-                $('.field-employee-id').val(null);
-                $('#create-project-modal').modal('hide');
+                resetProjectFields();
+                $('#create-project').modal('hide');
+                fetchTotalProjects();
                 projectTable.ajax.reload();
             } else {
                 if (response.errors) {
-                    $('.error-name').html(response.errors.name);
-                    $('.error-detail').html(response.errors.detail);
-                    $('.error-client-name').html(response.errors.client_name);
-                    $('.error-total-cost').html(response.errors.total_cost);
-                    $('.error-deadline').html(response.errors.deadline);
-                    $('.error-employee-id').html(response.errors.employee_id);
+                    showProjectErrors(response);
                 }
             }
         },
-        error: function (error) {
+        error: function (xhr, status, error) {
+            console.log(xhr);
+            console.log(status);
             console.log(error);
         }
     });
@@ -589,27 +688,109 @@ $('#create-project-form').submit(function (e) {
 
 /**
  | ----------------------------------------------------------------
- |  Cancel project form
+ |  Cancel create project form
  | ----------------------------------------------------------------
  |
  | Remove errors, labels and empty the fields
  |
  */
-$('.cancel-project-form').click(function () {
-    $('.field-name').val(null);
-    $('.field-detail').val(null);
-    $('.field-client-name').val(null);
-    $('.field-total-cost').val(null);
-    $('.field-deadline').val(null);
-    $('.field-employee-id').val(null);
-    // $('.select2-selection__choice').text(null);
+$('.cancel-create-project-form').click(function () {
+    resetProjectFields();
+    resetProjectErrors();
+});
 
-    $('.error-name').html(null);
-    $('.error-detail').html(null);
-    $('.error-client-name').html(null);
-    $('.error-total-cost').html(null);
-    $('.error-deadline').html(null);
-    $('.error-employee-id').html(null);
+/**
+ | ----------------------------------------------------------------
+ |  Change the format of date
+ | ----------------------------------------------------------------
+ |
+ | It changes the date format and return as ISO 8601
+ |
+ */
+const changeDateFormat = (date) => {
+    var date = new Date(date);
+    return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+}
+
+/**
+ | ----------------------------------------------------------------
+ |  Edit project
+ | ----------------------------------------------------------------
+ |
+ | It shows the edit form and sends ajax request
+ | against the specific project
+ |
+ */
+$('#init-project-datatable').on('click', '.edit-button', function () {
+    $('#edit-project form').attr('action', $(this).data('update-url'));
+    $.ajax({
+        type: 'GET',
+        url: $(this).data('url'),
+        success: function (response) {
+            if (response.success === true) {
+                showProjectFields(response);
+                $('#edit-project').modal('show');
+            } else {
+                console.log(response);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr);
+            console.log(status);
+            console.log(error);
+        }
+    });
+});
+
+/**
+ | ----------------------------------------------------------------
+ |  Update project
+ | ----------------------------------------------------------------
+ |
+ | Send ajax request to store project
+ |
+ */
+$('#edit-project form').submit(function (e) {
+    e.preventDefault();
+
+    $.ajaxSetup({
+        headers: {
+            'Accepts': 'application/json',
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        }
+    });
+
+    $.ajax({
+        type: 'PUT',
+        url: $(this).attr('action'),
+        data: $(this).serialize(),
+        success: function (response) {
+            if (response.success === true) {
+                console.log(response);
+                $('#edit-project').modal('hide');
+                projectTable.ajax.reload();
+            } else {
+                showProjectErrors(response);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr);
+            console.log(status);
+            console.log(error);
+        }
+    });
+});
+
+/**
+ | ----------------------------------------------------------------
+ |  Cancel edit project form
+ | ----------------------------------------------------------------
+ |
+ | Remove errors and labels in edit project form
+ |
+ */
+$('.cancel-edit-project-form').click(function () {
+    resetProjectErrors();
 });
 
 /**
@@ -641,7 +822,7 @@ $('#init-project-datatable').on('click', '.delete-button', function () {
 
             $.ajax({
                 type: 'DELETE',
-                url: $(this).attr('data-url'),
+                url: $(this).data('url'),
                 success: function (response) {
                     if (response.success == true) {
                         Swal.fire({
@@ -649,6 +830,7 @@ $('#init-project-datatable').on('click', '.delete-button', function () {
                             title: 'Deleted!',
                             text: response.message
                         })
+                        fetchTotalProjects();
                         projectTable.ajax.reload();
                     } else {
                         Swal.fire({

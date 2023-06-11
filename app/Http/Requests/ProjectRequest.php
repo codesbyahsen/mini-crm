@@ -43,6 +43,8 @@ class ProjectRequest extends FormRequest
                     'deadline' => ['required', 'date'],
                     'employee_id' => ['nullable']
                 ];
+            default:
+                return [];
         }
     }
 

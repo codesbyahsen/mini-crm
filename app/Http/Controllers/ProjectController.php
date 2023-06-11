@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\ProjectRequest;
 use App\Models\Employee;
+use App\Traits\AjaxResponse;
 use Yajra\DataTables\Facades\DataTables;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -14,6 +15,8 @@ use Illuminate\Database\QueryException;
 
 class ProjectController extends Controller
 {
+    use AjaxResponse;
+
     /**
      * Display a listing of the resource.
      */
@@ -30,7 +33,7 @@ class ProjectController extends Controller
                                     <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
                                     <div class="dropdown-menu dropdown-menu-right">
                                         <ul class="link-list-opt no-bdr">
-                                            <li><a href="javascript:void(0)" data-toggle="modal" class="edit-btn" data-id="' . $row->id . '" data-target="#edit-project-' . $row->id . '"><em class="icon ni ni-repeat"></em><span>Edit</span></a></li>
+                                            <li><a href="javascript:void(0)" data-toggle="modal" class="edit-button" data-url="' . route('projects.edit', $row->id) . '" data-update-url="' . route('projects.update', $row->id) . '" data-target="#edit-project"><em class="icon ni ni-repeat"></em><span>Edit</span></a></li>
                                             <li><a href="javascript:void(0)" class="delete-button" data-url="' . route('projects.destroy', $row->id) . '"><em class="icon ni ni-activity-round"></em><span>Delete</span></a></li>
                                         </ul>
                                     </div>
@@ -41,15 +44,27 @@ class ProjectController extends Controller
             }
 
             $employees = Employee::get(['id', 'first_name', 'last_name']);
-            $numberOfTotalProjects = Project::count();
         } catch (ModelNotFoundException $exception) {
             if ($request->ajax()) {
-                return response()->json(['success' => false, 'message', 'The projects are not found'], Response::HTTP_NOT_FOUND);
+                return $this->error('not_found', Response::HTTP_NOT_FOUND);
             }
             return back()->with('error', 'The projects are not found');
         }
 
-        return view('project.index', compact('employees', 'numberOfTotalProjects'));
+        return view('project.index', compact('employees'));
+    }
+
+    /**
+     * Display total number of projects.
+     */
+    public function totalProjects()
+    {
+        try {
+            $numberOfTotalProjects = Project::count();
+            return $this->success('The total projects fetched successfully.', $numberOfTotalProjects);
+        } catch (ModelNotFoundException $exception) {
+            return $this->error('not_found', Response::HTTP_NOT_FOUND);
+        }
     }
 
     /**
@@ -60,24 +75,37 @@ class ProjectController extends Controller
         try {
             $project = Project::create($request->validated());
 
-            if ($request->employee_id && count($request->employee_id) > 0) {
+            if ($request->employee_id) {
                 $this->assignProjectTo($project->id, $request->employee_id);
             }
-            return response()->json(['success' => true, 'message', 'The project created successfully.'], Response::HTTP_OK);
+            return $this->success('The project created successfully.', Response::HTTP_CREATED);
         } catch (QueryException $exception) {
-            return response()->json(['success' => false, 'message', 'The database not responed, failed to create project, try again!'], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->error('failed_query', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     private function assignProjectTo(string $projectId, array $employeeIds): void
     {
         foreach ($employeeIds as $employeeId) {
-            DB::table('project_employee')->updateOrInsert(
+            DB::table('employee_project')->updateOrInsert(
                 ['project_id' => $projectId, 'employee_id' => $employeeId],
                 ['project_id' => $projectId, 'employee_id' => $employeeId, 'created_at' => now(), 'updated_at' => now()]
             );
         }
-        DB::table('project_employee')->whereNotIn('employee_id', $employeeIds)->where('project_id', $projectId)->delete();
+        DB::table('employee_project')->whereNotIn('employee_id', $employeeIds)->where('project_id', $projectId)->delete();
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit($id)
+    {
+        try {
+            $project = Project::whereId($id)->with('employees')->first();
+            return $this->success('The project against id: ' . $id . ' fetched successfully.', $project);
+        } catch (ModelNotFoundException $exception) {
+            return $this->error('not_found', Response::HTTP_NOT_FOUND);
+        }
     }
 
     /**
@@ -91,9 +119,11 @@ class ProjectController extends Controller
             if ($request->employee_id && count($request->employee_id) > 0) {
                 $this->assignProjectTo($project->id, $request->employee_id);
             }
-            return response()->json(['success' => true, 'message', 'The project updated successfully.'], Response::HTTP_OK);
+            return $this->success('The project updated successfully.', Response::HTTP_NO_CONTENT);
         } catch (ModelNotFoundException $exception) {
-            return response()->json(['success' => false, 'message', 'The ' . $request->name . 'you requested to update has not found.'], Response::HTTP_NOT_FOUND);
+            return $this->error('not_found_update', Response::HTTP_NOT_FOUND);
+        } catch (QueryException $exception) {
+            return $this->error('failed_query', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -105,9 +135,9 @@ class ProjectController extends Controller
         try {
             $project->delete();
 
-            return response()->json(['success' => true, 'message', 'The project deleted successfully.'], Response::HTTP_OK);
+            return $this->success('The project deleted successfully.');
         } catch (ModelNotFoundException $exception) {
-            return response()->json(['success' => false, 'message', 'The data you requested to delete has not found.'], Response::HTTP_NOT_FOUND);
+            return $this->error('not_found_delete', Response::HTTP_NOT_FOUND);
         }
     }
 }
