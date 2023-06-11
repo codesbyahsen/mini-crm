@@ -20,7 +20,7 @@ trait AjaxResponse
      */
     public function error(string $messageKey, int $statusCode = Response::HTTP_BAD_REQUEST): JsonResponse
     {
-        return new JsonResponse(['success' => false, 'message' => self::errorMessages()[$messageKey]], $statusCode);
+        return new JsonResponse(['success' => false, 'message' => self::errorMessages()[$messageKey] ?? $messageKey], $statusCode);
     }
 
     /**
@@ -32,7 +32,7 @@ trait AjaxResponse
             'not_found' => 'The data you are requesting, not found',
             'not_found_update' => 'The data you are requesting to update, not found',
             'not_found_delete' => 'The data you are requesting to delete, not found',
-            'failed_query' => 'The database not responed, failed to create employee, try again!'
+            'failed_query' => 'The database not responed, failed to create, try again!'
         ];
     }
 }

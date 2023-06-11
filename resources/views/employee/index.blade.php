@@ -43,7 +43,7 @@
                             <div class="card card-preview">
                                 <div class="card-inner">
                                     <table class="nowrap table" id="init-employee-datatable"
-                                        url="{{ route('employees.index') }}">
+                                        data-url="{{ route('employees.index') }}">
                                         <thead>
                                             <tr>
                                                 <th>Employee Name</th>
