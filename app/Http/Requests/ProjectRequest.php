@@ -38,7 +38,7 @@ class ProjectRequest extends FormRequest
                 return [
                     'name' => ['required', 'max:220'],
                     'detail' => ['nullable', 'max:10000'],
-                    'client_name' => ['required', 'max:120', Rule::unique('projects')->ignore($this->id)->where('name', $this->name)],
+                    'client_name' => ['required', 'max:120', Rule::unique('projects')->ignore($this->project->id)->where('name', $this->name)],
                     'total_cost' => ['required', 'max:40'],
                     'deadline' => ['required', 'date'],
                     'employee_id' => ['nullable']
