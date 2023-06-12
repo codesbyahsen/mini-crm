@@ -119,7 +119,7 @@ class ProjectController extends Controller
             if ($request->employee_id && count($request->employee_id) > 0) {
                 $this->assignProjectTo($project->id, $request->employee_id);
             }
-            return $this->success('The project updated successfully.', Response::HTTP_NO_CONTENT);
+            return $this->success('The project updated successfully.', [], Response::HTTP_NO_CONTENT);
         } catch (ModelNotFoundException $exception) {
             return $this->error('not_found_update', Response::HTTP_NOT_FOUND);
         } catch (QueryException $exception) {

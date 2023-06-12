@@ -35,10 +35,12 @@ class CompanyRequest extends FormRequest
             case 'PUT':
                 return [
                     'name' => ['required', 'max:120'],
-                    'email' => ['nullable', 'email', 'unique:companies,email,' . $this->id],
+                    'email' => ['nullable', 'email', 'unique:companies,email,' . $this->company->id],
                     'logo' => ['nullable', File::types(['png', 'jpg', 'jpeg'])->max(1024), 'dimensions:min_width=100,min_height=100'],
                     'website' => ['nullable']
                 ];
+            default:
+                return [];
         }
     }
 

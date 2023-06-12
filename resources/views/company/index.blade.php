@@ -13,7 +13,9 @@
                                     <div class="nk-block-head-content">
                                         <h3 class="nk-block-title page-title">Companies</h3>
                                         <div class="nk-block-des text-soft">
-                                            <p>You have total {{ $numberOfTotalCompanies ?? '' }} companies.</p>
+                                            <p id="total-companies-url"
+                                                data-total-companies-url="{{ route('companies.total') }}">You have total
+                                                <span class="total-companies"></span> companies.</p>
                                         </div>
                                     </div>
                                     <div class="nk-block-head-content">
@@ -25,7 +27,7 @@
                                                     <li class="nk-block-tools-opt">
                                                         <div class="drodown">
                                                             <a href="javascript:void(0)" data-toggle="modal"
-                                                                data-target="#create-company-modal"
+                                                                data-target="#create-company"
                                                                 class="btn btn-icon btn-primary"><em
                                                                     class="icon ni ni-plus"></em></a>
                                                         </div>
@@ -38,7 +40,8 @@
                             </div>
                             <div class="card card-preview">
                                 <div class="card-inner">
-                                    <table class="nowrap table" id="init-company-datatable" data-url="{{ route('companies.index') }}">
+                                    <table class="nowrap table" id="init-company-datatable"
+                                        data-url="{{ route('companies.index') }}">
                                         <thead>
                                             <tr>
                                                 <th>Company Logo</th>
@@ -63,7 +66,7 @@
 
 @section('modals')
     <!-- Add Company Modal Form -->
-    <div class="modal fade" id="create-company-modal" data-backdrop="static">
+    <div class="modal fade" id="create-company" data-backdrop="static">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -73,7 +76,7 @@
                     </a>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('companies.store') }}" class="form-validate is-alter" id="create-company-form"
+                    <form action="{{ route('companies.store') }}" class="form-validate is-alter"
                         enctype="multipart/form-data">
                         <div class="form-group">
                             <label class="form-label">Logo</label>
@@ -83,7 +86,7 @@
                                         id="company-logo">
                                     <label class="custom-file-label" for="company-logo">Choose file</label>
                                 </div>
-                                    <span class="text-danger small error-logo"></span>
+                                <span class="text-danger small error-logo"></span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -92,7 +95,7 @@
                                 <input type="text" class="form-control field-name" id="company-name" name="name"
                                     value="{{ old('name') }}" />
                             </div>
-                                <span class="text-danger small error-name"></span>
+                            <span class="text-danger small error-name"></span>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="email-address">Email Address</label>
@@ -100,7 +103,7 @@
                                 <input type="email" class="form-control field-email" id="email-address" name="email"
                                     value="{{ old('email') }}" />
                             </div>
-                                <span class="text-danger small error-email"></span>
+                            <span class="text-danger small error-email"></span>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="website-url">Website URL</label>
@@ -108,11 +111,11 @@
                                 <input type="text" class="form-control field-website" id="website-url" name="website"
                                     value="{{ old('website') }}" />
                             </div>
-                                <span class="text-danger small error-website"></span>
+                            <span class="text-danger small error-website"></span>
                         </div>
                         <div class="form-group float-right">
-                            <button type="reset" class="btn btn-lg btn-light mr-1 cancel" data-dismiss="modal"
-                                aria-label="Close">Cancel</button>
+                            <button type="reset" class="btn btn-lg btn-light mr-1 cancel-create-company-form"
+                                data-dismiss="modal" aria-label="Close">Cancel</button>
                             <button type="submit" class="btn btn-lg btn-primary">Save</button>
                         </div>
                     </form>
@@ -132,8 +135,7 @@
                     </a>
                 </div>
                 <div class="modal-body">
-                    <form action="#" class="form-validate is-alter" id="edit-company-form"
-                        enctype="multipart/form-data">
+                    <form class="form-validate is-alter" enctype="multipart/form-data">
                         <div class="form-group">
                             <label class="form-label">Logo</label>
                             <div class="form-control-wrap">
@@ -142,44 +144,36 @@
                                         id="company-logo">
                                     <label class="custom-file-label" for="company-logo">Choose file</label>
                                 </div>
-                                @error('logo')
-                                    <span class="text-danger small">{{ $message }}</span>
-                                @enderror
+                                <span class="text-danger small error-logo"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="company-name">Company Name</label>
                             <div class="form-control-wrap">
                                 <input type="text" class="form-control field-name" id="company-name" name="name"
-                                    value="{{ old('name') }}" required />
+                                    value="{{ old('name') }}" />
                             </div>
-                            @error('name')
-                                <span class="text-danger small">{{ $message }}</span>
-                            @enderror
+                            <span class="text-danger small error-name"></span>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="email-address">Email Address</label>
                             <div class="form-control-wrap">
                                 <input type="email" class="form-control field-email" id="email-address" name="email"
-                                    value="{{ old('email') }}" required />
+                                    value="{{ old('email') }}" />
                             </div>
-                            @error('email')
-                                <span class="text-danger small">{{ $message }}</span>
-                            @enderror
+                            <span class="text-danger small error-email"></span>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="website-url">Website URL</label>
                             <div class="form-control-wrap">
                                 <input type="text" class="form-control field-website" id="website-url" name="website"
-                                    value="{{ old('website') }}" required />
+                                    value="{{ old('website') }}" />
                             </div>
-                            @error('website')
-                                <span class="text-danger small">{{ $message }}</span>
-                            @enderror
+                            <span class="text-danger small error-website"></span>
                         </div>
                         <div class="form-group float-right">
-                            <button type="reset" class="btn btn-lg btn-light mr-1" data-dismiss="modal"
-                                aria-label="Close">Cancel</button>
+                            <button type="reset" class="btn btn-lg btn-light mr-1 cancel-edit-company-form"
+                                data-dismiss="modal" aria-label="Close">Cancel</button>
                             <button type="submit" class="btn btn-lg btn-primary">Save</button>
                         </div>
                     </form>
