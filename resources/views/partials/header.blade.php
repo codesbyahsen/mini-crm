@@ -17,41 +17,6 @@
 
             <div class="nk-header-tools">
                 <ul class="nk-quick-nav">
-                    <li class="dropdown language-dropdown d-none d-sm-block mr-n1">
-                        <a href="#" class="dropdown-toggle nk-quick-nav-icon" data-toggle="dropdown">
-                            <div class="quick-icon border border-light">
-                                <img class="icon" src="./images/flags/english-sq.png" alt="">
-                            </div>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-s1">
-                            <ul class="language-list">
-                                <li>
-                                    <a href="#" class="language-item">
-                                        <img src="./images/flags/english.png" alt="" class="language-flag">
-                                        <span class="language-name">English</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" class="language-item">
-                                        <img src="./images/flags/spanish.png" alt="" class="language-flag">
-                                        <span class="language-name">Español</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" class="language-item">
-                                        <img src="./images/flags/french.png" alt="" class="language-flag">
-                                        <span class="language-name">Français</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" class="language-item">
-                                        <img src="./images/flags/turkey.png" alt="" class="language-flag">
-                                        <span class="language-name">Türkçe</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li><!-- .dropdown -->
                     <li class="dropdown user-dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <div class="user-toggle">
@@ -59,7 +24,19 @@
                                     <em class="icon ni ni-user-alt"></em>
                                 </div>
                                 <div class="user-info d-none d-md-block">
-                                    <div class="user-status">{{ auth()?->user()?->roles()?->value('name') }}</div>
+                                    <div class="user-status">
+                                        @if (auth()
+                                                ?->user()
+                                                ?->roles()
+                                                ?->value('name') === 'admin')
+                                            Administrator
+                                        @elseif (auth()
+                                                ?->user()
+                                                ?->roles()
+                                                ?->value('name') === 'sub-admin')
+                                            Sub Admin
+                                        @endif
+                                    </div>
                                     <div class="user-name dropdown-indicator">{{ auth()?->user()?->name }}</div>
                                 </div>
                             </div>
@@ -80,12 +57,6 @@
                                 <ul class="link-list">
                                     <li><a href="html/user-profile-regular.html"><em
                                                 class="icon ni ni-user-alt"></em><span>View Profile</span></a></li>
-                                    <li><a href="html/user-profile-setting.html"><em
-                                                class="icon ni ni-setting-alt"></em><span>Account Setting</span></a>
-                                    </li>
-                                    <li><a href="html/user-profile-activity.html"><em
-                                                class="icon ni ni-activity-alt"></em><span>Login Activity</span></a>
-                                    </li>
                                     <li><a class="dark-switch" href="#"><em
                                                 class="icon ni ni-moon"></em><span>Dark Mode</span></a></li>
                                 </ul>
@@ -100,87 +71,6 @@
                                         </form>
                                     </li>
                                 </ul>
-                            </div>
-                        </div>
-                    </li><!-- .dropdown -->
-                    <li class="dropdown notification-dropdown mr-n1">
-                        <a href="#" class="dropdown-toggle nk-quick-nav-icon" data-toggle="dropdown">
-                            <div class="icon-status icon-status-info"><em class="icon ni ni-bell"></em></div>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-xl dropdown-menu-right dropdown-menu-s1">
-                            <div class="dropdown-head">
-                                <span class="sub-title nk-dropdown-title">Notifications</span>
-                                <a href="#">Mark All as Read</a>
-                            </div>
-                            <div class="dropdown-body">
-                                <div class="nk-notification">
-                                    <div class="nk-notification-item dropdown-inner">
-                                        <div class="nk-notification-icon">
-                                            <em class="icon icon-circle bg-warning-dim ni ni-curve-down-right"></em>
-                                        </div>
-                                        <div class="nk-notification-content">
-                                            <div class="nk-notification-text">You have requested to
-                                                <span>Widthdrawl</span>
-                                            </div>
-                                            <div class="nk-notification-time">2 hrs ago</div>
-                                        </div>
-                                    </div>
-                                    <div class="nk-notification-item dropdown-inner">
-                                        <div class="nk-notification-icon">
-                                            <em class="icon icon-circle bg-success-dim ni ni-curve-down-left"></em>
-                                        </div>
-                                        <div class="nk-notification-content">
-                                            <div class="nk-notification-text">Your <span>Deposit Order</span> is placed
-                                            </div>
-                                            <div class="nk-notification-time">2 hrs ago</div>
-                                        </div>
-                                    </div>
-                                    <div class="nk-notification-item dropdown-inner">
-                                        <div class="nk-notification-icon">
-                                            <em class="icon icon-circle bg-warning-dim ni ni-curve-down-right"></em>
-                                        </div>
-                                        <div class="nk-notification-content">
-                                            <div class="nk-notification-text">You have requested to
-                                                <span>Widthdrawl</span>
-                                            </div>
-                                            <div class="nk-notification-time">2 hrs ago</div>
-                                        </div>
-                                    </div>
-                                    <div class="nk-notification-item dropdown-inner">
-                                        <div class="nk-notification-icon">
-                                            <em class="icon icon-circle bg-success-dim ni ni-curve-down-left"></em>
-                                        </div>
-                                        <div class="nk-notification-content">
-                                            <div class="nk-notification-text">Your <span>Deposit Order</span> is placed
-                                            </div>
-                                            <div class="nk-notification-time">2 hrs ago</div>
-                                        </div>
-                                    </div>
-                                    <div class="nk-notification-item dropdown-inner">
-                                        <div class="nk-notification-icon">
-                                            <em class="icon icon-circle bg-warning-dim ni ni-curve-down-right"></em>
-                                        </div>
-                                        <div class="nk-notification-content">
-                                            <div class="nk-notification-text">You have requested to
-                                                <span>Widthdrawl</span>
-                                            </div>
-                                            <div class="nk-notification-time">2 hrs ago</div>
-                                        </div>
-                                    </div>
-                                    <div class="nk-notification-item dropdown-inner">
-                                        <div class="nk-notification-icon">
-                                            <em class="icon icon-circle bg-success-dim ni ni-curve-down-left"></em>
-                                        </div>
-                                        <div class="nk-notification-content">
-                                            <div class="nk-notification-text">Your <span>Deposit Order</span> is placed
-                                            </div>
-                                            <div class="nk-notification-time">2 hrs ago</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="dropdown-foot center">
-                                <a href="#">View All</a>
                             </div>
                         </div>
                     </li>

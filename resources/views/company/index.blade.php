@@ -68,7 +68,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Create Company</h5>
-                    <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                    <a href="#" class="close cancel-create-company-form" data-dismiss="modal" aria-label="Close">
                         <em class="icon ni ni-cross"></em>
                     </a>
                 </div>
@@ -80,7 +80,7 @@
                             <div class="form-control-wrap">
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input field-logo" name="logo"
-                                        id="company-logo">
+                                        id="company-logo" accept="image/png,image/jpeg,image/gif" />
                                     <label class="custom-file-label" for="company-logo">Choose file</label>
                                 </div>
                                     <span class="text-danger small error-logo"></span>
@@ -127,7 +127,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Edit Company</h5>
-                    <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                    <a href="#" class="close cancel-edit-company-form" data-dismiss="modal" aria-label="Close">
                         <em class="icon ni ni-cross"></em>
                     </a>
                 </div>
@@ -139,7 +139,7 @@
                             <div class="form-control-wrap">
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input field-logo" name="logo"
-                                        id="company-logo">
+                                        id="company-logo" accept="image/png,image/jpeg,image/gif" />
                                     <label class="custom-file-label" for="company-logo">Choose file</label>
                                 </div>
                                 @error('logo')
