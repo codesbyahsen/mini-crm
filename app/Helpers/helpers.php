@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\File;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 
@@ -8,7 +7,7 @@ use Illuminate\Support\Facades\Storage;
  * Upload image files in storage directory
  */
 if (! function_exists('saveResizeImage')) {
-    function saveResizeImage(object $file, string $directory, int|string $width, int|string|null $height = null, string $type = 'jpg')
+    function saveResizeImage($file, $directory, $width, $height = null, $type = 'jpg')
     {
         $fileName = uniqid() . '_' . time() . '.' . $type;
         $path = "$directory/$fileName";
