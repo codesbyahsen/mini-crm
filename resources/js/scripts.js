@@ -1,3 +1,7 @@
+import 'bootstrap';
+import DataTable from 'datatables.net';
+window.DataTable = DataTable;
+
 "use strict";
 
 !function (NioApp, $) {
@@ -125,7 +129,7 @@
 
   NioApp.PassSwitch = function () {
     NioApp.Passcode('.passcode-switch');
-  }; // Toastr Message @v1.0 
+  }; // Toastr Message @v1.0
 
 
   NioApp.Toast = function (msg, ttype, opt) {

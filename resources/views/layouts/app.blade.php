@@ -12,8 +12,8 @@
 
     <title>@yield('title')</title>
 
-    @include('partials.links')
-    {{-- @vite(['resources/css/dashlite.min.css', 'resources/js/jquery.js', 'resources/js/bundle.js', 'resources/js/scripts.js', 'resources/js/custom.js', 'resources/js/datatable-btns.js']) --}}
+    {{-- @include('partials.links') --}}
+    @vite(['resources/css/dashlite.min.css', 'resources/js/jquery.min.js', 'resources/js/bundle.js', 'resources/js/scripts.js', 'resources/js/custom.js', 'resources/js/datatable-btns.js'])
 </head>
 
 <body class="nk-body bg-lighter npc-general has-sidebar ">
@@ -33,7 +33,7 @@
 
     @yield('modals')
 
-    @include('partials.scripts')
+    {{-- @include('partials.scripts') --}}
 </body>
 
 </html>
