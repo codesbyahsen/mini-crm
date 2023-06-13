@@ -30,7 +30,7 @@
                             </div>
                             <div class="form-control-wrap">
                                 <input type="email" name="email" class="form-control form-control-lg" id="default-01"
-                                    placeholder="Enter your email address" required />
+                                    placeholder="Enter your email address" />
                             </div>
                             @error('email')
                                 <span class="text-danger small">{{ $message }}</span>
