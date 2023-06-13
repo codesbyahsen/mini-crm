@@ -17,6 +17,9 @@
 </head>
 
 <body class="nk-body bg-lighter npc-general has-sidebar ">
+    <div id="preloader">
+        <img src="{{ asset('images/preloader.gif') }}" alt="loading">
+    </div>
     <div class="nk-app-root">
         <div class="nk-main ">
             @include('partials.sidebar')

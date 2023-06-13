@@ -1,3 +1,64 @@
+/**
+ | ----------------------------------------------------------------
+ |  Preloader
+ | ----------------------------------------------------------------
+ */
+$(document).ready(function () {
+    $("#preloader").show();
+
+    setTimeout(() => {
+        $("#preloader").hide();
+    }, 2000);
+});
+
+/**
+ | ----------------------------------------------------------------
+ |  Dark mode
+ | ----------------------------------------------------------------
+ |
+ | Set dark mode status and store in local
+ | storage of browser
+ |
+ */
+$(document).ready(function () {
+    var darkModeEnabled = localStorage.getItem("darkModeEnabled");
+
+    if (darkModeEnabled === "true") {
+        enableDarkMode();
+    }
+
+    $('#dark-mode-button').click(function (e) {
+        e.preventDefault();
+
+        setTimeout(() => {
+            if ($('body').hasClass('dark-mode')) {
+                enableDarkMode();
+                localStorage.setItem("darkModeEnabled", "true");
+                console.log('dark mode enabled');
+            } else {
+                disableDarkMode();
+                localStorage.removeItem('darkModeEnabled');
+            }
+        }, 500);
+    });
+
+    function enableDarkMode() {
+        $("body").addClass("dark-mode");
+    }
+
+    function disableDarkMode() {
+        $("body").removeClass("dark-mode");
+    }
+});
+
+/**
+ | ----------------------------------------------------------------
+ |  Fetch user avatar
+ | ----------------------------------------------------------------
+ |
+ | Sends ajax request to get the user avatar image
+ |
+ */
 const fetchUserAvatar = () => {
     $.ajaxSetup({
         headers: {
@@ -11,13 +72,27 @@ const fetchUserAvatar = () => {
         type: 'GET',
         success: function (response) {
             if (response.success === true) {
+                if ($('.avatar').length == 0) {
+                    $('.user-avatar').html('<img class="avatar" src="' + response.data + '" alt="user avatar" />')
+                    $('.name-initials').hide();
+                }
                 $('.avatar').attr('src', response.data);
+            } else {
+                console.log(response);
             }
         }
     });
 }
 fetchUserAvatar();
 
+/**
+ | ----------------------------------------------------------------
+ |  Save user avatar
+ | ----------------------------------------------------------------
+ |
+ | Sends ajax request to store the user avatar image
+ |
+ */
 $('#upload-button-avatar').click(function (e) {
     e.preventDefault();
     $('#avatarInput').click();
@@ -43,7 +118,6 @@ $('#upload-button-avatar').click(function (e) {
                 processData: false,
                 success: function (response, status, error) {
                     if (response.success === true) {
-                        console.log(response);
                         toastr['success']('Successfully', 'Avatar Uploaded', {
                             closeButton: true,
                             progressBar: true,
@@ -333,7 +407,7 @@ $('#edit-company form').submit(function (e) {
  | Remove errors
  |
  */
- $('.cancel-edit-company-form').click(function () {
+$('.cancel-edit-company-form').click(function () {
     resetCompanyErrors();
 });
 

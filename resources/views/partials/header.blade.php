@@ -24,7 +24,7 @@
                                     @if (auth()->user()->avatar)
                                         <img class="avatar" src="" alt="user avatar" />
                                     @else
-                                        <span>{{ getNameInitials() }}</span>
+                                        <span class="name-initials">{{ getNameInitials() }}</span>
                                     @endif
                                 </div>
                                 <div class="user-info d-none d-md-block">
@@ -46,7 +46,7 @@
                                         @if (auth()->user()->avatar)
                                             <img class="avatar" src="" alt="user avatar" />
                                         @else
-                                            <span>{{ getNameInitials() }}</span>
+                                            <span class="name-initials">{{ getNameInitials() }}</span>
                                         @endif
                                     </div>
                                     <div class="user-info">
@@ -57,9 +57,9 @@
                             </div>
                             <div class="dropdown-inner">
                                 <ul class="link-list">
-                                    <li><a href="html/user-profile-regular.html"><em
+                                    <li><a href="{{ route('profile.index') }}"><em
                                                 class="icon ni ni-user-alt"></em><span>View Profile</span></a></li>
-                                    <li><a class="dark-switch" href="#"><em
+                                    <li><a class="dark-switch" id="dark-mode-button" href="#"><em
                                                 class="icon ni ni-moon"></em><span>Dark Mode</span></a></li>
                                 </ul>
                             </div>

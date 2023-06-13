@@ -30,7 +30,11 @@ class ProfileController extends Controller
 
     public function avatar(Request $request)
     {
-        return $this->success('Avatar fetched successfully.', $request->user()->avatar);
+        if (!empty($request->user()->avatar)) {
+            return $this->success('Avatar fetched successfully.', $request->user()->avatar);
+        } else {
+            return $this->error('not_found', Response::HTTP_NOT_FOUND);
+        }
     }
 
     public function edit(Request $request)
@@ -66,7 +70,7 @@ class ProfileController extends Controller
         try {
             $avatar = null;
             if ($request->hasFile('avatar')) {
-                $avatar = saveResizeImage($request->avatar, 'avatar', 100, 100);
+                $avatar = saveResizeImage($request->avatar, 'user-avatar', 100, 100);
             }
             $profile->update(['avatar' => $avatar]);
             return $this->success('Avatar uploaded successfully');

@@ -23,7 +23,7 @@
                                                     @if (auth()->user()->avatar)
                                                         <img class="avatar" src="" alt="user avatar" />
                                                     @else
-                                                        <span>{{ getNameInitials() }}</span>
+                                                        <span class="name-initials">{{ getNameInitials() }}</span>
                                                     @endif
                                                 </div>
                                                 <div class="user-info">
