@@ -23,3 +23,14 @@ if (! function_exists('saveResizeImage')) {
         return $path;
     }
 }
+
+/**
+ * It returns the initial characters of name
+ * from the users table accessing from auth
+ */
+if (! function_exists('getNameInitials')) {
+    function getNameInitials(): string {
+        $name = explode(' ', auth()->user()->name);
+        return strtoupper($name[0][0] . $name[1][0]);
+    }
+}

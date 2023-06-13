@@ -1,3 +1,74 @@
+const fetchUserAvatar = () => {
+    $.ajaxSetup({
+        headers: {
+            'Accepts': 'application/json',
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        }
+    });
+
+    $.ajax({
+        url: 'profile/avatar',
+        type: 'GET',
+        success: function (response) {
+            if (response.success === true) {
+                $('.avatar').attr('src', response.data);
+            }
+        }
+    });
+}
+fetchUserAvatar();
+
+$('#upload-button-avatar').click(function (e) {
+    e.preventDefault();
+    $('#avatarInput').click();
+    var url = $(this).data('url');
+
+    $('#avatarInput').change(function () {
+        if (this.files[0]) {
+            var formData = new FormData();
+            formData.append('avatar', this.files[0]);
+
+            $.ajaxSetup({
+                headers: {
+                    'Accepts': 'application/json',
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response, status, error) {
+                    if (response.success === true) {
+                        console.log(response);
+                        toastr['success']('Successfully', 'Avatar Uploaded', {
+                            closeButton: true,
+                            progressBar: true,
+                            tapToDismiss: false,
+                            positionClass: 'toast-top-right',
+                        });
+                        toastr.options.preventDuplicates = true;
+                        fetchUserAvatar();
+                    } else {
+                        if (response) {
+                            console.log(response);
+                        }
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr);
+                    console.log(status);
+                    console.log(error);
+                }
+            });
+        }
+    });
+});
+
+
 // ============================== |> Module One <| ============================== //
 
 /**

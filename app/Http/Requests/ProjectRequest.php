@@ -60,8 +60,8 @@ class ProjectRequest extends FormRequest
     protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
-            'errors' => $validator->errors(),
-            'status' => false
+            'status' => false,
+            'errors' => $validator->errors()
         ]));
     }
 }

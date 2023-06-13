@@ -15,7 +15,8 @@
                                         <div class="nk-block-des text-soft">
                                             <p id="total-companies-url"
                                                 data-total-companies-url="{{ route('companies.total') }}">You have total
-                                                <span class="total-companies"></span> companies.</p>
+                                                <span class="total-companies"></span> companies.
+                                            </p>
                                         </div>
                                     </div>
                                     <div class="nk-block-head-content">

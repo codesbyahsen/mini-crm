@@ -17,9 +17,11 @@ class SubAdminSeeder extends Seeder
     public function run(): void
     {
         $user = User::create([
-            'name' => 'Mr. Sub Admin',
+            'name' => 'Daisy Smith',
+            'display_name' => 'Smith',
             'email' => 'sub-admin@admin.com',
             'email_verified_at' => now(),
+            'gender' => 'male',
             'password' => bcrypt('password'),
             'remember_token' => Str::random(10),
         ]);

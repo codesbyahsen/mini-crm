@@ -56,11 +56,16 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <div class="user-toggle">
                                 <div class="user-avatar sm">
-                                    <em class="icon ni ni-user-alt"></em>
+                                    @if (auth()->user()->avatar)
+                                        <img class="avatar" src="" alt="user avatar" />
+                                    @else
+                                        <span>{{ getNameInitials() }}</span>
+                                    @endif
                                 </div>
                                 <div class="user-info d-none d-md-block">
                                     <div class="user-status">{{ auth()?->user()?->roles()?->value('name') }}</div>
-                                    <div class="user-name dropdown-indicator">{{ auth()?->user()?->name }}</div>
+                                    <div class="user-name dropdown-indicator">{{ auth()->user()->display_name ?? '' }}
+                                    </div>
                                 </div>
                             </div>
                         </a>
@@ -68,10 +73,14 @@
                             <div class="dropdown-inner user-card-wrap bg-lighter d-none d-md-block">
                                 <div class="user-card">
                                     <div class="user-avatar">
-                                        <span>AB</span>
+                                        @if (auth()->user()->avatar)
+                                            <img class="avatar" src="" alt="user avatar" />
+                                        @else
+                                            <span>{{ getNameInitials() }}</span>
+                                        @endif
                                     </div>
                                     <div class="user-info">
-                                        <span class="lead-text">{{ auth()?->user()?->name }}</span>
+                                        <span class="lead-text">{{ auth()->user()->display_name ?? '' }}</span>
                                         <span class="sub-text">{{ auth()?->user()?->email }}</span>
                                     </div>
                                 </div>
