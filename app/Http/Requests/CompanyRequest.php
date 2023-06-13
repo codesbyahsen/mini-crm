@@ -28,14 +28,14 @@ class CompanyRequest extends FormRequest
             case 'POST':
                 return [
                     'name' => ['required', 'max:120'],
-                    'email' => ['nullable', 'email', 'unique:companies,email'],
+                    'email' => ['required', 'email', 'unique:companies,email'],
                     'logo' => ['nullable', File::types(['png', 'jpg', 'jpeg'])->max(1024), 'dimensions:min_width=100,min_height=100'],
                     'website' => ['nullable']
                 ];
             case 'PUT':
                 return [
                     'name' => ['required', 'max:120'],
-                    'email' => ['nullable', 'email', 'unique:companies,email,' . $this->company->id],
+                    'email' => ['required', 'email', 'unique:companies,email,' . $this->company->id],
                     'logo' => ['nullable', File::types(['png', 'jpg', 'jpeg'])->max(1024), 'dimensions:min_width=100,min_height=100'],
                     'website' => ['nullable']
                 ];
