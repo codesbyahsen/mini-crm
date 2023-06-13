@@ -39,6 +39,8 @@ class CompanyRequest extends FormRequest
                     'logo' => ['nullable', File::types(['png', 'jpg', 'jpeg'])->max(1024), 'dimensions:min_width=100,min_height=100'],
                     'website' => ['nullable']
                 ];
+            default:
+                return [];
         }
     }
 

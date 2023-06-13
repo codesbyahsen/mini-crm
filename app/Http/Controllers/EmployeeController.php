@@ -102,7 +102,7 @@ class EmployeeController extends Controller
     {
         try {
             $employee->update($request->validated());
-            return $this->success('The employee updated successfully.', Response::HTTP_NO_CONTENT);
+            return $this->success('The employee updated successfully.', [], Response::HTTP_NO_CONTENT);
         } catch (ModelNotFoundException $exception) {
             return $this->error('not_found_update', Response::HTTP_NOT_FOUND);
         }

@@ -14,10 +14,10 @@ var compantTable = $('#init-company-datatable').DataTable({
     serverSide: true,
     ajax: {
         type: "GET",
-        url: $(this).attr('url'),
+        url: $(this).data('url'),
     },
     columns: [
-        { data: 'logo', name: 'logo' },
+        { data: 'logo', name: 'logo', orderable: false },
         { data: 'name', name: 'name' },
         { data: 'email', name: 'email' },
         { data: 'website', name: 'website' },
@@ -27,13 +27,109 @@ var compantTable = $('#init-company-datatable').DataTable({
 
 /**
  | ----------------------------------------------------------------
+ |  Refresh number of companies
+ | ----------------------------------------------------------------
+ |
+ | Sends ajax request to fetch number of companies
+ |
+ */
+const fetchTotalCompanies = () => {
+    $.ajaxSetup({
+        headers: {
+            'Accepts': 'application/json',
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        }
+    });
+
+    $.ajax({
+        type: 'GET',
+        url: $('#total-companies-url').data('total-companies-url'),
+        success: function (response) {
+            if (response.success === true) {
+                $('.total-companies').text(response.data);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr);
+            console.log(status);
+            console.log(error);
+        }
+    });
+}
+fetchTotalCompanies();
+
+/**
+ | ----------------------------------------------------------------
+ |  Show company errors
+ | ----------------------------------------------------------------
+ |
+ | It accepts the object parameter and shows the input
+ | field errors of company form
+ |
+ */
+const showCompanyErrors = (response) => {
+    $('.error-logo').html(response.errors.logo ?? '');
+    $('.error-name').html(response.errors.name ?? '');
+    $('.error-email').html(response.errors.email ?? '');
+    $('.error-website').html(response.errors.website ?? '');
+}
+
+/**
+ | ----------------------------------------------------------------
+ |  Reset company errors
+ | ----------------------------------------------------------------
+ |
+ | It resets the input field errors of company form
+ |
+ */
+const resetCompanyErrors = () => {
+    $('.error-logo').html(null);
+    $('.error-name').html(null);
+    $('.error-email').html(null);
+    $('.error-website').html(null);
+}
+
+/**
+ | ----------------------------------------------------------------
+ |  Show company fields
+ | ----------------------------------------------------------------
+ |
+ | It accepts the object parameter and shows the input
+ | field data of company
+ |
+ */
+const showCompanyFields = (response) => {
+    $('#edit-company .field-logo').attr('value', response?.data?.logo);
+    $('#edit-company .field-name').attr('value', response?.data?.name);
+    $('#edit-company .field-email').attr('value', response?.data?.email);
+    $('#edit-company .field-website').attr('value', response?.data?.website);
+}
+
+/**
+ | ----------------------------------------------------------------
+ |  Reset company fields
+ | ----------------------------------------------------------------
+ |
+ | It resets the input field of company form
+ |
+ */
+const resetCompanyFields = () => {
+    $('#create-company .custom-file-label').html(null);
+    $('#create-company .field-logo').val(null);
+    $('#create-company .field-name').val(null);
+    $('#create-company .field-email').val(null);
+    $('#create-company .field-website').val(null).trigger('change');
+}
+
+/**
+ | ----------------------------------------------------------------
  |  Create company
  | ----------------------------------------------------------------
  |
  | Send ajax request to store company
  |
  */
-$('#create-company-form').submit(function (e) {
+$('#create-company form').submit(function (e) {
     e.preventDefault();
 
     $.ajaxSetup({
@@ -51,24 +147,63 @@ $('#create-company-form').submit(function (e) {
         processData: false,
         success: function (response) {
             if (response.success === true) {
-                $('.custom-file-label').html(null);
-                $('.field-logo').val(null);
-                $('.field-name').val(null);
-                $('.field-email').val(null);
-                $('.field-website').val(null);
-                $('#create-company-modal').modal('hide');
+                resetCompanyFields();
+                resetCompanyErrors();
+                $('#create-company').modal('hide');
+                fetchTotalCompanies();
                 compantTable.ajax.reload();
             } else {
                 if (response.errors) {
-                    $('#create-company-modal').modal('show');
-                    $('.error-logo').html(response.errors.logo);
-                    $('.error-name').html(response.errors.name);
-                    $('.error-email').html(response.errors.email);
-                    $('.error-website').html(response.errors.website);
+                    showCompanyErrors(response);
                 }
             }
         },
-        error: function (error) {
+        error: function (xhr, status, error) {
+            console.log(xhr);
+            console.log(status);
+            console.log(error);
+        }
+    });
+});
+
+/**
+ | ----------------------------------------------------------------
+ |  Cancel create company form
+ | ----------------------------------------------------------------
+ |
+ | Remove errors, labels and empty the fields
+ |
+ */
+$('.cancel-create-company-form').click(function () {
+    resetCompanyFields();
+    resetCompanyErrors();
+});
+
+/**
+ | ----------------------------------------------------------------
+ |  Edit company
+ | ----------------------------------------------------------------
+ |
+ | It shows the edit form and sends ajax request
+ | against the specific company
+ |
+ */
+$('#init-company-datatable').on('click', '.edit-button', function () {
+    $('#edit-company form').attr('action', $(this).data('update-url'));
+    $.ajax({
+        type: 'GET',
+        url: $(this).data('url'),
+        success: function (response) {
+            if (response.success === true) {
+                showCompanyFields(response);
+                $('#edit-company').modal('show');
+            } else {
+                console.log(response);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr);
+            console.log(status);
             console.log(error);
         }
     });
@@ -82,62 +217,41 @@ $('#create-company-form').submit(function (e) {
  | Send ajax request to update company
  |
  */
-$('#edit-company-form').submit(function (e) {
+$('#edit-company form').submit(function (e) {
     e.preventDefault();
-    let url = $('#edit-company-form').attr('action');
-    let formData = new FormData(this);
 
     $.ajaxSetup({
         headers: {
             'Accepts': 'application/json',
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            'X-HTTP-Method-Override': 'PUT'
         }
     });
 
     $.ajax({
-        type: 'PUT',
-        url: url,
-        data: formData,
+        type: 'POST',
+        url: $(this).attr('action'),
+        data: new FormData(this),
         contentType: false,
         processData: false,
         success: function (response) {
             if (response.success === true) {
-                $('.field-logo').val('');
-                $('.field-name').val('');
-                $('.field-email').val('');
-                $('.field-website').val('');
+                resetCompanyFields();
+                resetCompanyErrors();
+                $('#edit-company').modal('hide');
+                fetchTotalCompanies();
+                compantTable.ajax.reload();
             } else {
-                alert(response);
+                console.log(response);
+                showCompanyErrors(response);
             }
         },
-        error: function (error) {
+        error: function (xhr, status, error) {
+            console.log(xhr);
+            console.log(status);
             console.log(error);
         }
     });
-
-    $('#add-company').modal('hide');
-});
-
-/**
- | ----------------------------------------------------------------
- |  Cancel the forms
- | ----------------------------------------------------------------
- |
- | Remove errors, labels and empty the fields
- |
- */
-$('.cancel').click(function () {
-    $('.field-logo').val(null);
-    $('.field-name').val(null);
-    $('.field-email').val(null);
-    $('.field-website').val(null);
-
-    $('.error-logo').html(null);
-    $('.error-name').html(null);
-    $('.error-email').html(null);
-    $('.error-website').html(null);
-    $('#create-company-form').validate().resetForm();
-    $('.custom-file-label').html(null);
 });
 
 /**
@@ -189,6 +303,7 @@ $('#init-company-datatable').on('click', '.delete-button', function () {
                             title: 'Deleted!',
                             text: response.message
                         })
+                        fetchTotalCompanies();
                         compantTable.ajax.reload();
                     } else {
                         Swal.fire({
