@@ -28,21 +28,28 @@ class EmployeeRequest extends FormRequest
                 return [
                     'first_name' => ['required', 'max:120'],
                     'last_name' => ['required', 'max:120'],
-                    'email' => ['nullable', 'email', 'unique:employees,email'],
+                    'email' => ['required', 'email', 'unique:employees,email'],
                     'phone' => ['nullable'],
-                    'company_id' => ['nullable']
+                    'company_id' => ['required']
                 ];
             case 'PUT':
                 return [
                     'first_name' => ['required', 'max:120'],
                     'last_name' => ['required', 'max:120'],
-                    'email' => ['nullable', 'email', 'unique:employees,email,' . $this->employee->id],
+                    'email' => ['required', 'email', 'unique:employees,email,' . $this->employee->id],
                     'phone' => ['nullable'],
-                    'company_id' => ['nullable']
+                    'company_id' => ['required']
                 ];
             default:
                 return [];
         }
+    }
+
+    public function messages()
+    {
+        return [
+            'company_id.required' => 'The company field is required.'
+        ];
     }
 
     protected function failedValidation(Validator $validator)
