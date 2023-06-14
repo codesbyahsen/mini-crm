@@ -285,6 +285,12 @@ $('#edit-profile-address').submit(function (e) {
             if (response.success === true) {
                 $('#edit-profile').modal('hide');
                 fetchUserProfile();
+            } else {
+                $('#edit-profile-address .error-address-line-one').html(response.errors.address_line_one);
+                $('#edit-profile-address .error-address-line-two').html(response.errors.address_line_two);
+                $('#edit-profile-address .error-city').html(response.errors.city);
+                $('#edit-profile-address .error-state').html(response.errors.state);
+                $('#edit-profile-address .error-country').html(response.errors.date_of_birth);
             }
         },
         error: function (xhr, status, error) {

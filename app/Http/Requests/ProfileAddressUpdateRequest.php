@@ -24,11 +24,11 @@ class ProfileAddressUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'address_line_one' => ['string', 'max:255'],
-            'address_line_two' => ['string', 'max:255'],
-            'city' => ['string', 'max:150'],
-            'state' => ['string', 'max:150'],
-            'country' => ['string', 'max:255'],
+            'address_line_one' => ['required', 'string', 'max:255'],
+            'address_line_two' => ['nullable', 'string', 'max:255'],
+            'city' => ['required', 'string', 'max:150'],
+            'state' => ['required', 'string', 'max:150'],
+            'country' => ['required', 'string', 'max:255'],
         ];
     }
 

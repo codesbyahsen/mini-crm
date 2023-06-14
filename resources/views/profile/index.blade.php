@@ -201,12 +201,13 @@
                                             <label class="form-label" for="address-county">Country</label>
                                             <select class="form-select" name="country" id="address-county"
                                                 data-ui="lg">
-                                                <option selected>Select Country</option>
+                                                <option value="" selected>Select Country</option>
                                                 @foreach ($countries as $country)
                                                     <option value="{{ $country->name ?? '' }}" @selected($country->name === $user->country)>{{ $country->name ?? '' }}
                                                     </option>
                                                 @endforeach
                                             </select>
+                                            <span class="text-danger small error-country"></span>
                                         </div>
                                     </div>
                                     <div class="col-12">
