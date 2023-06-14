@@ -406,7 +406,7 @@ const resetCompanyErrors = () => {
  |
  */
 const showCompanyFields = (response) => {
-    $('#edit-company .field-logo').val(response?.data?.logo);
+    $('#edit-company .display-company-logo').attr('src', response?.data?.logo);
     $('#edit-company .field-name').val(response?.data?.name);
     $('#edit-company .field-email').val(response?.data?.email);
     $('#edit-company .field-website').val(response?.data?.website);
@@ -462,6 +462,8 @@ $('#create-company form').submit(function (e) {
             } else {
                 if (response.errors) {
                     showCompanyErrors(response);
+                } else {
+                    console.log(response);
                 }
             }
         },
@@ -502,8 +504,8 @@ $('#init-company-datatable').on('click', '.edit-button', function () {
         url: $(this).data('url'),
         success: function (response) {
             if (response.success === true) {
-                showCompanyFields(response);
                 $('#edit-company').modal('show');
+                showCompanyFields(response);
             } else {
                 console.log(response);
             }
@@ -547,8 +549,11 @@ $('#edit-company form').submit(function (e) {
                 $('#edit-company').modal('hide');
                 compantTable.ajax.reload();
             } else {
-                console.log(response);
-                showCompanyErrors(response);
+                if (response.errors) {
+                    showCompanyErrors(response);
+                } else {
+                    console.log(response);
+                }
             }
         },
         error: function (xhr, status, error) {
@@ -779,8 +784,10 @@ $('#create-employee form').submit(function (e) {
                 fetchTotalEmployees();
                 employeeTable.ajax.reload();
             } else {
-                if (response) {
+                if (response.errors) {
                     showEmployeeErrors(response);
+                } else {
+                    console.log(response);
                 }
             }
         },
@@ -864,7 +871,11 @@ $('#edit-employee form').submit(function (e) {
                 $('#edit-employee').modal('hide');
                 employeeTable.ajax.reload();
             } else {
-                showEmployeeErrors(response);
+                if (response.errors) {
+                    showEmployeeErrors(response);
+                } else {
+                    console.log(response);
+                }
             }
         },
         error: function (xhr, status, error) {

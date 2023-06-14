@@ -137,6 +137,9 @@
                 </div>
                 <div class="modal-body">
                     <form class="form-validate is-alter" enctype="multipart/form-data">
+                        <div class="text-center mb-2">
+                            <img src="" alt="" class="display-company-logo" width="100" />
+                        </div>
                         <div class="form-group">
                             <label class="form-label">Logo</label>
                             <div class="form-control-wrap">
