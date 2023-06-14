@@ -1048,11 +1048,11 @@ const resetProjectErrors = () => {
  |
  */
 const showProjectFields = (response) => {
-    $('#edit-project .field-name').attr('value', response?.data?.name);
+    $('#edit-project .field-name').val(response?.data?.name);
     $('#edit-project .field-detail').html(response?.data?.detail);
-    $('#edit-project .field-client-name').attr('value', response?.data?.client_name);
-    $('#edit-project .field-total-cost').attr('value', response?.data?.total_cost);
-    $('#edit-project .field-deadline').attr('value', changeDateFormat(response?.data?.deadline));
+    $('#edit-project .field-client-name').val(response?.data?.client_name);
+    $('#edit-project .field-total-cost').val(response?.data?.total_cost);
+    $('#edit-project .field-deadline').val(changeDateFormat(response?.data?.deadline));
     var employeeIds = [];
     response.data.employees.map(function (item) {
         employeeIds.push(item.id);
@@ -1074,7 +1074,7 @@ const resetProjectFields = () => {
     $('#create-project .field-client-name').val(null);
     $('#create-project .field-total-cost').val(null);
     $('#create-project .field-deadline').val(null);
-    $('#create-project .field-employee-id').val(null).trigger('change');
+    $('#create-project .field-employee-id').select2().val(null).trigger('change');
 }
 
 /**
@@ -1199,7 +1199,7 @@ $('#edit-project form').submit(function (e) {
         data: $(this).serialize(),
         success: function (response) {
             if (response.success === true) {
-                console.log(response);
+                resetProjectErrors();
                 $('#edit-project').modal('hide');
                 projectTable.ajax.reload();
             } else {

@@ -22,34 +22,27 @@ class ProjectController extends Controller
      */
     public function index(Request $request)
     {
-        try {
-            $projects = Project::get();
-            if ($request->ajax()) {
-                return Datatables::of($projects)
-                    ->addIndexColumn()
-                    ->addColumn('action', function ($row) {
+        $projects = Project::get();
+        if ($request->ajax()) {
+            return Datatables::of($projects)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
 
-                        return '<div class="drodown">
-                                    <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
-                                    <div class="dropdown-menu dropdown-menu-right">
-                                        <ul class="link-list-opt no-bdr">
-                                            <li><a href="javascript:void(0)" data-toggle="modal" class="edit-button" data-url="' . route('projects.edit', $row->id) . '" data-update-url="' . route('projects.update', $row->id) . '" data-target="#edit-project"><em class="icon ni ni-repeat"></em><span>Edit</span></a></li>
-                                            <li><a href="javascript:void(0)" class="delete-button" data-url="' . route('projects.destroy', $row->id) . '"><em class="icon ni ni-activity-round"></em><span>Delete</span></a></li>
-                                        </ul>
-                                    </div>
-                                </div>';
-                    })
-                    ->rawColumns(['action'])
-                    ->make(true);
-            }
-
-            $employees = Employee::get(['id', 'first_name', 'last_name']);
-        } catch (ModelNotFoundException $exception) {
-            if ($request->ajax()) {
-                return $this->error('not_found', Response::HTTP_NOT_FOUND);
-            }
-            return back()->with('error', 'The projects are not found');
+                    return '<div class="drodown">
+                                <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <ul class="link-list-opt no-bdr">
+                                        <li><a href="javascript:void(0)" data-toggle="modal" class="edit-button" data-url="' . route('projects.edit', $row->id) . '" data-update-url="' . route('projects.update', $row->id) . '" data-target="#edit-project"><em class="icon ni ni-repeat"></em><span>Edit</span></a></li>
+                                        <li><a href="javascript:void(0)" class="delete-button" data-url="' . route('projects.destroy', $row->id) . '"><em class="icon ni ni-activity-round"></em><span>Delete</span></a></li>
+                                    </ul>
+                                </div>
+                            </div>';
+                })
+                ->rawColumns(['action'])
+                ->make(true);
         }
+
+        $employees = Employee::get(['id', 'first_name', 'last_name']);
 
         return view('project.index', compact('employees'));
     }
@@ -59,12 +52,8 @@ class ProjectController extends Controller
      */
     public function totalProjects()
     {
-        try {
-            $numberOfTotalProjects = Project::count();
-            return $this->success('The total projects fetched successfully.', $numberOfTotalProjects);
-        } catch (ModelNotFoundException $exception) {
-            return $this->error('not_found', Response::HTTP_NOT_FOUND);
-        }
+        $numberOfTotalProjects = Project::count();
+        return $this->success('The total projects fetched successfully.', $numberOfTotalProjects);
     }
 
     /**
@@ -119,7 +108,7 @@ class ProjectController extends Controller
             if ($request->employee_id && count($request->employee_id) > 0) {
                 $this->assignProjectTo($project->id, $request->employee_id);
             }
-            return $this->success('The project updated successfully.', [], Response::HTTP_NO_CONTENT);
+            return $this->success('The project updated successfully.');
         } catch (ModelNotFoundException $exception) {
             return $this->error('not_found_update', Response::HTTP_NOT_FOUND);
         } catch (QueryException $exception) {

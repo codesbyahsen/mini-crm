@@ -67,12 +67,12 @@
 
 @section('modals')
     <!-- Create Project Modal Form -->
-    <div class="modal fade" id="create-project">
+    <div class="modal fade" id="create-project" data-backdrop="static">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Create Project</h5>
-                    <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                    <a href="#" class="close cancel-create-project-form" data-dismiss="modal" aria-label="Close">
                         <em class="icon ni ni-cross"></em>
                     </a>
                 </div>
@@ -143,12 +143,12 @@
     </div>
 
     <!-- Edit Project Modal Form -->
-    <div class="modal fade" id="edit-project">
+    <div class="modal fade" id="edit-project" data-backdrop="static">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Edit Project</h5>
-                    <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                    <a href="#" class="close cancel-edit-project-form" data-dismiss="modal" aria-label="Close">
                         <em class="icon ni ni-cross"></em>
                     </a>
                 </div>
