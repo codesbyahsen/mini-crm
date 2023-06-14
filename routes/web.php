@@ -29,9 +29,10 @@ Route::middleware('auth')->group(function () {
     # profile
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::get('/profile/avatar', [ProfileController::class, 'avatar'])->name('profile.avatar');
-    Route::get('/profile/{profile}/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/profile/{profile}/upload-avatar', [ProfileController::class, 'uploadAvatar'])->name('profile.upload.avatar');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::patch('/profile/update-personal', [ProfileController::class, 'updatePersonal'])->name('profile.update');
+    Route::patch('/profile/update-address', [ProfileController::class, 'updateAddress'])->name('profile.update.address');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     # company

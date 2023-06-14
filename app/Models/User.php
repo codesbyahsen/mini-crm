@@ -27,6 +27,7 @@ class User extends Authenticatable implements Authorizable
         'email',
         'phone',
         'mobile',
+        'gender',
         'date_of_birth',
         'address_line_one',
         'address_line_two',
@@ -65,9 +66,16 @@ class User extends Authenticatable implements Authorizable
 
     public function displayName(): Attribute
     {
-        $titles = ['Male' => 'Mr.', 'Female' => 'Ms.'];
+        $titles = ['Male' => 'Mr.', 'Female' => 'Ms.', 'Other' => null];
         return new Attribute(
             get: fn ($value) => $titles[$this->gender] . ' ' . $value
+        );
+    }
+
+    public function dateOfBirth() : Attribute
+    {
+        return new Attribute(
+            get: fn ($value) => date('Y-m-d', strtotime($value))
         );
     }
 

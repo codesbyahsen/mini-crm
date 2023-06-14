@@ -19,18 +19,18 @@
             <div class="data-head">
                 <h6 class="overline-title">Basics</h6>
             </div>
-            <div class="data-item" data-toggle="modal" data-target="#profile-edit">
+            <div class="data-item" data-toggle="modal" data-target="#edit-profile">
                 <div class="data-col">
                     <span class="data-label">Full Name</span>
-                    <span class="data-value">{{ auth()->user()->name ?? '' }}</span>
+                    <span class="data-value profile-name"></span>
                 </div>
                 <div class="data-col data-col-end"><span class="data-more"><em
                             class="icon ni ni-forward-ios"></em></span></div>
             </div><!-- data-item -->
-            <div class="data-item" data-toggle="modal" data-target="#profile-edit">
+            <div class="data-item" data-toggle="modal" data-target="#edit-profile">
                 <div class="data-col">
                     <span class="data-label">Display Name</span>
-                    <span class="data-value">{{ auth()->user()->getAttributes()['display_name'] ?? '' }}</span>
+                    <span class="data-value profile-display-name"></span>
                 </div>
                 <div class="data-col data-col-end"><span class="data-more"><em
                             class="icon ni ni-forward-ios"></em></span></div>
@@ -38,39 +38,39 @@
             <div class="data-item">
                 <div class="data-col">
                     <span class="data-label">Email</span>
-                    <span class="data-value">{{ auth()->user()->email ?? '' }}</span>
+                    <span class="data-value profile-email"></span>
                 </div>
                 <div class="data-col data-col-end"><span class="data-more disable"><em
                             class="icon ni ni-lock-alt"></em></span></div>
             </div><!-- data-item -->
-            <div class="data-item" data-toggle="modal" data-target="#profile-edit">
+            <div class="data-item" data-toggle="modal" data-target="#edit-profile">
                 <div class="data-col">
                     <span class="data-label">Phone Number</span>
-                    <span class="data-value text-soft">{{ auth()->user()->phone ?? 'Not added yet' }}</span>
+                    <span class="data-value text-soft profile-phone"></span>
                 </div>
                 <div class="data-col data-col-end"><span class="data-more"><em
                             class="icon ni ni-forward-ios"></em></span></div>
             </div><!-- data-item -->
-            <div class="data-item" data-toggle="modal" data-target="#profile-edit">
+            <div class="data-item" data-toggle="modal" data-target="#edit-profile">
                 <div class="data-col">
                     <span class="data-label">Date of Birth</span>
-                    <span class="data-value">{{ auth()->user()->date_of_birth ?? 'Not added yet' }}</span>
+                    <span class="data-value profile-date-of-birth"></span>
                 </div>
                 <div class="data-col data-col-end"><span class="data-more"><em
                             class="icon ni ni-forward-ios"></em></span></div>
             </div><!-- data-item -->
-            <div class="data-item" data-toggle="modal" data-target="#profile-edit">
+            <div class="data-item" data-toggle="modal" data-target="#edit-profile">
                 <div class="data-col">
                     <span class="data-label">Gender</span>
-                    <span class="data-value">{{ auth()->user()->gender ?? 'Not added yet' }}</span>
+                    <span class="data-value profile-gender"></span>
                 </div>
                 <div class="data-col data-col-end"><span class="data-more"><em
                             class="icon ni ni-forward-ios"></em></span></div>
             </div><!-- data-item -->
-            <div class="data-item" data-toggle="modal" data-target="#profile-edit" data-tab-target="#address">
+            <div class="data-item" data-toggle="modal" data-target="#edit-profile" data-tab-target="#address">
                 <div class="data-col">
                     <span class="data-label">Address</span>
-                    <span class="data-value">{{ auth()->user()->getFullAddress() ?? 'Not added yet' }}</span>
+                    <span class="data-value profile-address"></span>
                 </div>
                 <div class="data-col data-col-end"><span class="data-more"><em
                             class="icon ni ni-forward-ios"></em></span></div>

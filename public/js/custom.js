@@ -142,6 +142,168 @@ $('#upload-button-avatar').click(function (e) {
     });
 });
 
+/**
+ | ----------------------------------------------------------------
+ |  Fetch user profile
+ | ----------------------------------------------------------------
+ |
+ | Sends ajax request to get the user profile information
+ |
+ */
+const fetchUserProfile = () => {
+    $.ajaxSetup({
+        headers: {
+            'Accepts': 'application/json',
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        }
+    });
+
+    $.ajax({
+        url: 'profile',
+        type: 'GET',
+        success: function (response) {
+            if (response.success === true) {
+                $('.profile-name').html(response?.data?.name);
+                $('.profile-display-name').html(response?.data?.display_name);
+                $('.profile-email').html(response?.data?.email);
+                $('.profile-phone').html(response?.data?.phone);
+                $('.profile-gender').html(response?.data?.gender);
+                $('.profile-date-of-birth').html(response?.data?.date_of_birth);
+                $('.profile-address').html(response?.data?.full_address);
+            } else {
+                console.log(response);
+            }
+        }
+    });
+}
+fetchUserProfile();
+
+/**
+ | ----------------------------------------------------------------
+ |  Update profile personal information
+ | ----------------------------------------------------------------
+ |
+ | Send ajax request to update user profile
+ | personal information
+ |
+ */
+$('#display-name-switch').change(function () {
+    const displayName = $('#edit-profile .field-display-name').attr('value');
+    if ($(this).is(':checked')) {
+        $('#edit-profile .field-display-name').val($('#edit-profile .field-name').val());
+    } else {
+        $('#edit-profile .field-display-name').val(displayName ?? null);
+    }
+});
+
+$('#edit-profile form').submit(function (e) {
+    e.preventDefault();
+
+    $.ajaxSetup({
+        headers: {
+            'Accepts': 'application/json',
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    $.ajax({
+        url: $(this).attr('action'),
+        type: 'PATCH',
+        data: $(this).serialize(),
+        success: function (response) {
+            if (response.success === true) {
+                $('#edit-profile').modal('hide');
+                fetchUserProfile();
+            } else {
+                $('#edit-profile .error-name').html(response.errors.name);
+                $('#edit-profile .error-display-name').html(response.errors.display_name);
+                $('#edit-profile .error-phone').html(response.errors.phone);
+                $('#edit-profile .error-gender').html(response.errors.gender);
+                $('#edit-profile .error-date-of-birth').html(response.errors.date_of_birth);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr);
+            console.log(status);
+            console.log(error);
+        }
+    });
+})
+
+/**
+ | ----------------------------------------------------------------
+ |  Update profile address
+ | ----------------------------------------------------------------
+ |
+ | Send ajax request to update user profile
+ | address
+ |
+ */
+$('#edit-profile-address').submit(function (e) {
+    e.preventDefault();
+
+    $.ajaxSetup({
+        headers: {
+            'Accepts': 'application/json',
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    $.ajax({
+        url: $(this).attr('action'),
+        type: 'PATCH',
+        data: $(this).serialize(),
+        success: function (response) {
+            if (response.success === true) {
+                $('#edit-profile').modal('hide');
+                fetchUserProfile();
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr);
+            console.log(status);
+            console.log(error);
+        }
+    });
+});
+
+/**
+ | ----------------------------------------------------------------
+ |  Update password
+ | ----------------------------------------------------------------
+ |
+ | It verify current password then update new password
+ |
+ */
+$('#security-settings').submit(function (e) {
+    e.preventDefault();
+
+    $.ajax({
+        url: $(this).attr('action'),
+        type: 'PUT',
+        data: $(this).serialize(),
+        success: function (response) {
+            if (response.success === true) {
+                $('#security-settings .error-current-password').html(null);
+                $('#security-settings .error-new-password').html(null);
+                $('#security-settings #current_password').val(null);
+                $('#security-settings #password').val(null);
+                $('#security-settings #password_confirmation').val(null);
+                toastr['success']('Successfully', response.message, {
+                    closeButton: true,
+                    progressBar: true,
+                    tapToDismiss: false,
+                    positionClass: 'toast-top-right',
+                });
+                toastr.options.preventDuplicates = true;
+            } else {
+                $('#security-settings .error-current-password').html(response.errors.current_password ?? null);
+                $('#security-settings .error-new-password').html(response.errors.password ?? null);
+            }
+        }
+    });
+});
+
 
 // ============================== |> Module One <| ============================== //
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProfileAddressUpdateRequest;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Http\Requests\UploadAvatarRequest;
 use App\Models\User;
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,10 +23,21 @@ class ProfileController extends Controller
     /**
      * Display the user's profile.
      */
-    public function index(Request $request): View
+    public function index(Request $request)
     {
+        $user = $request->user();
+        $fullAddress = $user->getFullAddress();
+        $user = $user->toArray();
+        $user['full_address'] = $fullAddress;
+        if ($request->ajax()) {
+            return $this->success('User profile fetched successfully.', $user);
+        }
+
+        $countries = DB::table('countries')->select('id', 'name')->get();
+
         return view('profile.index', [
             'user' => $request->user(),
+            'countries' => $countries
         ]);
     }
 
@@ -52,7 +65,7 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function updatePersonal(ProfileUpdateRequest $request)
     {
         $request->user()->fill($request->validated());
 
@@ -62,7 +75,20 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        return $this->success('Profile Updated');
+    }
+
+    public function updateAddress(ProfileAddressUpdateRequest $request)
+    {
+        $request->user()->fill($request->validated());
+
+        if ($request->user()->isDirty('email')) {
+            $request->user()->email_verified_at = null;
+        }
+
+        $request->user()->save();
+
+        return $this->success('Address Updated');
     }
 
     public function uploadAvatar(UploadAvatarRequest $request, User $profile)

@@ -16,8 +16,7 @@
     </div>
     <div class="nk-block">
         <div class="nk-data data-list">
-            <form method="POST" action="{{ route('password.update') }}">
-                @csrf @method('PUT')
+            <form method="POST" action="{{ route('password.update') }}" id="security-settings">
                 <div class="form-group">
                     <label class="form-label" for="current_password">Current Password</label>
                     <div class="form-control-wrap">
@@ -30,9 +29,7 @@
                             id="current_password" placeholder="Enter your current password"
                             autocomplete="current-password" />
                     </div>
-                    @error('current_password')
-                        <span class="text-danger small">{{ $message }}</span>
-                    @enderror
+                    <span class="text-danger small error-current-password"></span>
                 </div>
 
                 <div class="form-group">
@@ -45,9 +42,7 @@
                         <input type="password" name="password" class="form-control form-control-lg" id="password"
                             placeholder="Enter your new password" autocomplete="new-password" />
                     </div>
-                    @error('password')
-                        <span class="text-danger small">{{ $message }}</span>
-                    @enderror
+                    <span class="text-danger small error-new-password"></span>
                 </div>
 
                 <div class="form-group">
@@ -62,9 +57,7 @@
                             id="password_confirmation" placeholder="Retype your new password"
                             autocomplete="new-password" />
                     </div>
-                    @error('password_confirmation')
-                        <span class="text-danger small">{{ $message }}</span>
-                    @enderror
+                    <span class="text-danger small error-confirm-password"></span>
                 </div>
 
                 <div class="form-group float-right">

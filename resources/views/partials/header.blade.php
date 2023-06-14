@@ -35,7 +35,7 @@
                                             Sub Admin
                                         @endif
                                     </div>
-                                    <div class="user-name dropdown-indicator">{{ auth()?->user()?->name }}</div>
+                                    <div class="user-name dropdown-indicator profile-display-name"></div>
                                 </div>
                             </div>
                         </a>
@@ -50,8 +50,8 @@
                                         @endif
                                     </div>
                                     <div class="user-info">
-                                        <span class="lead-text">{{ auth()->user()->display_name ?? '' }}</span>
-                                        <span class="sub-text">{{ auth()?->user()?->email }}</span>
+                                        <span class="lead-text profile-display-name"></span>
+                                        <span class="sub-text profile-email"></span>
                                     </div>
                                 </div>
                             </div>
