@@ -32,8 +32,9 @@ class ProjectController extends Controller
                                 <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
                                 <div class="dropdown-menu dropdown-menu-right">
                                     <ul class="link-list-opt no-bdr">
-                                        <li><a href="javascript:void(0)" data-toggle="modal" class="edit-button" data-url="' . route('projects.edit', $row->id) . '" data-update-url="' . route('projects.update', $row->id) . '" data-target="#edit-project"><em class="icon ni ni-repeat"></em><span>Edit</span></a></li>
-                                        <li><a href="javascript:void(0)" class="delete-button" data-url="' . route('projects.destroy', $row->id) . '"><em class="icon ni ni-activity-round"></em><span>Delete</span></a></li>
+                                        <li><a href="javascript:void(0)" data-toggle="modal" class="view-details-button" data-show-url="' . route('projects.show', $row->id) . '" data-target="#view-project"><em class="icon ni ni-eye"></em><span>View Details</span></a></li>
+                                        <li><a href="javascript:void(0)" data-toggle="modal" class="edit-button" data-url="' . route('projects.edit', $row->id) . '" data-update-url="' . route('projects.update', $row->id) . '" data-target="#edit-project"><em class="icon ni ni-edit"></em><span>Edit</span></a></li>
+                                        <li><a href="javascript:void(0)" class="delete-button" data-url="' . route('projects.destroy', $row->id) . '"><em class="icon ni ni-trash"></em><span>Delete</span></a></li>
                                     </ul>
                                 </div>
                             </div>';
@@ -88,6 +89,16 @@ class ProjectController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit($id)
+    {
+        try {
+            $project = Project::whereId($id)->with('employees')->first();
+            return $this->success('The project against id: ' . $id . ' fetched successfully.', $project);
+        } catch (ModelNotFoundException $exception) {
+            return $this->error('not_found', Response::HTTP_NOT_FOUND);
+        }
+    }
+
+    public function show($id)
     {
         try {
             $project = Project::whereId($id)->with('employees')->first();

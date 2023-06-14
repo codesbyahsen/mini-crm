@@ -1,3 +1,5 @@
+// ============================== |> Global <| ============================== //
+
 /**
  | ----------------------------------------------------------------
  |  Preloader
@@ -10,6 +12,30 @@ $(document).ready(function () {
         $("#preloader").hide();
     }, 2000);
 });
+
+/**
+ | ----------------------------------------------------------------
+ |  Initialize summernote
+ | ----------------------------------------------------------------
+ */
+$(document).ready(function () {
+    $('.summernote').summernote({
+        height: 120
+    });
+});
+
+/**
+ | ----------------------------------------------------------------
+ |  Change the format of date
+ | ----------------------------------------------------------------
+ |
+ | It changes the date format and return as ISO 8601
+ |
+ */
+const changeDateFormat = (date) => {
+    var date = new Date(date);
+    return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+}
 
 /**
  | ----------------------------------------------------------------
@@ -50,6 +76,8 @@ $(document).ready(function () {
         $("body").removeClass("dark-mode");
     }
 });
+
+// ============================== |> User Profile Module <| ============================== //
 
 /**
  | ----------------------------------------------------------------
@@ -305,7 +333,7 @@ $('#security-settings').submit(function (e) {
 });
 
 
-// ============================== |> Module One <| ============================== //
+// ============================== |> Company Module <| ============================== //
 
 /**
  | ----------------------------------------------------------------
@@ -623,7 +651,7 @@ $('#init-company-datatable').on('click', '.delete-button', function () {
     })
 });
 
-// ============================== |> Module Two <| ============================== //
+// ============================== |> Employee Module <| ============================== //
 
 /**
  | ----------------------------------------------------------------
@@ -944,7 +972,7 @@ $('#init-employee-datatable').on('click', '.delete-button', function () {
     })
 });
 
-// ============================== |> Module Three <| ============================== //
+// ============================== |> Project Module <| ============================== //
 
 /**
  | ----------------------------------------------------------------
@@ -1049,7 +1077,7 @@ const resetProjectErrors = () => {
  */
 const showProjectFields = (response) => {
     $('#edit-project .field-name').val(response?.data?.name);
-    $('#edit-project .field-detail').html(response?.data?.detail);
+    $('#edit-project .field-detail').html(response?.data?.detail).summernote('code', response?.data?.detail);
     $('#edit-project .field-client-name').val(response?.data?.client_name);
     $('#edit-project .field-total-cost').val(response?.data?.total_cost);
     $('#edit-project .field-deadline').val(changeDateFormat(response?.data?.deadline));
@@ -1075,6 +1103,44 @@ const resetProjectFields = () => {
     $('#create-project .field-total-cost').val(null);
     $('#create-project .field-deadline').val(null);
     $('#create-project .field-employee-id').select2().val(null).trigger('change');
+}
+
+/**
+ | ----------------------------------------------------------------
+ |  Show project attributes
+ | ----------------------------------------------------------------
+ |
+ | It accepts the object parameter and shows the attributes
+ | of project
+ |
+ */
+const showProjectAttributes = (response) => {
+    $('.show-name').html(response?.data?.name);
+    $('.show-client-name').html(response?.data?.client_name);
+    $('.show-total-cost').html(response?.data?.total_cost);
+    $('.show-deadline').html(response?.data?.deadline);
+    $('.show-detail').html(response?.data?.detail);
+    var employees = response?.data?.employees;
+    employees.map(function (employee, index) {
+        $('.show-employees').append(employee?.first_name + ' ' + employee.last_name + ((employees.length - 1) == index ? '.' : ', '));
+    });
+}
+
+/**
+ | ----------------------------------------------------------------
+ |  Reset project attributes
+ | ----------------------------------------------------------------
+ |
+ | It resets the attributes of project
+ |
+ */
+const resetProjectAttributes = () => {
+    $('.show-name').html(null);
+    $('.show-client-name').html(null);
+    $('.show-total-cost').html(null);
+    $('.show-deadline').html(null);
+    $('.show-detail').html(null);
+    $('.show-employees').html(null);
 }
 
 /**
@@ -1134,16 +1200,44 @@ $('.cancel-create-project-form').click(function () {
 
 /**
  | ----------------------------------------------------------------
- |  Change the format of date
+ |  Show project
  | ----------------------------------------------------------------
  |
- | It changes the date format and return as ISO 8601
+ | It shows the show project details and sends ajax request
+ | against the specific project
  |
  */
-const changeDateFormat = (date) => {
-    var date = new Date(date);
-    return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
-}
+$('#init-project-datatable').on('click', '.view-details-button', function () {
+    $.ajax({
+        type: 'GET',
+        url: $(this).data('show-url'),
+        success: function (response) {
+            if (response.success === true) {
+                showProjectAttributes(response);
+            } else {
+                console.log(response);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr);
+            console.log(status);
+            console.log(error);
+        }
+    });
+});
+
+/**
+ | ----------------------------------------------------------------
+ |  Close the view of project
+ | ----------------------------------------------------------------
+ |
+ | It reset the html of the attributes when click on close
+ | modal
+ |
+ */
+$('.close-view-project').click(function () {
+    resetProjectAttributes();
+});
 
 /**
  | ----------------------------------------------------------------

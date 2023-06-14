@@ -89,7 +89,7 @@
                         <div class="form-group">
                             <label class="form-label" for="project-detail">Project Detail</label>
                             <div class="form-control-wrap">
-                                <textarea class="form-control form-control-sm field-detail" id="project-detail" name="detail"
+                                <textarea class="form-control form-control-sm field-detail summernote" id="project-detail" name="detail"
                                     placeholder="Write your message"></textarea>
                             </div>
                             <span class="text-danger small error-detail"></span>
@@ -165,7 +165,7 @@
                         <div class="form-group">
                             <label class="form-label" for="project-detail">Project Detail</label>
                             <div class="form-control-wrap">
-                                <textarea class="form-control form-control-sm field-detail" id="project-detail" name="detail"
+                                <textarea class="form-control form-control-sm field-detail summernote" id="project-detail" name="detail"
                                     placeholder="Write your message"></textarea>
                             </div>
                             <span class="text-danger small error-detail"></span>
@@ -213,6 +213,62 @@
                             <button type="submit" class="btn btn-lg btn-primary">Save</button>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade zoom" tabindex="-1" id="view-project" data-backdrop="static">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">View Project Details</h5>
+                    <a href="#" class="close close-view-project" data-dismiss="modal" aria-label="Close">
+                        <em class="icon ni ni-cross"></em>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <div class="card card-bordered">
+                        <div class="card-aside-wrap">
+                            <div class="card-content">
+                                <div class="card-inner">
+                                    <div class="nk-block">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <label class="mb-0 pb-0 text-muted">Project Name:</label>
+                                                <div class="fw-bold show-name"></div>
+                                            </div>
+                                            <div class="col-12 mt-3">
+                                                <label class="mb-0 pb-0 text-muted">Client Name:</label>
+                                                <div class="fw-bold show-client-name"></div>
+                                            </div>
+                                            <div class="col-12 mt-3">
+                                                <label class="mb-0 pb-0 text-muted">Total Cost:</label>
+                                                <div class="fw-bold show-total-cost"></div>
+                                            </div>
+                                            <div class="col-12 mt-3">
+                                                <label class="mb-0 pb-0 text-muted">Deadline:</label>
+                                                <div class="fw-bold show-deadline"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="nk-divider divider md"></div>
+                                    <div class="nk-block">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <label class="mb-0 pb-0 text-muted">Detail:</label>
+                                                <div class="show-detail"></div>
+                                            </div>
+                                            <div class="col-12 mt-3">
+                                                <label class="mb-0 pb-0 text-muted">Employees Working On:</label>
+                                                <div class="show-employees"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
