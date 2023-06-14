@@ -543,10 +543,8 @@ $('#edit-company form').submit(function (e) {
         processData: false,
         success: function (response) {
             if (response.success === true) {
-                resetCompanyFields();
                 resetCompanyErrors();
                 $('#edit-company').modal('hide');
-                fetchTotalCompanies();
                 compantTable.ajax.reload();
             } else {
                 console.log(response);
