@@ -1055,7 +1055,7 @@ const resetProjectErrors = () => {
  */
 const showProjectFields = (response) => {
     $('#edit-project .field-name').val(response?.data?.name);
-    $('#edit-project .field-detail').html(response?.data?.detail);
+    $('#edit-project .field-detail').html(response?.data?.detail).summernote('code', response?.data?.detail);
     $('#edit-project .field-client-name').val(response?.data?.client_name);
     $('#edit-project .field-total-cost').val(response?.data?.total_cost);
     $('#edit-project .field-deadline').val(changeDateFormat(response?.data?.deadline));
