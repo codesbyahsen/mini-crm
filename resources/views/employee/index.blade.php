@@ -150,7 +150,7 @@
     </div>
 
     <!-- Edit Employee Modal Form -->
-    <div class="modal fade" id="edit-employee">
+    <div class="modal fade" id="edit-employee" data-backdrop="static">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">

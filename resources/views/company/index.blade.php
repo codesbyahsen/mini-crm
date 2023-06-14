@@ -126,7 +126,7 @@
     </div>
 
     <!-- Edit Company Modal Form -->
-    <div class="modal fade" id="edit-company">
+    <div class="modal fade" id="edit-company" data-backdrop="static">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
