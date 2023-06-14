@@ -89,7 +89,7 @@
                         <div class="form-group">
                             <label class="form-label" for="project-detail">Project Detail</label>
                             <div class="form-control-wrap">
-                                <textarea class="form-control form-control-sm field-detail" id="project-detail" name="detail"
+                                <textarea class="form-control form-control-sm field-detail summernote" id="project-detail" name="detail"
                                     placeholder="Write your message"></textarea>
                             </div>
                             <span class="text-danger small error-detail"></span>
@@ -165,7 +165,7 @@
                         <div class="form-group">
                             <label class="form-label" for="project-detail">Project Detail</label>
                             <div class="form-control-wrap">
-                                <textarea class="form-control form-control-sm field-detail" id="project-detail" name="detail"
+                                <textarea class="form-control form-control-sm field-detail summernote" id="project-detail" name="detail"
                                     placeholder="Write your message"></textarea>
                             </div>
                             <span class="text-danger small error-detail"></span>

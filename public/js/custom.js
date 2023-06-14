@@ -1,3 +1,9 @@
+$(document).ready(function() {
+    $('.summernote').summernote({
+        height: 120
+    });
+  });
+
 /**
  | ----------------------------------------------------------------
  |  Preloader
