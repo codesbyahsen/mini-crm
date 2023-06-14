@@ -406,10 +406,10 @@ const resetCompanyErrors = () => {
  |
  */
 const showCompanyFields = (response) => {
-    $('#edit-company .field-logo').attr('value', response?.data?.logo);
-    $('#edit-company .field-name').attr('value', response?.data?.name);
-    $('#edit-company .field-email').attr('value', response?.data?.email);
-    $('#edit-company .field-website').attr('value', response?.data?.website);
+    $('#edit-company .field-logo').val(response?.data?.logo);
+    $('#edit-company .field-name').val(response?.data?.name);
+    $('#edit-company .field-email').val(response?.data?.email);
+    $('#edit-company .field-website').val(response?.data?.website);
 }
 
 /**
@@ -726,10 +726,10 @@ const resetEmployeeErrors = () => {
  |
  */
 const showEmployeeFields = (response) => {
-    $('#edit-employee .field-first-name').attr('value', response?.data?.first_name);
-    $('#edit-employee .field-last-name').attr('value', response?.data?.last_name);
-    $('#edit-employee .field-phone').attr('value', response?.data?.phone);
-    $('#edit-employee .field-email').attr('value', response?.data?.email);
+    $('#edit-employee .field-first-name').val(response?.data?.first_name);
+    $('#edit-employee .field-last-name').val(response?.data?.last_name);
+    $('#edit-employee .field-phone').val(response?.data?.phone);
+    $('#edit-employee .field-email').val(response?.data?.email);
     $('#edit-employee .field-company').select2().val(response?.data?.company?.id).trigger('change');
 }
 
@@ -746,7 +746,7 @@ const resetEmployeeFields = () => {
     $('#create-employee .field-last-name').val(null);
     $('#create-employee .field-phone').val(null);
     $('#create-employee .field-email').val(null);
-    $('#create-employee .field-company').val(null);
+    $('#create-employee .field-company').val(null).trigger('change');
 }
 
 /**
@@ -773,6 +773,7 @@ $('#create-employee form').submit(function (e) {
         data: $(this).serialize(),
         success: function (response) {
             if (response.success === true) {
+                resetEmployeeErrors();
                 resetEmployeeFields();
                 $('#create-employee').modal('hide');
                 fetchTotalEmployees();
@@ -821,8 +822,8 @@ $('#init-employee-datatable').on('click', '.edit-button', function () {
         url: $(this).data('url'),
         success: function (response) {
             if (response.success === true) {
-                showEmployeeFields(response);
                 $('#edit-employee').modal('show');
+                showEmployeeFields(response);
             } else {
                 console.log(response);
             }
@@ -859,7 +860,7 @@ $('#edit-employee form').submit(function (e) {
         data: $(this).serialize(),
         success: function (response) {
             if (response.success === true) {
-                console.log(response);
+                resetEmployeeErrors();
                 $('#edit-employee').modal('hide');
                 employeeTable.ajax.reload();
             } else {
