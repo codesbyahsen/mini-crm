@@ -27,19 +27,19 @@ class ProjectRequest extends FormRequest
         switch ($this->getMethod()) {
             case 'POST':
                 return [
-                    'name' => ['required', 'max:220'],
+                    'name' => ['required', 'string', 'max:220'],
                     'detail' => ['nullable', 'max:10000'],
-                    'client_name' => ['required', 'max:120', Rule::unique('projects')->where('name', $this->name)],
-                    'total_cost' => ['required', 'max:40'],
+                    'client_name' => ['required', 'string', 'max:120', Rule::unique('projects')->where('name', $this->name)],
+                    'total_cost' => ['required', 'numeric', 'max:40'],
                     'deadline' => ['required', 'date'],
                     'employee_id' => ['nullable']
                 ];
             case 'PUT':
                 return [
-                    'name' => ['required', 'max:220'],
+                    'name' => ['required', 'string', 'max:220'],
                     'detail' => ['nullable', 'max:10000'],
-                    'client_name' => ['required', 'max:120', Rule::unique('projects')->ignore($this->project->id)->where('name', $this->name)],
-                    'total_cost' => ['required', 'max:40'],
+                    'client_name' => ['required', 'string', 'max:120', Rule::unique('projects')->ignore($this->project->id)->where('name', $this->name)],
+                    'total_cost' => ['required', 'numeric', 'max:40'],
                     'deadline' => ['required', 'date'],
                     'employee_id' => ['nullable']
                 ];

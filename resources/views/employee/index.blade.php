@@ -50,7 +50,9 @@
                                                 <th>Email</th>
                                                 <th>Phone</th>
                                                 <th>Company <span class="small">&#40;Employed at&#41;</span></th>
-                                                <th>Action</th>
+                                                @role('admin')
+                                                    <th>Action</th>
+                                                @endrole
                                             </tr>
                                         </thead>
                                         <tbody>

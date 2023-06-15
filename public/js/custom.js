@@ -2,19 +2,6 @@
 
 /**
  | ----------------------------------------------------------------
- |  Preloader
- | ----------------------------------------------------------------
- */
-// $(document).ready(function () {
-//     $("#preloader").show();
-
-//     setTimeout(() => {
-//         $("#preloader").hide();
-//     }, 2000);
-// });
-
-/**
- | ----------------------------------------------------------------
  |  Initialize summernote
  | ----------------------------------------------------------------
  */
@@ -208,6 +195,22 @@ fetchUserProfile();
 
 /**
  | ----------------------------------------------------------------
+ |  Clear password fields error
+ | ----------------------------------------------------------------
+ |
+ | When click on personal profile tab it will clear the
+ | password fields error
+ |
+ */
+$('.tab-profile-settings').click(function (e) {
+    e.preventDefault();
+
+    $('#security-settings .error-current-password').html(null);
+    $('#security-settings .error-new-password').html(null);
+});
+
+/**
+ | ----------------------------------------------------------------
  |  Show personal profile errors
  | ----------------------------------------------------------------
  |
@@ -356,6 +359,8 @@ $('#edit-profile form').submit(function (e) {
         success: function (response) {
             if (response.success === true) {
                 $('#edit-profile').modal('hide');
+                resetPersonalProfileErrors();
+                resetProfileAddressErrors();
                 fetchUserProfile();
             } else {
                 showPersonalProfileErrors(response);
@@ -395,6 +400,8 @@ $('#edit-profile-address').submit(function (e) {
         success: function (response) {
             if (response.success === true) {
                 $('#edit-profile').modal('hide');
+                resetPersonalProfileErrors();
+                resetProfileAddressErrors();
                 fetchUserProfile();
             } else {
                 showProfileAddressErrors(response);
@@ -602,9 +609,9 @@ $('#create-company form').submit(function (e) {
         processData: false,
         success: function (response) {
             if (response.success === true) {
+                $('#create-company').modal('hide');
                 resetCompanyFields();
                 resetCompanyErrors();
-                $('#create-company').modal('hide');
                 fetchTotalCompanies();
                 compantTable.ajax.reload();
             } else {
@@ -693,8 +700,8 @@ $('#edit-company form').submit(function (e) {
         processData: false,
         success: function (response) {
             if (response.success === true) {
-                resetCompanyErrors();
                 $('#edit-company').modal('hide');
+                resetCompanyErrors();
                 compantTable.ajax.reload();
             } else {
                 if (response.errors) {
@@ -799,7 +806,7 @@ var employeeTable = $('#init-employee-datatable').DataTable({
         { data: 'email', name: 'email' },
         { data: 'phone', name: 'phone' },
         { data: 'company.name', name: 'company.name' },
-        { data: 'action', name: 'action', orderable: false, searchable: false },
+        // { data: 'action', name: 'action', orderable: false, searchable: false },
     ]
 });
 
@@ -926,9 +933,9 @@ $('#create-employee form').submit(function (e) {
         data: $(this).serialize(),
         success: function (response) {
             if (response.success === true) {
+                $('#create-employee').modal('hide');
                 resetEmployeeErrors();
                 resetEmployeeFields();
-                $('#create-employee').modal('hide');
                 fetchTotalEmployees();
                 employeeTable.ajax.reload();
             } else {
@@ -1015,8 +1022,8 @@ $('#edit-employee form').submit(function (e) {
         data: $(this).serialize(),
         success: function (response) {
             if (response.success === true) {
-                resetEmployeeErrors();
                 $('#edit-employee').modal('hide');
+                resetEmployeeErrors();
                 employeeTable.ajax.reload();
             } else {
                 if (response.errors) {
@@ -1230,6 +1237,7 @@ const showProjectFields = (response) => {
 const resetProjectFields = () => {
     $('#create-project .field-name').val(null);
     $('#create-project .field-detail').val(null);
+    $('#create-project .field-detail').summernote('reset');
     $('#create-project .field-client-name').val(null);
     $('#create-project .field-total-cost').val(null);
     $('#create-project .field-deadline').val(null);
@@ -1298,8 +1306,9 @@ $('#create-project form').submit(function (e) {
         data: $(this).serialize(),
         success: function (response) {
             if (response.success === true) {
-                resetProjectFields();
                 $('#create-project').modal('hide');
+                resetProjectFields();
+                resetProjectErrors();
                 fetchTotalProjects();
                 projectTable.ajax.reload();
             } else {
@@ -1424,8 +1433,8 @@ $('#edit-project form').submit(function (e) {
         data: $(this).serialize(),
         success: function (response) {
             if (response.success === true) {
-                resetProjectErrors();
                 $('#edit-project').modal('hide');
+                resetProjectErrors();
                 projectTable.ajax.reload();
             } else {
                 showProjectErrors(response);

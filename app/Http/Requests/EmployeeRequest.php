@@ -26,18 +26,18 @@ class EmployeeRequest extends FormRequest
         switch ($this->getMethod()) {
             case 'POST':
                 return [
-                    'first_name' => ['required', 'max:120'],
-                    'last_name' => ['required', 'max:120'],
-                    'email' => ['required', 'email', 'unique:employees,email'],
-                    'phone' => ['nullable'],
+                    'first_name' => ['required', 'string', 'max:120'],
+                    'last_name' => ['required', 'string', 'max:120'],
+                    'email' => ['required', 'string', 'email', 'max:150', 'unique:employees,email'],
+                    'phone' => ['nullable', 'numeric', 'digits:11'],
                     'company_id' => ['required']
                 ];
             case 'PUT':
                 return [
-                    'first_name' => ['required', 'max:120'],
-                    'last_name' => ['required', 'max:120'],
-                    'email' => ['required', 'email', 'unique:employees,email,' . $this->employee->id],
-                    'phone' => ['nullable'],
+                    'first_name' => ['required', 'string', 'max:120'],
+                    'last_name' => ['required', 'string', 'max:120'],
+                    'email' => ['required', 'string', 'email', 'max:150', 'unique:employees,email,' . $this->employee->id],
+                    'phone' => ['nullable', 'numeric', 'digits:11'],
                     'company_id' => ['required']
                 ];
             default:

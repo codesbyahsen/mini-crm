@@ -52,7 +52,7 @@
                                         </div><!-- .card-inner -->
                                         <div class="card-inner p-0">
                                             <ul class="link-list-menu nav nav-tabs">
-                                                <li><a class="active" data-toggle="tab" href="#tabProfileSettings"><em
+                                                <li><a class="active tab-profile-settings" data-toggle="tab" href="#tabProfileSettings"><em
                                                             class="icon ni ni-user-fill-c"></em><span>Personal
                                                             Infomation</span></a></li>
                                                 <li><a data-toggle="tab" href="#tabSecuritySettings"><em
@@ -75,7 +75,8 @@
     <div class="modal fade" role="dialog" id="edit-profile">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
-                <a href="#" class="close cancel-edit-profile-modal" data-dismiss="modal"><em class="icon ni ni-cross-sm"></em></a>
+                <a href="#" class="close cancel-edit-profile-modal" data-dismiss="modal"><em
+                        class="icon ni ni-cross-sm"></em></a>
                 <div class="modal-body modal-body-lg">
                     <h5 class="title">Update Profile</h5>
                     <ul class="nk-nav nav nav-tabs">
@@ -94,8 +95,7 @@
                                         <div class="form-group">
                                             <label class="form-label" for="full-name">Full Name</label>
                                             <input type="text" class="form-control form-control-lg field-name"
-                                                id="full-name" name="name" value=""
-                                                placeholder="Enter Full name">
+                                                id="full-name" name="name" value="" placeholder="Enter Full name">
                                             <span class="text-danger small error-name"></span>
                                         </div>
                                     </div>
@@ -103,8 +103,7 @@
                                         <div class="form-group">
                                             <label class="form-label" for="display-name">Display Name</label>
                                             <input type="text" class="form-control form-control-lg field-display-name"
-                                                id="display-name" name="display_name"
-                                                value=""
+                                                id="display-name" name="display_name" value=""
                                                 placeholder="Enter display name">
                                             <span class="text-danger small error-display-name"></span>
                                         </div>
@@ -113,8 +112,7 @@
                                         <div class="form-group">
                                             <label class="form-label" for="phone-no">Phone Number</label>
                                             <input type="text" class="form-control form-control-lg field-phone"
-                                                id="phone-no" name="phone" value=""
-                                                placeholder="Phone Number">
+                                                id="phone-no" name="phone" value="" placeholder="Phone Number">
                                             <span class="text-danger small error-phone"></span>
                                         </div>
                                     </div>
@@ -135,8 +133,7 @@
                                         <div class="form-group">
                                             <label class="form-label" for="birth-day">Date of Birth</label>
                                             <input type="date" class="form-control form-control-lg field-date-of-birth"
-                                                name="date_of_birth" id="birth-day"
-                                                value=""
+                                                name="date_of_birth" id="birth-day" value=""
                                                 placeholder="Enter your date of birth" />
                                             <span class="text-danger small error-date-of-birth"></span>
                                         </div>
@@ -165,17 +162,18 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-label" for="address-l1">Address Line 1</label>
-                                            <input type="text" class="form-control form-control-lg field-address-line-one" id="address-l1"
-                                                name="address_line_one"
-                                                value="">
+                                            <input type="text"
+                                                class="form-control form-control-lg field-address-line-one"
+                                                id="address-l1" name="address_line_one" value="">
                                             <span class="text-danger small error-address-line-one"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-label" for="address-l2">Address Line 2</label>
-                                            <input type="text" class="form-control form-control-lg field-address-line-two" id="address-l2"
-                                                name="address_line_two"
+                                            <input type="text"
+                                                class="form-control form-control-lg field-address-line-two"
+                                                id="address-l2" name="address_line_two"
                                                 value="{{ old('address_line_two', $user?->address_line_one) }}">
                                             <span class="text-danger small error-address-line-two"></span>
                                         </div>
@@ -183,31 +181,35 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-label" for="address-city">City</label>
-                                            <input type="text" class="form-control form-control-lg field-city" id="address-city"
-                                                name="city" value="{{ old('city', $user?->city) }}">
+                                            <input type="text" class="form-control form-control-lg field-city"
+                                                id="address-city" name="city" value="{{ old('city', $user?->city) }}">
                                             <span class="text-danger small error-city"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-label" for="address-st">State</label>
-                                            <input type="text" class="form-control form-control-lg field-state" id="address-st"
-                                                name="state" value="{{ old('statue', $user?->statue) }}">
+                                            <input type="text" class="form-control form-control-lg field-state"
+                                                id="address-st" name="state"
+                                                value="{{ old('statue', $user?->statue) }}">
                                             <span class="text-danger small error-state"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-label" for="address-county">Country</label>
-                                            <select class="form-select field-country" name="country" id="address-county"
-                                                data-ui="lg">
-                                                <option value="" selected>Select Country</option>
-                                                @foreach ($countries as $country)
-                                                    <option value="{{ $country->name ?? '' }}">{{ $country->name ?? '' }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                            <span class="text-danger small error-country"></span>
+                                            <div class="form-control-wrap">
+                                                <select class="form-select field-country" id="address-county"
+                                                    data-search="on" name="country">
+                                                    <option value="" selected>Select Country</option>
+                                                    @foreach ($countries as $country)
+                                                        <option value="{{ $country->name ?? '' }}">
+                                                            {{ $country->name ?? '' }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                                <span class="text-danger small error-country"></span>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-12">

@@ -17,6 +17,11 @@ class ProjectController extends Controller
 {
     use AjaxResponse;
 
+    public function __construct()
+    {
+        $this->middleware('role:admin');
+    }
+
     /**
      * Display a listing of the resource.
      */
