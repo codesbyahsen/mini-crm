@@ -284,6 +284,7 @@ const resetProfileAddressErrors = () => {
 const showProfileFields = (response) => {
     $('#edit-profile .field-name').val(response?.data?.name);
     $('#edit-profile .field-display-name').val(response?.data?.display_name);
+    $('#edit-profile .field-display-name').attr('value', response?.data?.display_name);
     $('#edit-profile .field-phone').val(response?.data?.phone);
     $('#edit-profile .field-gender').val(response?.data?.gender).trigger('change');
     $('#edit-profile .field-date-of-birth').val(response?.data?.date_of_birth);
@@ -436,13 +437,13 @@ $('#security-settings').submit(function (e) {
                 $('#security-settings #current_password').val(null);
                 $('#security-settings #password').val(null);
                 $('#security-settings #password_confirmation').val(null);
+                toastr.options.preventDuplicates = true;
                 toastr['success']('Successfully', response.message, {
                     closeButton: true,
                     progressBar: true,
                     tapToDismiss: false,
                     positionClass: 'toast-top-right',
                 });
-                toastr.options.preventDuplicates = true;
             } else {
                 $('#security-settings .error-current-password').html(response.errors.current_password ?? null);
                 $('#security-settings .error-new-password').html(response.errors.password ?? null);
