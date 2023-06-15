@@ -29,9 +29,15 @@
                                 </div>
                                 <div class="user-info d-none d-md-block">
                                     <div class="user-status">
-                                        @if (auth()?->user()?->roles()?->value('name') === 'admin')
+                                        @if (auth()
+                                                ?->user()
+                                                ?->roles()
+                                                ?->value('name') === 'admin')
                                             Administrator
-                                        @elseif (auth()?->user()?->roles()?->value('name') === 'sub-admin')
+                                        @elseif (auth()
+                                                ?->user()
+                                                ?->roles()
+                                                ?->value('name') === 'sub-admin')
                                             Sub Admin
                                         @endif
                                     </div>

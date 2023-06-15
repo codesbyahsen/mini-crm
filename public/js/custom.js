@@ -5,13 +5,13 @@
  |  Preloader
  | ----------------------------------------------------------------
  */
-$(document).ready(function () {
-    $("#preloader").show();
+// $(document).ready(function () {
+//     $("#preloader").show();
 
-    setTimeout(() => {
-        $("#preloader").hide();
-    }, 2000);
-});
+//     setTimeout(() => {
+//         $("#preloader").hide();
+//     }, 2000);
+// });
 
 /**
  | ----------------------------------------------------------------
