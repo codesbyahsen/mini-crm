@@ -13,7 +13,7 @@
     <title>@yield('title')</title>
 
     {{-- @include('partials.links') --}}
-    @vite(['resources/css/dashlite.min.css', 'resources/js/jquery.min.js', 'resources/js/bundle.js', 'resources/js/scripts.js', 'resources/js/custom.js', 'resources/js/datatable-btns.js'])
+    @vite(['resources/css/dashlite.min.css', 'resources/js/jquery.min.js', 'resources/js/bundle.js', 'resources/js/scripts.js', 'resources/js/custom.js', 'resources/js/datatable-btns.js', 'resources/vendors/summernote/summernote.css', 'resources/vendors/summernote/summernote.js'])
 </head>
 
 <body class="nk-body bg-lighter npc-general has-sidebar ">

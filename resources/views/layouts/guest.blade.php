@@ -9,8 +9,7 @@
     <link rel="shortcut icon" href="{{ asset('images/favicon.png') }}">
     <title> @yield('title') | Mini-CRM</title>
 
-    <link rel="stylesheet" href="{{ asset('css/dashlite.min.css') }}">
-    <link id="skin-default" rel="stylesheet" href="{{ asset('css/theme.css') }}">
+    @vite(['resources/css/dashlite.min.css', 'resources/js/jquery.min.js', 'resources/js/bundle.js', 'resources/js/scripts.js'])
 </head>
 
 <body class="nk-body bg-white npc-general pg-auth">
@@ -24,8 +23,6 @@
         </div>
     </div>
 
-    <script src="{{ asset('js/bundle.js') }}"></script>
-    <script src="{{ asset('js/scripts.js') }}"></script>
 </body>
 
 </html>
