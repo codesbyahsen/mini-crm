@@ -73,7 +73,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Create Employee</h5>
-                    <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                    <a href="#" class="close cancel-create-employee-form" data-dismiss="modal" aria-label="Close">
                         <em class="icon ni ni-cross"></em>
                     </a>
                 </div>
@@ -150,12 +150,12 @@
     </div>
 
     <!-- Edit Employee Modal Form -->
-    <div class="modal fade" id="edit-employee">
+    <div class="modal fade" id="edit-employee" data-backdrop="static">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Edit Employee</h5>
-                    <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                    <a href="#" class="close cancel-edit-employee-form" data-dismiss="modal" aria-label="Close">
                         <em class="icon ni ni-cross"></em>
                     </a>
                 </div>
@@ -167,7 +167,7 @@
                                     <label class="form-label" for="first-name">First Name</label>
                                     <div class="form-control-wrap">
                                         <input type="text" class="form-control field-first-name" id="first-name"
-                                            name="first_name" value="{{ old('first_name') }}" />
+                                            name="first_name" />
                                     </div>
                                     <span class="text-danger small error-first-name"></span>
                                 </div>
@@ -177,7 +177,7 @@
                                     <label class="form-label" for="last-name">Last Name</label>
                                     <div class="form-control-wrap">
                                         <input type="text" class="form-control field-last-name" id="last-name"
-                                            name="last_name" value="{{ old('last_name') }}" />
+                                            name="last_name" />
                                     </div>
                                     <span class="text-danger small error-last-name"></span>
                                 </div>

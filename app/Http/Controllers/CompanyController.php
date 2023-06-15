@@ -21,34 +21,27 @@ class CompanyController extends Controller
      */
     public function index(Request $request)
     {
-        try {
-            $companies = Company::all();
-            if ($request->ajax()) {
-                return Datatables::of($companies)
-                    ->addIndexColumn()
-                    ->editColumn('logo', function ($row) {
-                        return '<div class="user-avatar bg-light"><img src=' . $row->logo . ' \/></div>';
-                    })
-                    ->addColumn('action', function ($row) {
+        $companies = Company::all();
+        if ($request->ajax()) {
+            return Datatables::of($companies)
+                ->addIndexColumn()
+                ->editColumn('logo', function ($row) {
+                    return '<div class="user-avatar bg-light"><img src=' . $row->logo . ' \/></div>';
+                })
+                ->addColumn('action', function ($row) {
 
-                        return '<div class="drodown">
-                                    <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
-                                    <div class="dropdown-menu dropdown-menu-right">
-                                        <ul class="link-list-opt no-bdr">
-                                            <li><a href="javascript:void(0)" class="edit-button" data-url="' . route('companies.edit', $row->id) . '" data-update-url="' . route('companies.update', $row->id) . '" data-toggle="modal" data-target="#edit-company"><em class="icon ni ni-repeat"></em><span>Edit</span></a></li>
-                                            <li><a href="javascript:void(0)" class="delete-button" data-url="' . route('companies.destroy', $row->id) . '"><em class="icon ni ni-activity-round"></em><span>Delete</span></a></li>
-                                        </ul>
-                                    </div>
-                                </div>';
-                    })
-                    ->rawColumns(['logo', 'action'])
-                    ->make(true);
-            }
-        } catch (ModelNotFoundException $exception) {
-            if ($request->ajax()) {
-                return $this->error('not_found', Response::HTTP_NOT_FOUND);
-            }
-            return back()->with('error', 'The companies are not found');
+                    return '<div class="drodown">
+                                <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <ul class="link-list-opt no-bdr">
+                                        <li><a href="javascript:void(0)" class="edit-button" data-url="' . route('companies.edit', $row->id) . '" data-update-url="' . route('companies.update', $row->id) . '" data-toggle="modal" data-target="#edit-company"><em class="icon ni ni-repeat"></em><span>Edit</span></a></li>
+                                        <li><a href="javascript:void(0)" class="delete-button" data-url="' . route('companies.destroy', $row->id) . '"><em class="icon ni ni-activity-round"></em><span>Delete</span></a></li>
+                                    </ul>
+                                </div>
+                            </div>';
+                })
+                ->rawColumns(['logo', 'action'])
+                ->make(true);
         }
 
         return view('company.index');
@@ -59,12 +52,8 @@ class CompanyController extends Controller
      */
     public function totalCompanies()
     {
-        try {
-            $numberOfTotalCompanies = Company::count();
-            return $this->success('The total companies fetched successfully.', $numberOfTotalCompanies);
-        } catch (ModelNotFoundException $exception) {
-            return $this->error('not_found', Response::HTTP_NOT_FOUND);
-        }
+        $numberOfTotalCompanies = Company::count();
+        return $this->success('The total companies fetched successfully.', $numberOfTotalCompanies);
     }
 
     /**
@@ -112,13 +101,13 @@ class CompanyController extends Controller
             if ($request->hasFile('logo')) {
                 $logoName = saveResizeImage($request->logo, 'logo', 100, 100);
             } else {
-                $logoName = $company->getAttribute('logo');
+                $logoName = $company->getAttributes()['logo'];
             }
 
             // replace logo value with custom logo name
             $companyDetails = array_replace($request->validated(), array('logo' => $logoName));
             $company->update($companyDetails);
-            return $this->success('The company updated successfully.', [], Response::HTTP_NO_CONTENT);
+            return $this->success('The company updated successfully.');
         } catch (ModelNotFoundException $exception) {
             return $this->error('not_found_update', Response::HTTP_NOT_FOUND);
         } catch (QueryException $exception) {

@@ -18,7 +18,7 @@ class Company extends Model
     public function logo(): Attribute
     {
         return new Attribute(
-            get: fn ($value) => isset($value) && !empty($value) ? asset('storage/' . $value) : null
+            get: fn ($value) => isset($value) && !empty($value) ? asset('storage/' . $value) : asset('images/building.jpg')
         );
     }
 

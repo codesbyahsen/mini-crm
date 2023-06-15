@@ -6,10 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <!-- Fav Icon  -->
-    <link rel="shortcut icon" href="./images/favicon.png">
+    <link rel="shortcut icon" href="{{ asset('images/favicon.png') }}">
     <title> @yield('title') | Mini-CRM</title>
 
-    @vite(['resources/css/dashlite.min.css', 'resources/css/theme.css', 'resources/js/bundle.js', 'resources/js/scripts.js'])
+    <link rel="stylesheet" href="{{ asset('css/dashlite.min.css') }}">
+    <link id="skin-default" rel="stylesheet" href="{{ asset('css/theme.css') }}">
 </head>
 
 <body class="nk-body bg-white npc-general pg-auth">
@@ -22,6 +23,9 @@
             </div>
         </div>
     </div>
+
+    <script src="{{ asset('js/bundle.js') }}"></script>
+    <script src="{{ asset('js/scripts.js') }}"></script>
 </body>
 
 </html>

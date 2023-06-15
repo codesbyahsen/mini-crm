@@ -7,6 +7,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\Access\Authorizable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -20,8 +21,19 @@ class User extends Authenticatable implements Authorizable
      * @var array<int, string>
      */
     protected $fillable = [
+        'avatar',
         'name',
+        'display_name',
         'email',
+        'phone',
+        'mobile',
+        'gender',
+        'date_of_birth',
+        'address_line_one',
+        'address_line_two',
+        'city',
+        'state',
+        'country',
         'password',
     ];
 
@@ -44,4 +56,31 @@ class User extends Authenticatable implements Authorizable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function avatar(): Attribute
+    {
+        return new Attribute(
+            get: fn ($value) => isset($value) && !empty($value) ? asset('storage/' . $value) : null
+        );
+    }
+
+    public function displayName(): Attribute
+    {
+        $titles = ['Male' => 'Mr.', 'Female' => 'Ms.', 'Other' => null];
+        return new Attribute(
+            get: fn ($value) => $titles[$this->gender] . ' ' . $value
+        );
+    }
+
+    public function dateOfBirth() : Attribute
+    {
+        return new Attribute(
+            get: fn ($value) => date('Y-m-d', strtotime($value))
+        );
+    }
+
+    public function getFullAddress()
+    {
+        return (($this->address_line_one ? $this->address_line_one . ', ' : null) . ($this->address_line_two ? $this->address_line_two . ', ' : null) . ($this->city ? $this->city . ', ' : null) . ($this->state ? $this->state . ', ' : null) . ($this->country ? $this->country . '.' : null) == null ? null : ($this->address_line_one ? $this->address_line_one . ', ' : null) . ($this->address_line_two ? $this->address_line_two . ', ' : null) . ($this->city ? $this->city . ', ' : null) . ($this->state ? $this->state . ', ' : null) . ($this->country ? $this->country . '.' : null));
+    }
 }

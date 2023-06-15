@@ -1,7 +1,3 @@
-import 'bootstrap';
-import DataTable from 'datatables.net';
-window.DataTable = DataTable;
-
 "use strict";
 
 !function (NioApp, $) {

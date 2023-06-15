@@ -1,4 +1,459 @@
-// ============================== |> Module One <| ============================== //
+// ============================== |> Global <| ============================== //
+
+/**
+ | ----------------------------------------------------------------
+ |  Preloader
+ | ----------------------------------------------------------------
+ */
+// $(document).ready(function () {
+//     $("#preloader").show();
+
+//     setTimeout(() => {
+//         $("#preloader").hide();
+//     }, 2000);
+// });
+
+/**
+ | ----------------------------------------------------------------
+ |  Initialize summernote
+ | ----------------------------------------------------------------
+ */
+$(document).ready(function () {
+    $('.summernote').summernote({
+        height: 120
+    });
+});
+
+/**
+ | ----------------------------------------------------------------
+ |  Change the format of date
+ | ----------------------------------------------------------------
+ |
+ | It changes the date format and return as ISO 8601
+ |
+ */
+const changeDateFormat = (date) => {
+    var date = new Date(date);
+    return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+}
+
+/**
+ | ----------------------------------------------------------------
+ |  Dark mode
+ | ----------------------------------------------------------------
+ |
+ | Set dark mode status and store in local
+ | storage of browser
+ |
+ */
+$(document).ready(function () {
+    var darkModeEnabled = localStorage.getItem("darkModeEnabled");
+
+    if (darkModeEnabled === "true") {
+        enableDarkMode();
+    }
+
+    $('#dark-mode-button').click(function (e) {
+        e.preventDefault();
+
+        setTimeout(() => {
+            if ($('body').hasClass('dark-mode')) {
+                enableDarkMode();
+                localStorage.setItem("darkModeEnabled", "true");
+                console.log('dark mode enabled');
+            } else {
+                disableDarkMode();
+                localStorage.removeItem('darkModeEnabled');
+            }
+        }, 500);
+    });
+
+    function enableDarkMode() {
+        $("body").addClass("dark-mode");
+    }
+
+    function disableDarkMode() {
+        $("body").removeClass("dark-mode");
+    }
+});
+
+// ============================== |> User Profile Module <| ============================== //
+
+/**
+ | ----------------------------------------------------------------
+ |  Fetch user avatar
+ | ----------------------------------------------------------------
+ |
+ | Sends ajax request to get the user avatar image
+ |
+ */
+const fetchUserAvatar = () => {
+    $.ajaxSetup({
+        headers: {
+            'Accepts': 'application/json',
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        }
+    });
+
+    $.ajax({
+        url: 'profile/avatar',
+        type: 'GET',
+        success: function (response) {
+            if (response.success === true) {
+                if ($('.avatar').length == 0) {
+                    $('.user-avatar').html('<img class="avatar" src="' + response.data + '" alt="user avatar" />')
+                    $('.name-initials').hide();
+                }
+                $('.avatar').attr('src', response.data);
+            } else {
+                console.log(response);
+            }
+        }
+    });
+}
+fetchUserAvatar();
+
+/**
+ | ----------------------------------------------------------------
+ |  Save user avatar
+ | ----------------------------------------------------------------
+ |
+ | Sends ajax request to store the user avatar image
+ |
+ */
+$('#upload-button-avatar').click(function (e) {
+    e.preventDefault();
+    $('#avatarInput').click();
+    var url = $(this).data('url');
+
+    $('#avatarInput').change(function () {
+        if (this.files[0]) {
+            var formData = new FormData();
+            formData.append('avatar', this.files[0]);
+
+            $.ajaxSetup({
+                headers: {
+                    'Accepts': 'application/json',
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response, status, error) {
+                    if (response.success === true) {
+                        toastr['success']('Successfully', 'Avatar Uploaded', {
+                            closeButton: true,
+                            progressBar: true,
+                            tapToDismiss: false,
+                            positionClass: 'toast-top-right',
+                        });
+                        toastr.options.preventDuplicates = true;
+                        fetchUserAvatar();
+                    } else {
+                        if (response) {
+                            console.log(response);
+                        }
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr);
+                    console.log(status);
+                    console.log(error);
+                }
+            });
+        }
+    });
+});
+
+/**
+ | ----------------------------------------------------------------
+ |  Fetch user profile
+ | ----------------------------------------------------------------
+ |
+ | Sends ajax request to get the user profile information
+ |
+ */
+const fetchUserProfile = () => {
+    $.ajaxSetup({
+        headers: {
+            'Accepts': 'application/json',
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        }
+    });
+
+    $.ajax({
+        url: 'profile',
+        type: 'GET',
+        success: function (response) {
+            if (response.success === true) {
+                $('.profile-name').html(response?.data?.name);
+                $('.profile-display-name').html(response?.data?.display_name);
+                $('.profile-email').html(response?.data?.email);
+                $('.profile-phone').html(response?.data?.phone);
+                $('.profile-gender').html(response?.data?.gender);
+                $('.profile-date-of-birth').html(response?.data?.date_of_birth);
+                $('.profile-address').html(response?.data?.full_address);
+            } else {
+                console.log(response);
+            }
+        }
+    });
+}
+fetchUserProfile();
+
+/**
+ | ----------------------------------------------------------------
+ |  Show personal profile errors
+ | ----------------------------------------------------------------
+ |
+ | It accepts the object parameter and shows the input
+ | field errors of user profile personal information
+ |
+ */
+const showPersonalProfileErrors = (response) => {
+    $('#edit-profile .error-name').html(response.errors.name ?? null);
+    $('#edit-profile .error-display-name').html(response.errors.display_name ?? null);
+    $('#edit-profile .error-phone').html(response.errors.phone ?? null);
+    $('#edit-profile .error-gender').html(response.errors.gender ?? null);
+    $('#edit-profile .error-date-of-birth').html(response.errors.date_of_birth ?? null);
+}
+
+/**
+ | ----------------------------------------------------------------
+ |  Reset personal profile errors
+ | ----------------------------------------------------------------
+ |
+ | It resets the input field errors of personal user profile form
+ |
+ */
+const resetPersonalProfileErrors = () => {
+    $('#edit-profile .error-name').html(null);
+    $('#edit-profile .error-display-name').html(null);
+    $('#edit-profile .error-phone').html(null);
+    $('#edit-profile .error-gender').html(null);
+    $('#edit-profile .error-date-of-birth').html(null);
+}
+
+/**
+ | ----------------------------------------------------------------
+ |  Show profile address errors
+ | ----------------------------------------------------------------
+ |
+ | It accepts the object parameter and shows the input
+ | field errors of user profile address
+ |
+ */
+const showProfileAddressErrors = (response) => {
+    $('#edit-profile-address .error-address-line-one').html(response.errors.address_line_one ?? null);
+    $('#edit-profile-address .error-address-line-two').html(response.errors.address_line_two ?? null);
+    $('#edit-profile-address .error-city').html(response.errors.city ?? null);
+    $('#edit-profile-address .error-state').html(response.errors.state ?? null);
+    $('#edit-profile-address .error-country').html(response.errors.date_of_birth ?? null);
+}
+
+/**
+ | ----------------------------------------------------------------
+ |  Reset profile address errors
+ | ----------------------------------------------------------------
+ |
+ | It resets the input field errors of user profile address form
+ |
+ */
+const resetProfileAddressErrors = () => {
+    $('#edit-profile-address .error-address-line-one').html(null);
+    $('#edit-profile-address .error-address-line-two').html(null);
+    $('#edit-profile-address .error-city').html(null);
+    $('#edit-profile-address .error-state').html(null);
+    $('#edit-profile-address .error-country').html(null);
+}
+
+/**
+ | ----------------------------------------------------------------
+ |  Show profile all fields
+ | ----------------------------------------------------------------
+ |
+ | It accepts the object parameter and shows the all input
+ | fields data of user profile
+ |
+ */
+const showProfileFields = (response) => {
+    $('#edit-profile .field-name').val(response?.data?.name);
+    $('#edit-profile .field-display-name').val(response?.data?.display_name);
+    $('#edit-profile .field-display-name').attr('value', response?.data?.display_name);
+    $('#edit-profile .field-phone').val(response?.data?.phone);
+    $('#edit-profile .field-gender').val(response?.data?.gender).trigger('change');
+    $('#edit-profile .field-date-of-birth').val(response?.data?.date_of_birth);
+    $('#edit-profile .field-address-line-one').val(response?.data?.address_line_one);
+    $('#edit-profile .field-address-line-two').val(response?.data?.address_line_two);
+    $('#edit-profile .field-city').val(response?.data?.city);
+    $('#edit-profile .field-state').val(response?.data?.state);
+    $('#edit-profile .field-country').val(response?.data?.country).trigger('change');
+}
+
+/**
+ | ----------------------------------------------------------------
+ |  Edit profile
+ | ----------------------------------------------------------------
+ |
+ | It shows the edit form and sends ajax request
+ | against the specific profile
+ |
+ */
+$('#user-profile').click(function () {
+    $.ajax({
+        url: $(this).data('url'),
+        type: 'GET',
+        success: function (response) {
+            if (response.success === true) {
+                showProfileFields(response);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr);
+            console.log(status);
+            console.log(error);
+        }
+    });
+});
+
+/**
+ | ----------------------------------------------------------------
+ |  Update profile personal information
+ | ----------------------------------------------------------------
+ |
+ | Send ajax request to update user profile
+ | personal information
+ |
+ */
+$('#display-name-switch').change(function () {
+    const displayName = $('#edit-profile .field-display-name').attr('value');
+    if ($(this).is(':checked')) {
+        $('#edit-profile .field-display-name').val($('#edit-profile .field-name').val());
+    } else {
+        $('#edit-profile .field-display-name').val(displayName ?? null);
+    }
+});
+
+$('#edit-profile form').submit(function (e) {
+    e.preventDefault();
+
+    $.ajaxSetup({
+        headers: {
+            'Accepts': 'application/json',
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    $.ajax({
+        url: $(this).attr('action'),
+        type: 'PATCH',
+        data: $(this).serialize(),
+        success: function (response) {
+            if (response.success === true) {
+                $('#edit-profile').modal('hide');
+                fetchUserProfile();
+            } else {
+                showPersonalProfileErrors(response);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr);
+            console.log(status);
+            console.log(error);
+        }
+    });
+})
+
+/**
+ | ----------------------------------------------------------------
+ |  Update profile address
+ | ----------------------------------------------------------------
+ |
+ | Send ajax request to update user profile
+ | address
+ |
+ */
+$('#edit-profile-address').submit(function (e) {
+    e.preventDefault();
+
+    $.ajaxSetup({
+        headers: {
+            'Accepts': 'application/json',
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    $.ajax({
+        url: $(this).attr('action'),
+        type: 'PATCH',
+        data: $(this).serialize(),
+        success: function (response) {
+            if (response.success === true) {
+                $('#edit-profile').modal('hide');
+                fetchUserProfile();
+            } else {
+                showProfileAddressErrors(response);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr);
+            console.log(status);
+            console.log(error);
+        }
+    });
+});
+
+$('.cancel-edit-profile-modal').click(function (e) {
+    e.preventDefault();
+
+    resetPersonalProfileErrors();
+    resetProfileAddressErrors();
+});
+
+/**
+ | ----------------------------------------------------------------
+ |  Update password
+ | ----------------------------------------------------------------
+ |
+ | It verify current password then update new password
+ |
+ */
+$('#security-settings').submit(function (e) {
+    e.preventDefault();
+
+    $.ajax({
+        url: $(this).attr('action'),
+        type: 'PUT',
+        data: $(this).serialize(),
+        success: function (response) {
+            if (response.success === true) {
+                $('#security-settings .error-current-password').html(null);
+                $('#security-settings .error-new-password').html(null);
+                $('#security-settings #current_password').val(null);
+                $('#security-settings #password').val(null);
+                $('#security-settings #password_confirmation').val(null);
+                toastr.options.preventDuplicates = true;
+                toastr['success']('Successfully', response.message, {
+                    closeButton: true,
+                    progressBar: true,
+                    tapToDismiss: false,
+                    positionClass: 'toast-top-right',
+                });
+            } else {
+                $('#security-settings .error-current-password').html(response.errors.current_password ?? null);
+                $('#security-settings .error-new-password').html(response.errors.password ?? null);
+            }
+        }
+    });
+});
+
+
+// ============================== |> Company Module <| ============================== //
 
 /**
  | ----------------------------------------------------------------
@@ -99,10 +554,10 @@ const resetCompanyErrors = () => {
  |
  */
 const showCompanyFields = (response) => {
-    $('#edit-company .field-logo').attr('value', response?.data?.logo);
-    $('#edit-company .field-name').attr('value', response?.data?.name);
-    $('#edit-company .field-email').attr('value', response?.data?.email);
-    $('#edit-company .field-website').attr('value', response?.data?.website);
+    $('#edit-company .display-company-logo').attr('src', response?.data?.logo);
+    $('#edit-company .field-name').val(response?.data?.name);
+    $('#edit-company .field-email').val(response?.data?.email);
+    $('#edit-company .field-website').val(response?.data?.website);
 }
 
 /**
@@ -155,6 +610,8 @@ $('#create-company form').submit(function (e) {
             } else {
                 if (response.errors) {
                     showCompanyErrors(response);
+                } else {
+                    console.log(response);
                 }
             }
         },
@@ -195,8 +652,8 @@ $('#init-company-datatable').on('click', '.edit-button', function () {
         url: $(this).data('url'),
         success: function (response) {
             if (response.success === true) {
-                showCompanyFields(response);
                 $('#edit-company').modal('show');
+                showCompanyFields(response);
             } else {
                 console.log(response);
             }
@@ -236,14 +693,15 @@ $('#edit-company form').submit(function (e) {
         processData: false,
         success: function (response) {
             if (response.success === true) {
-                resetCompanyFields();
                 resetCompanyErrors();
                 $('#edit-company').modal('hide');
-                fetchTotalCompanies();
                 compantTable.ajax.reload();
             } else {
-                console.log(response);
-                showCompanyErrors(response);
+                if (response.errors) {
+                    showCompanyErrors(response);
+                } else {
+                    console.log(response);
+                }
             }
         },
         error: function (xhr, status, error) {
@@ -252,6 +710,18 @@ $('#edit-company form').submit(function (e) {
             console.log(error);
         }
     });
+});
+
+/**
+ | ----------------------------------------------------------------
+ |  Cancel edit company form
+ | ----------------------------------------------------------------
+ |
+ | Remove errors
+ |
+ */
+$('.cancel-edit-company-form').click(function () {
+    resetCompanyErrors();
 });
 
 /**
@@ -306,7 +776,7 @@ $('#init-company-datatable').on('click', '.delete-button', function () {
     })
 });
 
-// ============================== |> Module Two <| ============================== //
+// ============================== |> Employee Module <| ============================== //
 
 /**
  | ----------------------------------------------------------------
@@ -409,10 +879,10 @@ const resetEmployeeErrors = () => {
  |
  */
 const showEmployeeFields = (response) => {
-    $('#edit-employee .field-first-name').attr('value', response?.data?.first_name);
-    $('#edit-employee .field-last-name').attr('value', response?.data?.last_name);
-    $('#edit-employee .field-phone').attr('value', response?.data?.phone);
-    $('#edit-employee .field-email').attr('value', response?.data?.email);
+    $('#edit-employee .field-first-name').val(response?.data?.first_name);
+    $('#edit-employee .field-last-name').val(response?.data?.last_name);
+    $('#edit-employee .field-phone').val(response?.data?.phone);
+    $('#edit-employee .field-email').val(response?.data?.email);
     $('#edit-employee .field-company').select2().val(response?.data?.company?.id).trigger('change');
 }
 
@@ -429,7 +899,7 @@ const resetEmployeeFields = () => {
     $('#create-employee .field-last-name').val(null);
     $('#create-employee .field-phone').val(null);
     $('#create-employee .field-email').val(null);
-    $('#create-employee .field-company').val(null);
+    $('#create-employee .field-company').val(null).trigger('change');
 }
 
 /**
@@ -456,13 +926,16 @@ $('#create-employee form').submit(function (e) {
         data: $(this).serialize(),
         success: function (response) {
             if (response.success === true) {
+                resetEmployeeErrors();
                 resetEmployeeFields();
                 $('#create-employee').modal('hide');
                 fetchTotalEmployees();
                 employeeTable.ajax.reload();
             } else {
-                if (response) {
+                if (response.errors) {
                     showEmployeeErrors(response);
+                } else {
+                    console.log(response);
                 }
             }
         },
@@ -504,8 +977,8 @@ $('#init-employee-datatable').on('click', '.edit-button', function () {
         url: $(this).data('url'),
         success: function (response) {
             if (response.success === true) {
-                showEmployeeFields(response);
                 $('#edit-employee').modal('show');
+                showEmployeeFields(response);
             } else {
                 console.log(response);
             }
@@ -542,11 +1015,15 @@ $('#edit-employee form').submit(function (e) {
         data: $(this).serialize(),
         success: function (response) {
             if (response.success === true) {
-                console.log(response);
+                resetEmployeeErrors();
                 $('#edit-employee').modal('hide');
                 employeeTable.ajax.reload();
             } else {
-                showEmployeeErrors(response);
+                if (response.errors) {
+                    showEmployeeErrors(response);
+                } else {
+                    console.log(response);
+                }
             }
         },
         error: function (xhr, status, error) {
@@ -626,7 +1103,7 @@ $('#init-employee-datatable').on('click', '.delete-button', function () {
     })
 });
 
-// ============================== |> Module Three <| ============================== //
+// ============================== |> Project Module <| ============================== //
 
 /**
  | ----------------------------------------------------------------
@@ -730,11 +1207,11 @@ const resetProjectErrors = () => {
  |
  */
 const showProjectFields = (response) => {
-    $('#edit-project .field-name').attr('value', response?.data?.name);
-    $('#edit-project .field-detail').html(response?.data?.detail);
-    $('#edit-project .field-client-name').attr('value', response?.data?.client_name);
-    $('#edit-project .field-total-cost').attr('value', response?.data?.total_cost);
-    $('#edit-project .field-deadline').attr('value', changeDateFormat(response?.data?.deadline));
+    $('#edit-project .field-name').val(response?.data?.name);
+    $('#edit-project .field-detail').html(response?.data?.detail).summernote('code', response?.data?.detail);
+    $('#edit-project .field-client-name').val(response?.data?.client_name);
+    $('#edit-project .field-total-cost').val(response?.data?.total_cost);
+    $('#edit-project .field-deadline').val(changeDateFormat(response?.data?.deadline));
     var employeeIds = [];
     response.data.employees.map(function (item) {
         employeeIds.push(item.id);
@@ -756,7 +1233,45 @@ const resetProjectFields = () => {
     $('#create-project .field-client-name').val(null);
     $('#create-project .field-total-cost').val(null);
     $('#create-project .field-deadline').val(null);
-    $('#create-project .field-employee-id').val(null).trigger('change');
+    $('#create-project .field-employee-id').select2().val(null).trigger('change');
+}
+
+/**
+ | ----------------------------------------------------------------
+ |  Show project attributes
+ | ----------------------------------------------------------------
+ |
+ | It accepts the object parameter and shows the attributes
+ | of project
+ |
+ */
+const showProjectAttributes = (response) => {
+    $('.show-name').html(response?.data?.name);
+    $('.show-client-name').html(response?.data?.client_name);
+    $('.show-total-cost').html(response?.data?.total_cost);
+    $('.show-deadline').html(response?.data?.deadline);
+    $('.show-detail').html(response?.data?.detail);
+    var employees = response?.data?.employees;
+    employees.map(function (employee, index) {
+        $('.show-employees').append(employee?.first_name + ' ' + employee.last_name + ((employees.length - 1) == index ? '.' : ', '));
+    });
+}
+
+/**
+ | ----------------------------------------------------------------
+ |  Reset project attributes
+ | ----------------------------------------------------------------
+ |
+ | It resets the attributes of project
+ |
+ */
+const resetProjectAttributes = () => {
+    $('.show-name').html(null);
+    $('.show-client-name').html(null);
+    $('.show-total-cost').html(null);
+    $('.show-deadline').html(null);
+    $('.show-detail').html(null);
+    $('.show-employees').html(null);
 }
 
 /**
@@ -816,16 +1331,44 @@ $('.cancel-create-project-form').click(function () {
 
 /**
  | ----------------------------------------------------------------
- |  Change the format of date
+ |  Show project
  | ----------------------------------------------------------------
  |
- | It changes the date format and return as ISO 8601
+ | It shows the show project details and sends ajax request
+ | against the specific project
  |
  */
-const changeDateFormat = (date) => {
-    var date = new Date(date);
-    return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
-}
+$('#init-project-datatable').on('click', '.view-details-button', function () {
+    $.ajax({
+        type: 'GET',
+        url: $(this).data('show-url'),
+        success: function (response) {
+            if (response.success === true) {
+                showProjectAttributes(response);
+            } else {
+                console.log(response);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr);
+            console.log(status);
+            console.log(error);
+        }
+    });
+});
+
+/**
+ | ----------------------------------------------------------------
+ |  Close the view of project
+ | ----------------------------------------------------------------
+ |
+ | It reset the html of the attributes when click on close
+ | modal
+ |
+ */
+$('.close-view-project').click(function () {
+    resetProjectAttributes();
+});
 
 /**
  | ----------------------------------------------------------------
@@ -881,7 +1424,7 @@ $('#edit-project form').submit(function (e) {
         data: $(this).serialize(),
         success: function (response) {
             if (response.success === true) {
-                console.log(response);
+                resetProjectErrors();
                 $('#edit-project').modal('hide');
                 projectTable.ajax.reload();
             } else {

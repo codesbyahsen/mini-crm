@@ -21,17 +21,16 @@ class EmployeeController extends Controller
      */
     public function index(Request $request)
     {
-        try {
-            $employees = Employee::with('company')->get();
-            if ($request->ajax()) {
-                return Datatables::of($employees)
-                    ->addIndexColumn()
-                    ->editColumn('fullname', function ($row) {
-                        return $row->fullName();
-                    })
-                    ->addColumn('action', function ($row) {
+        $employees = Employee::with('company')->get();
+        if ($request->ajax()) {
+            return Datatables::of($employees)
+                ->addIndexColumn()
+                ->editColumn('fullname', function ($row) {
+                    return $row->fullName();
+                })
+                ->addColumn('action', function ($row) {
 
-                        return '<div class="drodown">
+                    return '<div class="drodown">
                                 <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
                                 <div class="dropdown-menu dropdown-menu-right">
                                     <ul class="link-list-opt no-bdr">
@@ -40,15 +39,9 @@ class EmployeeController extends Controller
                                     </ul>
                                 </div>
                             </div>';
-                    })
-                    ->rawColumns(['fullname', 'action'])
-                    ->make(true);
-            }
-        } catch (ModelNotFoundException $exception) {
-            if ($request->ajax()) {
-                return $this->error('not_found', Response::HTTP_NOT_FOUND);
-            }
-            return back()->with('error', 'The companies are not found');
+                })
+                ->rawColumns(['fullname', 'action'])
+                ->make(true);
         }
 
         $companies = Company::get(['id', 'name']);
@@ -60,12 +53,8 @@ class EmployeeController extends Controller
      */
     public function totalEmployees()
     {
-        try {
-            $numberOfTotalEmployees = Employee::count();
-            return $this->success('The total employees fetched successfully.', $numberOfTotalEmployees);
-        } catch (ModelNotFoundException $exception) {
-            return $this->error('not_found', Response::HTTP_NOT_FOUND);
-        }
+        $numberOfTotalEmployees = Employee::count();
+        return $this->success('The total employees fetched successfully.', $numberOfTotalEmployees);
     }
 
     /**
@@ -102,9 +91,11 @@ class EmployeeController extends Controller
     {
         try {
             $employee->update($request->validated());
-            return $this->success('The employee updated successfully.', [], Response::HTTP_NO_CONTENT);
+            return $this->success('The employee updated successfully.');
         } catch (ModelNotFoundException $exception) {
             return $this->error('not_found_update', Response::HTTP_NOT_FOUND);
+        } catch (QueryException $exception) {
+            return $this->error('failed_query', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 

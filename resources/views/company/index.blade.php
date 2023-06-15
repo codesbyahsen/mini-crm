@@ -15,7 +15,8 @@
                                         <div class="nk-block-des text-soft">
                                             <p id="total-companies-url"
                                                 data-total-companies-url="{{ route('companies.total') }}">You have total
-                                                <span class="total-companies"></span> companies.</p>
+                                                <span class="total-companies"></span> companies.
+                                            </p>
                                         </div>
                                     </div>
                                     <div class="nk-block-head-content">
@@ -71,7 +72,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Create Company</h5>
-                    <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                    <a href="#" class="close cancel-create-company-form" data-dismiss="modal" aria-label="Close">
                         <em class="icon ni ni-cross"></em>
                     </a>
                 </div>
@@ -83,7 +84,7 @@
                             <div class="form-control-wrap">
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input field-logo" name="logo"
-                                        id="company-logo">
+                                        id="company-logo" accept="image/png,image/jpeg,image/gif" />
                                     <label class="custom-file-label" for="company-logo">Choose file</label>
                                 </div>
                                 <span class="text-danger small error-logo"></span>
@@ -125,23 +126,26 @@
     </div>
 
     <!-- Edit Company Modal Form -->
-    <div class="modal fade" id="edit-company">
+    <div class="modal fade" id="edit-company" data-backdrop="static">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Edit Company</h5>
-                    <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                    <a href="#" class="close cancel-edit-company-form" data-dismiss="modal" aria-label="Close">
                         <em class="icon ni ni-cross"></em>
                     </a>
                 </div>
                 <div class="modal-body">
                     <form class="form-validate is-alter" enctype="multipart/form-data">
+                        <div class="text-center mb-2">
+                            <img src="" alt="" class="display-company-logo" width="100" />
+                        </div>
                         <div class="form-group">
                             <label class="form-label">Logo</label>
                             <div class="form-control-wrap">
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input field-logo" name="logo"
-                                        id="company-logo">
+                                        id="company-logo" accept="image/png,image/jpeg,image/gif" />
                                     <label class="custom-file-label" for="company-logo">Choose file</label>
                                 </div>
                                 <span class="text-danger small error-logo"></span>
