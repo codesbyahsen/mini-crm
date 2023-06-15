@@ -75,7 +75,7 @@
     <div class="modal fade" role="dialog" id="edit-profile">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
-                <a href="#" class="close" data-dismiss="modal"><em class="icon ni ni-cross-sm"></em></a>
+                <a href="#" class="close cancel-edit-profile-modal" data-dismiss="modal"><em class="icon ni ni-cross-sm"></em></a>
                 <div class="modal-body modal-body-lg">
                     <h5 class="title">Update Profile</h5>
                     <ul class="nk-nav nav nav-tabs">
@@ -94,7 +94,7 @@
                                         <div class="form-group">
                                             <label class="form-label" for="full-name">Full Name</label>
                                             <input type="text" class="form-control form-control-lg field-name"
-                                                id="full-name" name="name" value="{{ old('name', $user?->name) }}"
+                                                id="full-name" name="name" value=""
                                                 placeholder="Enter Full name">
                                             <span class="text-danger small error-name"></span>
                                         </div>
@@ -104,7 +104,7 @@
                                             <label class="form-label" for="display-name">Display Name</label>
                                             <input type="text" class="form-control form-control-lg field-display-name"
                                                 id="display-name" name="display_name"
-                                                value="{{ old('display_name', $user?->getAttributes()['display_name']) }}"
+                                                value=""
                                                 placeholder="Enter display name">
                                             <span class="text-danger small error-display-name"></span>
                                         </div>
@@ -113,7 +113,7 @@
                                         <div class="form-group">
                                             <label class="form-label" for="phone-no">Phone Number</label>
                                             <input type="text" class="form-control form-control-lg field-phone"
-                                                id="phone-no" name="phone" value="{{ old('phone', $user?->phone) }}"
+                                                id="phone-no" name="phone" value=""
                                                 placeholder="Phone Number">
                                             <span class="text-danger small error-phone"></span>
                                         </div>
@@ -124,9 +124,9 @@
                                             <select class="form-select field-gender" name="gender" id="gender"
                                                 data-ui="lg">
                                                 <option value="" selected>Select gender</option>
-                                                <option value="Male" @selected('Male' === $user?->gender)>Male</option>
-                                                <option value="Female" @selected('Female' === $user?->gender)>Female</option>
-                                                <option value="Other" @selected('Other' === $user?->gender)>Other</option>
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                                <option value="Other">Other</option>
                                             </select>
                                             <span class="text-danger small error-gender"></span>
                                         </div>
@@ -136,7 +136,7 @@
                                             <label class="form-label" for="birth-day">Date of Birth</label>
                                             <input type="date" class="form-control form-control-lg field-date-of-birth"
                                                 name="date_of_birth" id="birth-day"
-                                                value="{{ old('date_of_birth', $user?->date_of_birth) }}"
+                                                value=""
                                                 placeholder="Enter your date of birth" />
                                             <span class="text-danger small error-date-of-birth"></span>
                                         </div>
@@ -153,7 +153,7 @@
                                         <div class="form-group float-right">
                                             <button type="submit" class="btn btn-lg btn-primary">Update Profile</button>
                                             <button type="reset" data-dismiss="modal"
-                                                class="link link-light ml-2">Cancel</button>
+                                                class="link link-light ml-2 cancel-edit-profile-modal">Cancel</button>
                                         </div>
                                     </div>
                                 </div>
@@ -165,16 +165,16 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-label" for="address-l1">Address Line 1</label>
-                                            <input type="text" class="form-control form-control-lg" id="address-l1"
+                                            <input type="text" class="form-control form-control-lg field-address-line-one" id="address-l1"
                                                 name="address_line_one"
-                                                value="{{ old('address_line_one', $user?->address_line_one) }}">
+                                                value="">
                                             <span class="text-danger small error-address-line-one"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-label" for="address-l2">Address Line 2</label>
-                                            <input type="text" class="form-control form-control-lg" id="address-l2"
+                                            <input type="text" class="form-control form-control-lg field-address-line-two" id="address-l2"
                                                 name="address_line_two"
                                                 value="{{ old('address_line_two', $user?->address_line_one) }}">
                                             <span class="text-danger small error-address-line-two"></span>
@@ -183,7 +183,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-label" for="address-city">City</label>
-                                            <input type="text" class="form-control form-control-lg" id="address-city"
+                                            <input type="text" class="form-control form-control-lg field-city" id="address-city"
                                                 name="city" value="{{ old('city', $user?->city) }}">
                                             <span class="text-danger small error-city"></span>
                                         </div>
@@ -191,7 +191,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-label" for="address-st">State</label>
-                                            <input type="text" class="form-control form-control-lg" id="address-st"
+                                            <input type="text" class="form-control form-control-lg field-state" id="address-st"
                                                 name="state" value="{{ old('statue', $user?->statue) }}">
                                             <span class="text-danger small error-state"></span>
                                         </div>
@@ -199,11 +199,11 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-label" for="address-county">Country</label>
-                                            <select class="form-select" name="country" id="address-county"
+                                            <select class="form-select field-country" name="country" id="address-county"
                                                 data-ui="lg">
                                                 <option value="" selected>Select Country</option>
                                                 @foreach ($countries as $country)
-                                                    <option value="{{ $country->name ?? '' }}" @selected($country->name === $user->country)>{{ $country->name ?? '' }}
+                                                    <option value="{{ $country->name ?? '' }}">{{ $country->name ?? '' }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -214,7 +214,7 @@
                                         <div class="form-group float-right">
                                             <button type="submit" class="btn btn-lg btn-primary">Update Address</button>
                                             <button type="reset" data-dismiss="modal"
-                                                class="link link-light ml-2">Cancel</button>
+                                                class="link link-light ml-2 cancel-edit-profile-modal">Cancel</button>
                                         </div>
                                     </div>
                                 </div>

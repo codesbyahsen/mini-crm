@@ -208,6 +208,120 @@ fetchUserProfile();
 
 /**
  | ----------------------------------------------------------------
+ |  Show personal profile errors
+ | ----------------------------------------------------------------
+ |
+ | It accepts the object parameter and shows the input
+ | field errors of user profile personal information
+ |
+ */
+const showPersonalProfileErrors = (response) => {
+    $('#edit-profile .error-name').html(response.errors.name ?? null);
+    $('#edit-profile .error-display-name').html(response.errors.display_name ?? null);
+    $('#edit-profile .error-phone').html(response.errors.phone ?? null);
+    $('#edit-profile .error-gender').html(response.errors.gender ?? null);
+    $('#edit-profile .error-date-of-birth').html(response.errors.date_of_birth ?? null);
+}
+
+/**
+ | ----------------------------------------------------------------
+ |  Reset personal profile errors
+ | ----------------------------------------------------------------
+ |
+ | It resets the input field errors of personal user profile form
+ |
+ */
+const resetPersonalProfileErrors = () => {
+    $('#edit-profile .error-name').html(null);
+    $('#edit-profile .error-display-name').html(null);
+    $('#edit-profile .error-phone').html(null);
+    $('#edit-profile .error-gender').html(null);
+    $('#edit-profile .error-date-of-birth').html(null);
+}
+
+/**
+ | ----------------------------------------------------------------
+ |  Show profile address errors
+ | ----------------------------------------------------------------
+ |
+ | It accepts the object parameter and shows the input
+ | field errors of user profile address
+ |
+ */
+const showProfileAddressErrors = (response) => {
+    $('#edit-profile-address .error-address-line-one').html(response.errors.address_line_one ?? null);
+    $('#edit-profile-address .error-address-line-two').html(response.errors.address_line_two ?? null);
+    $('#edit-profile-address .error-city').html(response.errors.city ?? null);
+    $('#edit-profile-address .error-state').html(response.errors.state ?? null);
+    $('#edit-profile-address .error-country').html(response.errors.date_of_birth ?? null);
+}
+
+/**
+ | ----------------------------------------------------------------
+ |  Reset profile address errors
+ | ----------------------------------------------------------------
+ |
+ | It resets the input field errors of user profile address form
+ |
+ */
+const resetProfileAddressErrors = () => {
+    $('#edit-profile-address .error-address-line-one').html(null);
+    $('#edit-profile-address .error-address-line-two').html(null);
+    $('#edit-profile-address .error-city').html(null);
+    $('#edit-profile-address .error-state').html(null);
+    $('#edit-profile-address .error-country').html(null);
+}
+
+/**
+ | ----------------------------------------------------------------
+ |  Show profile all fields
+ | ----------------------------------------------------------------
+ |
+ | It accepts the object parameter and shows the all input
+ | fields data of user profile
+ |
+ */
+const showProfileFields = (response) => {
+    $('#edit-profile .field-name').val(response?.data?.name);
+    $('#edit-profile .field-display-name').val(response?.data?.display_name);
+    $('#edit-profile .field-phone').val(response?.data?.phone);
+    $('#edit-profile .field-gender').val(response?.data?.gender).trigger('change');
+    $('#edit-profile .field-date-of-birth').val(response?.data?.date_of_birth);
+    $('#edit-profile .field-address-line-one').val(response?.data?.address_line_one);
+    $('#edit-profile .field-address-line-two').val(response?.data?.address_line_two);
+    $('#edit-profile .field-city').val(response?.data?.city);
+    $('#edit-profile .field-state').val(response?.data?.state);
+    $('#edit-profile .field-country').val(response?.data?.country).trigger('change');
+}
+
+/**
+ | ----------------------------------------------------------------
+ |  Edit profile
+ | ----------------------------------------------------------------
+ |
+ | It shows the edit form and sends ajax request
+ | against the specific profile
+ |
+ */
+$('#user-profile').click(function () {
+    $.ajax({
+        url: $(this).data('url'),
+        type: 'GET',
+        success: function (response) {
+            if (response.success === true) {
+                showProfileFields(response);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr);
+            console.log(status);
+            console.log(error);
+        }
+    });
+});
+
+/**
+ | ----------------------------------------------------------------
  |  Update profile personal information
  | ----------------------------------------------------------------
  |
@@ -243,11 +357,7 @@ $('#edit-profile form').submit(function (e) {
                 $('#edit-profile').modal('hide');
                 fetchUserProfile();
             } else {
-                $('#edit-profile .error-name').html(response.errors.name);
-                $('#edit-profile .error-display-name').html(response.errors.display_name);
-                $('#edit-profile .error-phone').html(response.errors.phone);
-                $('#edit-profile .error-gender').html(response.errors.gender);
-                $('#edit-profile .error-date-of-birth').html(response.errors.date_of_birth);
+                showPersonalProfileErrors(response);
             }
         },
         error: function (xhr, status, error) {
@@ -286,11 +396,7 @@ $('#edit-profile-address').submit(function (e) {
                 $('#edit-profile').modal('hide');
                 fetchUserProfile();
             } else {
-                $('#edit-profile-address .error-address-line-one').html(response.errors.address_line_one);
-                $('#edit-profile-address .error-address-line-two').html(response.errors.address_line_two);
-                $('#edit-profile-address .error-city').html(response.errors.city);
-                $('#edit-profile-address .error-state').html(response.errors.state);
-                $('#edit-profile-address .error-country').html(response.errors.date_of_birth);
+                showProfileAddressErrors(response);
             }
         },
         error: function (xhr, status, error) {
@@ -299,6 +405,13 @@ $('#edit-profile-address').submit(function (e) {
             console.log(error);
         }
     });
+});
+
+$('.cancel-edit-profile-modal').click(function (e) {
+    e.preventDefault();
+
+    resetPersonalProfileErrors();
+    resetProfileAddressErrors();
 });
 
 /**

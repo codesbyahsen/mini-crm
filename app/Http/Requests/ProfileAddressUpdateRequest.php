@@ -24,11 +24,22 @@ class ProfileAddressUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'address_line_one' => ['required', 'string', 'max:255'],
-            'address_line_two' => ['nullable', 'string', 'max:255'],
+            'address_line_one' => ['required', 'string', 'max:250'],
+            'address_line_two' => ['nullable', 'string', 'max:250'],
             'city' => ['required', 'string', 'max:150'],
             'state' => ['required', 'string', 'max:150'],
             'country' => ['required', 'string', 'max:255'],
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'address_line_one.required' => 'The address line 1 field is required.',
+            'address_line_one.string' => 'The address line 1 field must be a string.',
+            'address_line_one.max' => 'The address line 1 field must not be greater than :max characters.',
+            'address_line_two.string' => 'The address line 2 field must be a string.',
+            'address_line_two.max' => 'The address line 2 field must not be greater than :max characters.'
         ];
     }
 

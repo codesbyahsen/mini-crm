@@ -56,7 +56,7 @@ class ProfileController extends Controller
             [
                 'success' => true,
                 'message' => 'User fetched successfully.',
-                'data' => $request->user()
+                'data' => $request->user()->getAttributes()
             ],
             200
         );

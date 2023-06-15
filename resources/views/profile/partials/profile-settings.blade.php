@@ -15,7 +15,7 @@
         </div>
     </div><!-- .nk-block-head -->
     <div class="nk-block">
-        <div class="nk-data data-list">
+        <div id="user-profile" class="nk-data data-list" data-url="{{ route('profile.edit') }}">
             <div class="data-head">
                 <h6 class="overline-title">Basics</h6>
             </div>
