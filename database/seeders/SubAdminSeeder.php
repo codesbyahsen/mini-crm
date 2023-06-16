@@ -17,11 +17,13 @@ class SubAdminSeeder extends Seeder
     public function run(): void
     {
         $user = User::create([
-            'name' => 'Daisy Smith',
+            'first_name' => 'Daisy',
+            'last_name' => 'Smith',
             'display_name' => 'Smith',
             'email' => 'sub-admin@admin.com',
             'email_verified_at' => now(),
-            'gender' => 'male',
+            'phone' => '03123456789',
+            'gender' => 'Male',
             'password' => bcrypt('password'),
             'remember_token' => Str::random(10),
         ]);

@@ -24,7 +24,8 @@ class User extends Authenticatable implements Authorizable
      */
     protected $fillable = [
         'avatar',
-        'name',
+        'first_name',
+        'last_name',
         'display_name',
         'email',
         'phone',
@@ -36,7 +37,7 @@ class User extends Authenticatable implements Authorizable
         'city',
         'state',
         'country',
-        'password',
+        'password'
     ];
 
     /**
