@@ -7,7 +7,17 @@
  */
 $(document).ready(function () {
     $('.summernote').summernote({
-        height: 120
+        height: 120,
+        toolbar: [
+            [ 'style', [ 'style' ] ],
+            [ 'font', [ 'bold', 'italic', 'underline', 'strikethrough', 'clear'] ],
+            [ 'fontname', [ 'fontname' ] ],
+            [ 'fontsize', [ 'fontsize' ] ],
+            [ 'color', [ 'color' ] ],
+            [ 'para', [ 'ol', 'ul', 'paragraph', 'height' ] ],
+            [ 'table', [ 'table' ] ],
+            [ 'view', ['fullscreen', 'codeview', 'help' ] ]
+        ]
     });
 });
 
@@ -474,6 +484,7 @@ $('#security-settings').submit(function (e) {
 var compantTable = $('#init-company-datatable').DataTable({
     processing: true,
     serverSide: true,
+    dom: "<'row'<'col-sm-12 col-md-6 float-left'f><'col-sm-12 col-md-6'<'float-right'l>>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-12 col-md-7 float-left'p><'col-sm-12 col-md-5'<'float-right'i>>>",
     ajax: {
         type: "GET",
         url: $(this).data('url'),
@@ -797,6 +808,7 @@ $('#init-company-datatable').on('click', '.delete-button', function () {
 var employeeTable = $('#init-employee-datatable').DataTable({
     processing: true,
     serverSide: true,
+    dom: "<'row'<'col-sm-12 col-md-6 float-left'f><'col-sm-12 col-md-6'<'float-right'l>>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-12 col-md-7 float-left'p><'col-sm-12 col-md-5'<'float-right'i>>>",
     ajax: {
         type: "GET",
         url: $('#init-employee-datatable').data('url'),
@@ -806,7 +818,7 @@ var employeeTable = $('#init-employee-datatable').DataTable({
         { data: 'email', name: 'email' },
         { data: 'phone', name: 'phone' },
         { data: 'company.name', name: 'company.name' },
-        // { data: 'action', name: 'action', orderable: false, searchable: false },
+        { data: 'action', name: 'action', orderable: false, searchable: false }
     ]
 });
 
@@ -1124,6 +1136,7 @@ $('#init-employee-datatable').on('click', '.delete-button', function () {
 var projectTable = $('#init-project-datatable').DataTable({
     processing: true,
     serverSide: true,
+    dom: "<'row'<'col-sm-12 col-md-6 float-left'f><'col-sm-12 col-md-6'<'float-right'l>>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-12 col-md-7 float-left'p><'col-sm-12 col-md-5'<'float-right'i>>>",
     ajax: {
         type: "GET",
         url: $(this).attr('data-url'),

@@ -27,6 +27,7 @@ class EmployeeController extends Controller
      */
     public function index(Request $request)
     {
+        // dd(Auth::user()->hasRole('admin'));
         $employees = Employee::with('company')->get();
         if ($request->ajax()) {
             $dataTable = Datatables::of($employees)
@@ -45,6 +46,15 @@ class EmployeeController extends Controller
                                         </ul>
                                     </div>
                                 </div>';
+                } else {
+                    return '<div class="drodown">
+                                <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <ul class="link-list-opt no-bdr">
+                                        <li><a href="javascript:void(0)" class="delete-button" data-url="' . route('employees.destroy', $row->id) . '"><em class="icon ni ni-activity-round"></em><span>Delete</span></a></li>
+                                    </ul>
+                                </div>
+                            </div>';
                 }
             })->rawColumns(['action']);
 

@@ -14,6 +14,14 @@
             </div>
             <div class="card card-bordered">
                 <div class="card-inner card-inner-lg">
+                    @if (Session::has('status'))
+                        <div class="my-3">
+                            <div class="alert alert-success alert-icon alert-dismissible">
+                                <em class="icon ni ni-check-circle"></em> {{ session('status') }} <button class="close"
+                                    data-dismiss="alert"></button>
+                            </div>
+                        </div>
+                    @endif
                     <div class="nk-block-head">
                         <div class="nk-block-head-content">
                             <h4 class="nk-block-title">Sign-In</h4>

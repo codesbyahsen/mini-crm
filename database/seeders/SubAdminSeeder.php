@@ -28,6 +28,6 @@ class SubAdminSeeder extends Seeder
 
         $roleSubAdmin = Role::where('name', 'sub-admin')->first();
         $user->assignRole($roleSubAdmin);
-        $roleSubAdmin->givePermissionTo(['View Employee', 'Create Employee']);
+        $roleSubAdmin->givePermissionTo(['View Employee', 'Create Employee', 'Delete Employee']);
     }
 }

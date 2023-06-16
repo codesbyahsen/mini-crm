@@ -5,7 +5,7 @@
     <div class="nk-content ">
         <div class="nk-block nk-block-middle nk-auth-body  wide-xs">
             <div class="brand-logo pb-4 text-center">
-                <a href="html/index.html" class="logo-link">
+                <a href="javascript:void(0)" class="logo-link">
                     <img class="logo-light logo-img logo-img-lg" src="./images/logo.png" srcset="./images/logo2x.png 2x"
                         alt="logo">
                     <img class="logo-dark logo-img logo-img-lg" src="./images/logo-dark.png"
@@ -14,6 +14,14 @@
             </div>
             <div class="card card-bordered">
                 <div class="card-inner card-inner-lg">
+                    @if (Session::has('status'))
+                        <div class="my-3">
+                            <div class="alert alert-success alert-icon alert-dismissible">
+                                <em class="icon ni ni-check-circle"></em> {{ session('status') }} <button class="close"
+                                    data-dismiss="alert"></button>
+                            </div>
+                        </div>
+                    @endif
                     <div class="nk-block-head">
                         <div class="nk-block-head-content">
                             <h5 class="nk-block-title">Reset password</h5>

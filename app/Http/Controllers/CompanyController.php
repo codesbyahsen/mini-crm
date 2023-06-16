@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Company;
 use Illuminate\Http\Request;
-use App\Jobs\NewCompanyCreationJob;
 use App\Http\Requests\CompanyRequest;
+use App\Models\User;
+use App\Notifications\NewCompanyCreation;
 use App\Traits\AjaxResponse;
 use Illuminate\Database\QueryException;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Notification;
 use Symfony\Component\HttpFoundation\Response;
 
 class CompanyController extends Controller
@@ -76,7 +78,9 @@ class CompanyController extends Controller
             $company = array_replace($request->validated(), array('logo' => $logoName));
             $result = Company::create($company);
 
-            dispatch(new NewCompanyCreationJob($result, 'The company ' . $result->name . ' has been created.'));
+            // send notfication to admin
+            $admin = User::role('admin')->first();
+            Notification::send($admin, new NewCompanyCreation('The company ' . strtoupper($result->name) . ' has been created.'));
 
             return $this->success('The company created successfully.', $result, Response::HTTP_CREATED);
         } catch (QueryException $exception) {

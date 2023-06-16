@@ -7,18 +7,15 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class NewCompanyCreation extends Notification implements ShouldQueue
+class ResetPassword extends Notification implements ShouldQueue
 {
     use Queueable;
-
-    public $tries = 3;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(private string $message)
+    public function __construct(private string $token)
     {
-        //
     }
 
     /**
@@ -36,9 +33,15 @@ class NewCompanyCreation extends Notification implements ShouldQueue
      */
     public function toMail(object $notifiable): MailMessage
     {
+        $resetPasswordUrl = route('password.reset', [
+            'token' => $this->token,
+            'email' => $notifiable->getEmailForPasswordReset(),
+        ]);
+
         return (new MailMessage)
-                    ->line($this->message)
-                    ->line('Thank you for using our application!');
+            ->line('You are receiving this email because we received a password reset request for your account.')
+            ->action('Reset Password', $resetPasswordUrl)
+            ->line('Thank you for using our application!');
     }
 
     /**
@@ -51,13 +54,5 @@ class NewCompanyCreation extends Notification implements ShouldQueue
         return [
             //
         ];
-    }
-
-    /**
-     * Retry after defined number of seconds.
-     */
-    public function retryAfter()
-    {
-        return 5;
     }
 }
