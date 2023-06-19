@@ -75,8 +75,9 @@ class CompanyController extends Controller
             }
 
             // replace logo value with custom logo name
-            $company = array_replace($request->validated(), array('logo' => $logoName));
+            $company = array_replace($request->validated(), array('logo' => $logoName, 'display_name' => $request->name));
             $result = Company::create($company);
+            $result->assignRole('company');
 
             // send notfication to admin
             $admin = User::role('admin')->first();

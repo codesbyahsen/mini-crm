@@ -38,7 +38,7 @@
             <div class="data-item">
                 <div class="data-col">
                     <span class="data-label">Email</span>
-                    <span class="data-value profile-email"></span>
+                    <span class="data-value text-soft profile-email"></span>
                 </div>
                 <div class="data-col data-col-end"><span class="data-more disable"><em
                             class="icon ni ni-lock-alt"></em></span></div>
@@ -46,27 +46,46 @@
             <div class="data-item" data-toggle="modal" data-target="#edit-profile">
                 <div class="data-col">
                     <span class="data-label">Phone Number</span>
-                    <span class="data-value text-soft profile-phone"></span>
+                    <span class="data-value profile-phone"></span>
                 </div>
                 <div class="data-col data-col-end"><span class="data-more"><em
                             class="icon ni ni-forward-ios"></em></span></div>
             </div><!-- data-item -->
-            <div class="data-item" data-toggle="modal" data-target="#edit-profile">
-                <div class="data-col">
-                    <span class="data-label">Date of Birth</span>
-                    <span class="data-value profile-date-of-birth"></span>
-                </div>
-                <div class="data-col data-col-end"><span class="data-more"><em
-                            class="icon ni ni-forward-ios"></em></span></div>
-            </div><!-- data-item -->
-            <div class="data-item" data-toggle="modal" data-target="#edit-profile">
-                <div class="data-col">
-                    <span class="data-label">Gender</span>
-                    <span class="data-value profile-gender"></span>
-                </div>
-                <div class="data-col data-col-end"><span class="data-more"><em
-                            class="icon ni ni-forward-ios"></em></span></div>
-            </div><!-- data-item -->
+            @auth('company')
+                <div class="data-item" data-toggle="modal" data-target="#edit-profile">
+                    <div class="data-col">
+                        <span class="data-label">Founded In</span>
+                        <span class="data-value profile-founded-in"></span>
+                    </div>
+                    <div class="data-col data-col-end"><span class="data-more"><em
+                                class="icon ni ni-forward-ios"></em></span></div>
+                </div><!-- data-item -->
+                <div class="data-item" data-toggle="modal" data-target="#edit-profile">
+                    <div class="data-col">
+                        <span class="data-label">Website</span>
+                        <span class="data-value profile-website"></span>
+                    </div>
+                    <div class="data-col data-col-end"><span class="data-more"><em
+                                class="icon ni ni-forward-ios"></em></span></div>
+                </div><!-- data-item -->
+            @else
+                <div class="data-item" data-toggle="modal" data-target="#edit-profile">
+                    <div class="data-col">
+                        <span class="data-label">Date of Birth</span>
+                        <span class="data-value profile-date-of-birth"></span>
+                    </div>
+                    <div class="data-col data-col-end"><span class="data-more"><em
+                                class="icon ni ni-forward-ios"></em></span></div>
+                </div><!-- data-item -->
+                <div class="data-item" data-toggle="modal" data-target="#edit-profile">
+                    <div class="data-col">
+                        <span class="data-label">Gender</span>
+                        <span class="data-value profile-gender"></span>
+                    </div>
+                    <div class="data-col data-col-end"><span class="data-more"><em
+                                class="icon ni ni-forward-ios"></em></span></div>
+                </div><!-- data-item -->
+            @endauth
             <div class="data-item" data-toggle="modal" data-target="#edit-profile" data-tab-target="#address">
                 <div class="data-col">
                     <span class="data-label">Address</span>

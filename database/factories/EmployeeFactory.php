@@ -18,10 +18,12 @@ class EmployeeFactory extends Factory
      */
     public function definition(): array
     {
+        $lastName = fake()->lastName();
         return [
             'company_id' => Company::factory(),
             'first_name' => fake()->firstName(),
-            'last_name' => fake()->lastName(),
+            'last_name' => $lastName,
+            'display_name' => $lastName,
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'phone' => fake()->phoneNumber(),

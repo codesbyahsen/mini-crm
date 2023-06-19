@@ -9,14 +9,14 @@ $(document).ready(function () {
     $('.summernote').summernote({
         height: 120,
         toolbar: [
-            [ 'style', [ 'style' ] ],
-            [ 'font', [ 'bold', 'italic', 'underline', 'strikethrough', 'clear'] ],
-            [ 'fontname', [ 'fontname' ] ],
-            [ 'fontsize', [ 'fontsize' ] ],
-            [ 'color', [ 'color' ] ],
-            [ 'para', [ 'ol', 'ul', 'paragraph', 'height' ] ],
-            [ 'table', [ 'table' ] ],
-            [ 'view', ['fullscreen', 'codeview', 'help' ] ]
+            ['style', ['style']],
+            ['font', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
+            ['fontname', ['fontname']],
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['para', ['ol', 'ul', 'paragraph', 'height']],
+            ['table', ['table']],
+            ['view', ['fullscreen', 'codeview', 'help']]
         ]
     });
 });
@@ -73,6 +73,70 @@ $(document).ready(function () {
         $("body").removeClass("dark-mode");
     }
 });
+
+/**
+ | ----------------------------------------------------------------
+ |  Generate random string
+ | ----------------------------------------------------------------
+ |
+ | It generate rondom string use for multi purpose
+ |
+ */
+const random = (length = 12) => {
+    let chars = "0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&_ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    let randomString = '';
+
+    for (var i = 0; i <= length; i++) {
+        let randomNumber = Math.floor(Math.random() * chars.length);
+        randomString += chars.substring(randomNumber, randomNumber + 1);
+    }
+    return randomString;
+}
+
+/**
+ | ----------------------------------------------------------------
+ |  Copy to clipboard
+ | ----------------------------------------------------------------
+ |
+ | It writes the data on clipboard to available for reuse
+ | by pasting
+ |
+ */
+const copyToClipboard = (data) => {
+    navigator.clipboard.writeText(data);
+}
+
+/**
+ | ----------------------------------------------------------------
+ |  Get random string as a password
+ | ----------------------------------------------------------------
+ |
+ | It shows random string for password generating modal
+ |
+ */
+$(document).ready(function () {
+    $('#get-random-password').val(random());
+});
+
+$('#generate-password').click(function (e) {
+    $('#get-random-password').val(random());
+});
+
+/**
+ | ----------------------------------------------------------------
+ |  Copy input from "generate random password modal"
+ | ----------------------------------------------------------------
+ |
+ | It takes the value for copy from generate random password
+ | modal
+ |
+ */
+$('#get-random-password').click(function () {
+    let value = $('#get-random-password').val();
+    copyToClipboard(value);
+    toastr['success']('', 'Copied to clipboard!');
+});
+
 
 // ============================== |> User Profile Module <| ============================== //
 
@@ -188,12 +252,24 @@ const fetchUserProfile = () => {
         type: 'GET',
         success: function (response) {
             if (response.success === true) {
-                $('.profile-name').html(response?.data?.name);
-                $('.profile-display-name').html(response?.data?.display_name);
+                $('.profile-name').html((response?.data?.name) ? (response?.data?.name) : (response?.data?.first_name + ' ' + response?.data?.last_name));
+                if (response?.data?.display_name) {
+                    $('.profile-display-name').html(response?.data?.display_name);
+                } else {
+                    $('.profile-display-name').html(response.data.name ?? response.data.first_name + ' ' + response.data.last_name);
+                }
                 $('.profile-email').html(response?.data?.email);
                 $('.profile-phone').html(response?.data?.phone);
-                $('.profile-gender').html(response?.data?.gender);
-                $('.profile-date-of-birth').html(response?.data?.date_of_birth);
+                if (response?.data?.gender) {
+                    $('.profile-gender').html(response?.data?.gender);
+                } else {
+                    $('.profile-founded-in').html(response?.data?.founded_in);
+                }
+                if (response?.data?.date_of_birth) {
+                    $('.profile-date-of-birth').html(response?.data?.date_of_birth);
+                } else {
+                    $('.profile-website').html(response?.data?.website);
+                }
                 $('.profile-address').html(response?.data?.full_address);
             } else {
                 console.log(response);
@@ -229,11 +305,27 @@ $('.tab-profile-settings').click(function (e) {
  |
  */
 const showPersonalProfileErrors = (response) => {
-    $('#edit-profile .error-name').html(response.errors.name ?? null);
+    if (response?.errors?.name) {
+        $('#edit-profile .error-name').html(response.errors.name ?? null);
+    } else {
+        $('#edit-profile .error-first-name').html(response.errors.first_name ?? null);
+        $('#edit-profile .error-last-name').html(response.errors.last_name ?? null);
+    }
+
     $('#edit-profile .error-display-name').html(response.errors.display_name ?? null);
     $('#edit-profile .error-phone').html(response.errors.phone ?? null);
-    $('#edit-profile .error-gender').html(response.errors.gender ?? null);
-    $('#edit-profile .error-date-of-birth').html(response.errors.date_of_birth ?? null);
+
+    if (response?.errors?.gender) {
+        $('#edit-profile .error-gender').html(response.errors.gender ?? null);
+    } else {
+        $('#edit-profile .error-founded-in').html(response.errors.founded_in ?? null);
+    }
+
+    if (response?.errors?.date_of_birth) {
+        $('#edit-profile .error-date-of-birth').html(response.errors.date_of_birth ?? null);
+    } else {
+        $('#edit-profile .error-website').val(response.errors.website ?? null);
+    }
 }
 
 /**
@@ -246,10 +338,14 @@ const showPersonalProfileErrors = (response) => {
  */
 const resetPersonalProfileErrors = () => {
     $('#edit-profile .error-name').html(null);
+    $('#edit-profile .error-first-name').html(null);
+    $('#edit-profile .error-last-name').html(null);
     $('#edit-profile .error-display-name').html(null);
     $('#edit-profile .error-phone').html(null);
     $('#edit-profile .error-gender').html(null);
     $('#edit-profile .error-date-of-birth').html(null);
+    $('#edit-profile .error-founded-in').html(null);
+    $('#edit-profile .error-website').val(null);
 }
 
 /**
@@ -295,12 +391,25 @@ const resetProfileAddressErrors = () => {
  |
  */
 const showProfileFields = (response) => {
-    $('#edit-profile .field-name').val(response?.data?.name);
+    if (response?.data?.name) {
+        $('#edit-profile .field-name').val(response?.data?.name);
+    } else {
+        $('#edit-profile .field-first-name').val(response?.data?.first_name);
+        $('#edit-profile .field-last-name').val(response?.data?.last_name);
+    }
     $('#edit-profile .field-display-name').val(response?.data?.display_name);
     $('#edit-profile .field-display-name').attr('value', response?.data?.display_name);
     $('#edit-profile .field-phone').val(response?.data?.phone);
-    $('#edit-profile .field-gender').val(response?.data?.gender).trigger('change');
-    $('#edit-profile .field-date-of-birth').val(response?.data?.date_of_birth);
+    if (response?.data?.gender) {
+        $('#edit-profile .field-gender').val(response?.data?.gender).trigger('change');
+    } else {
+        $('#edit-profile .field-founded-in').val(response?.data?.founded_in);
+    }
+    if (response?.data?.date_of_birth) {
+        $('#edit-profile .field-date-of-birth').val(response?.data?.date_of_birth);
+    } else {
+        $('#edit-profile .field-website').val(response?.data?.website);
+    }
     $('#edit-profile .field-address-line-one').val(response?.data?.address_line_one);
     $('#edit-profile .field-address-line-two').val(response?.data?.address_line_two);
     $('#edit-profile .field-city').val(response?.data?.city);
@@ -545,6 +654,7 @@ const showCompanyErrors = (response) => {
     $('.error-name').html(response.errors.name ?? '');
     $('.error-email').html(response.errors.email ?? '');
     $('.error-website').html(response.errors.website ?? '');
+    $('.error-password').html(response.errors.password ?? '');
 }
 
 /**
@@ -560,6 +670,7 @@ const resetCompanyErrors = () => {
     $('.error-name').html(null);
     $('.error-email').html(null);
     $('.error-website').html(null);
+    $('.error-password').html(null);
 }
 
 /**
@@ -639,6 +750,21 @@ $('#create-company form').submit(function (e) {
             console.log(error);
         }
     });
+});
+
+/**
+ | ----------------------------------------------------------------
+ |  Make create company modal scrollable
+ | ----------------------------------------------------------------
+ |
+ | When opens a modal on modal it prevent the scrolling for
+ | main modal so it make main modal scrollable again
+ |
+ */
+$(document).on('hidden.bs.modal', function (event) {
+    if ($('#create-company:visible').length) {
+        $('body').addClass('modal-open');
+    }
 });
 
 /**
@@ -870,6 +996,7 @@ const showEmployeeErrors = (response) => {
     $('.error-phone').html(response.errors.phone ?? '');
     $('.error-email').html(response.errors.email ?? '');
     $('.error-company').html(response.errors.company_id ?? '');
+    $('.error-password').html(response.errors.password ?? '');
 }
 
 /**
@@ -886,6 +1013,7 @@ const resetEmployeeErrors = () => {
     $('.error-phone').html(null);
     $('.error-email').html(null);
     $('.error-company').html(null);
+    $('.error-password').html(null);
 }
 
 /**
@@ -898,6 +1026,7 @@ const resetEmployeeErrors = () => {
  |
  */
 const showEmployeeFields = (response) => {
+    $('#edit-employee .display-employee-avatar').attr('src', response?.data?.avatar);
     $('#edit-employee .field-first-name').val(response?.data?.first_name);
     $('#edit-employee .field-last-name').val(response?.data?.last_name);
     $('#edit-employee .field-phone').val(response?.data?.phone);
@@ -919,6 +1048,7 @@ const resetEmployeeFields = () => {
     $('#create-employee .field-phone').val(null);
     $('#create-employee .field-email').val(null);
     $('#create-employee .field-company').val(null).trigger('change');
+    $('#create-employee .field-password').val(null);
 }
 
 /**
@@ -964,6 +1094,21 @@ $('#create-employee form').submit(function (e) {
             console.log(error);
         }
     });
+});
+
+/**
+ | ----------------------------------------------------------------
+ |  Make create employee modal scrollable
+ | ----------------------------------------------------------------
+ |
+ | When opens a modal on modal it prevent the scrolling for
+ | main modal so it make main modal scrollable again
+ |
+ */
+$(document).on('hidden.bs.modal', function (event) {
+    if ($('#create-employee:visible').length) {
+        $('body').addClass('modal-open');
+    }
 });
 
 /**
@@ -1063,6 +1208,7 @@ $('#edit-employee form').submit(function (e) {
  */
 $('.cancel-edit-employee-form').click(function () {
     resetEmployeeErrors();
+    $('#edit-employee .field-password').val(null);
 });
 
 /**
@@ -1276,6 +1422,7 @@ const showProjectAttributes = (response) => {
     employees.map(function (employee, index) {
         $('.show-employees').append(employee?.first_name + ' ' + employee.last_name + ((employees.length - 1) == index ? '.' : ', '));
     });
+    $('.show-company').html(response?.data?.detail);
 }
 
 /**

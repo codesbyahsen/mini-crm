@@ -80,8 +80,9 @@ class EmployeeController extends Controller
     public function store(EmployeeRequest $request)
     {
         try {
-            $employee = Employee::create($request->validated());
-
+            $employee = $request->validated() + ['display_name' => $request->first_name . ' ' . $request->last_name];
+            $employee = Employee::create($employee);
+            $employee->assignRole('employee');
             return $this->success('The employee created successfully.', $employee, Response::HTTP_CREATED);
         } catch (QueryException $exception) {
             return $this->error('failed_query', Response::HTTP_INTERNAL_SERVER_ERROR);

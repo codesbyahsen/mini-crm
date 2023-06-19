@@ -122,8 +122,7 @@
                             <label class="form-label">Employees</label>
                             <div class="form-control-wrap">
                                 <select class="form-select field-employee-id" multiple="multiple" name="employee_id[]"
-                                    data-placeholder="Select Multiple options">
-                                    <option value="">Assign To</option>
+                                data-placeholder="Select Employees">
                                     @foreach ($employees as $employee)
                                         <option value="{{ $employee?->id }}">{{ $employee?->fullName() }}</option>
                                     @endforeach
@@ -198,8 +197,7 @@
                             <label class="form-label">Employees</label>
                             <div class="form-control-wrap">
                                 <select class="form-select field-employee-id" multiple="multiple" name="employee_id[]"
-                                    data-placeholder="Select Multiple options">
-                                    <option value="">Assign To</option>
+                                    data-placeholder="Select Employees">
                                     @foreach ($employees as $employee)
                                         <option value="{{ $employee?->id }}">{{ $employee?->fullName() }}</option>
                                     @endforeach
@@ -262,6 +260,10 @@
                                             <div class="col-12 mt-3">
                                                 <label class="mb-0 pb-0 text-muted">Employees Working On:</label>
                                                 <div class="show-employees"></div>
+                                            </div>
+                                            <div class="col-12 mt-3">
+                                                <label class="mb-0 pb-0 text-muted">Employee Detail:</label>
+                                                <div class="show-company"></div>
                                             </div>
                                         </div>
                                     </div>

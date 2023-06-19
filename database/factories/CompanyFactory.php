@@ -17,8 +17,10 @@ class CompanyFactory extends Factory
      */
     public function definition(): array
     {
+        $name = fake()->company();
         return [
-            'name' => fake()->company(),
+            'name' => $name,
+            'display_name' => $name,
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'phone' => fake()->phoneNumber(),

@@ -114,6 +114,25 @@
                             </div>
                             <span class="text-danger small error-website"></span>
                         </div>
+                        <div class="form-group">
+                            <div class="form-label-group">
+                                <label class="form-label" for="password">Password</label>
+                                <a class="link link-primary link-sm" data-toggle="modal"
+                                    data-target="#generate-password-modal"
+                                    href="javascript:void(0)">{{ __('Generate password') }}</a>
+                            </div>
+                            <div class="form-control-wrap">
+                                <a href="#" class="form-icon form-icon-right passcode-switch lg"
+                                    data-target="company-password">
+                                    <em class="passcode-icon icon-show icon ni ni-eye"></em>
+                                    <em class="passcode-icon icon-hide icon ni ni-eye-off"></em>
+                                </a>
+                                <input type="password" name="password"
+                                    class="form-control form-control-lg field-password" id="company-password"
+                                    placeholder="Enter the new password" autocomplete="new-password" />
+                            </div>
+                            <span class="text-danger small error-password"></span>
+                        </div>
                         <div class="form-group float-right">
                             <button type="reset" class="btn btn-lg btn-light mr-1 cancel-create-company-form"
                                 data-dismiss="modal" aria-label="Close">Cancel</button>

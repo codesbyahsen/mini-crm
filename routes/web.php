@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\EmployeeController;
@@ -21,16 +22,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth:web,employee,company', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth:web,employee,company')->group(function () {
     # profile
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::get('/profile/avatar', [ProfileController::class, 'avatar'])->name('profile.avatar');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::post('/profile/{profile}/upload-avatar', [ProfileController::class, 'uploadAvatar'])->name('profile.upload.avatar');
+    Route::post('/profile/upload-avatar', [ProfileController::class, 'uploadAvatar'])->name('profile.upload.avatar');
     Route::patch('/profile/update-personal', [ProfileController::class, 'updatePersonal'])->name('profile.update');
     Route::patch('/profile/update-address', [ProfileController::class, 'updateAddress'])->name('profile.update.address');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

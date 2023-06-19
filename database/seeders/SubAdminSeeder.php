@@ -18,7 +18,7 @@ class SubAdminSeeder extends Seeder
     {
         $user = User::create([
             'first_name' => 'Daisy',
-            'last_name' => 'Smith',
+            'last_name' => 'Smith', 
             'display_name' => 'Smith',
             'email' => 'sub-admin@admin.com',
             'email_verified_at' => now(),

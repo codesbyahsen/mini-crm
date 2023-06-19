@@ -13,6 +13,10 @@ class CompanySeeder extends Seeder
      */
     public function run(): void
     {
-        Company::factory()->count(10)->create();
+        $companies = Company::factory()->count(10)->create();
+
+        foreach ($companies as $company) {
+            $company->assignRole('company');
+        }
     }
 }
