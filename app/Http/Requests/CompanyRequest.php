@@ -6,6 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rules\File;
+use Illuminate\Validation\Rules\Password;
 
 class CompanyRequest extends FormRequest
 {
@@ -30,7 +31,8 @@ class CompanyRequest extends FormRequest
                     'name' => ['required', 'string', 'max:120', 'unique:companies,name'],
                     'email' => ['required', 'string', 'max:120', 'email', 'unique:companies,email'],
                     'logo' => ['nullable', File::types(['png', 'jpg', 'jpeg'])->max(1024), 'dimensions:min_width=100,min_height=100'],
-                    'website' => ['nullable']
+                    'website' => ['nullable'],
+                    'password' => ['required', Password::defaults()]
                 ];
             case 'PUT':
                 return [

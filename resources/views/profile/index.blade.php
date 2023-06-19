@@ -36,8 +36,7 @@
                                                             href="#"><em class="icon ni ni-more-v"></em></a>
                                                         <div class="dropdown-menu dropdown-menu-right">
                                                             <ul class="link-list-opt no-bdr">
-                                                                <li><a href="#" id="upload-button-avatar"
-                                                                        data-url="{{ route('profile.upload.avatar', $user->id) }}">
+                                                                <li><a href="#" id="upload-button-avatar" data-url="{{ route('profile.upload.avatar') }}">
                                                                         <em class="icon ni ni-camera-fill"></em><span>Upload
                                                                             Photo</span></a>
                                                                     <input type="file" id="avatarInput"
@@ -52,7 +51,8 @@
                                         </div><!-- .card-inner -->
                                         <div class="card-inner p-0">
                                             <ul class="link-list-menu nav nav-tabs">
-                                                <li><a class="active tab-profile-settings" data-toggle="tab" href="#tabProfileSettings"><em
+                                                <li><a class="active tab-profile-settings" data-toggle="tab"
+                                                        href="#tabProfileSettings"><em
                                                             class="icon ni ni-user-fill-c"></em><span>Personal
                                                             Infomation</span></a></li>
                                                 <li><a data-toggle="tab" href="#tabSecuritySettings"><em
@@ -91,14 +91,36 @@
                         <div class="tab-pane active" id="personal">
                             <form action="{{ route('profile.update') }}">
                                 <div class="row gy-4">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="form-label" for="full-name">Full Name</label>
-                                            <input type="text" class="form-control form-control-lg field-name"
-                                                id="full-name" name="name" value="" placeholder="Enter Full name">
-                                            <span class="text-danger small error-name"></span>
+                                    @auth('company')
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-label" for="full-name">Full Name</label>
+                                                <input type="text" class="form-control form-control-lg field-name"
+                                                    id="full-name" name="name" value=""
+                                                    placeholder="Enter Full name">
+                                                <span class="text-danger small error-name"></span>
+                                            </div>
                                         </div>
-                                    </div>
+                                    @else
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-label" for="first-name">First Name</label>
+                                                <input type="text" class="form-control form-control-lg field-first-name"
+                                                    id="first-name" name="first_name" value=""
+                                                    placeholder="Enter your first name">
+                                                <span class="text-danger small error-first-name"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-label" for="last-name">Last Name</label>
+                                                <input type="text" class="form-control form-control-lg field-last-name"
+                                                    id="last-name" name="last_name" value=""
+                                                    placeholder="Enter your last name">
+                                                <span class="text-danger small error-last-name"></span>
+                                            </div>
+                                        </div>
+                                    @endauth
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-label" for="display-name">Display Name</label>
@@ -116,28 +138,49 @@
                                             <span class="text-danger small error-phone"></span>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="form-label" for="gender">Gender</label>
-                                            <select class="form-select field-gender" name="gender" id="gender"
-                                                data-ui="lg">
-                                                <option value="" selected>Select gender</option>
-                                                <option value="Male">Male</option>
-                                                <option value="Female">Female</option>
-                                                <option value="Other">Other</option>
-                                            </select>
-                                            <span class="text-danger small error-gender"></span>
+                                    @auth('company')
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-label" for="founded-in">Founded In</label>
+                                                <input type="text" class="form-control form-control-lg field-founded-in"
+                                                    id="founded-in" name="founded_in" value=""
+                                                    placeholder="Founded in">
+                                                <span class="text-danger small error-founded-in"></span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="form-label" for="birth-day">Date of Birth</label>
-                                            <input type="date" class="form-control form-control-lg field-date-of-birth"
-                                                name="date_of_birth" id="birth-day" value=""
-                                                placeholder="Enter your date of birth" />
-                                            <span class="text-danger small error-date-of-birth"></span>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-label" for="website">Website</label>
+                                                <input type="text" class="form-control form-control-lg field-website"
+                                                    id="website" name="website" value=""
+                                                    placeholder="Website">
+                                                <span class="text-danger small error-website"></span>
+                                            </div>
                                         </div>
-                                    </div>
+                                    @else
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-label" for="gender">Gender</label>
+                                                <select class="form-select field-gender" name="gender" id="gender"
+                                                    data-ui="lg">
+                                                    <option value="" selected>Select gender</option>
+                                                    <option value="Male">Male</option>
+                                                    <option value="Female">Female</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
+                                                <span class="text-danger small error-gender"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="form-label" for="birth-day">Date of Birth</label>
+                                                <input type="date" class="form-control form-control-lg field-date-of-birth"
+                                                    name="date_of_birth" id="birth-day" value=""
+                                                    placeholder="Enter your date of birth" />
+                                                <span class="text-danger small error-date-of-birth"></span>
+                                            </div>
+                                        </div>
+                                    @endauth
                                     <div class="col-12">
                                         <div class="custom-control custom-switch">
                                             <input type="checkbox" class="custom-control-input" id="display-name-switch">

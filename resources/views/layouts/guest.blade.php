@@ -19,7 +19,9 @@
         <div class="nk-main ">
             <!-- wrap -->
             <div class="nk-wrap nk-wrap-nosidebar">
-                @yield('page-content')
+                <div class="nk-content ">
+                    @yield('page-content')
+                </div>
             </div>
         </div>
     </div>

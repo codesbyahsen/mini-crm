@@ -72,11 +72,25 @@
                             <div class="dropdown-inner">
                                 <ul class="link-list">
                                     <li>
-                                        <form method="POST" action="{{ route('logout') }}">
-                                            @csrf
-                                            <button type="submit" class="bg-transparent border-0"><em
-                                                    class="icon ni ni-signout"></em><span>{{ __('Sign out') }}</span></button>
-                                        </form>
+                                        @if (auth()->guard('employee')->check())
+                                            <form method="POST" action="{{ route('employees.logout') }}">
+                                                @csrf
+                                                <button type="submit" class="bg-transparent border-0"><em
+                                                        class="icon ni ni-signout"></em><span>{{ __('Sign out') }}</span></button>
+                                            </form>
+                                        @elseif (auth()->guard('company')->check())
+                                            <form method="POST" action="{{ route('companies.logout') }}">
+                                                @csrf
+                                                <button type="submit" class="bg-transparent border-0"><em
+                                                        class="icon ni ni-signout"></em><span>{{ __('Sign out') }}</span></button>
+                                            </form>
+                                        @else
+                                            <form method="POST" action="{{ route('logout') }}">
+                                                @csrf
+                                                <button type="submit" class="bg-transparent border-0"><em
+                                                        class="icon ni ni-signout"></em><span>{{ __('Sign out') }}</span></button>
+                                            </form>
+                                        @endif
                                     </li>
                                 </ul>
                             </div>

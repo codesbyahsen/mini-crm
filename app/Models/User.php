@@ -24,7 +24,8 @@ class User extends Authenticatable implements Authorizable
      */
     protected $fillable = [
         'avatar',
-        'name',
+        'first_name',
+        'last_name',
         'display_name',
         'email',
         'phone',
@@ -36,7 +37,7 @@ class User extends Authenticatable implements Authorizable
         'city',
         'state',
         'country',
-        'password',
+        'password'
     ];
 
     /**
@@ -81,7 +82,7 @@ class User extends Authenticatable implements Authorizable
         );
     }
 
-    public function getFullAddress()
+    public function getFullAddress(): ?string
     {
         return (($this->address_line_one ? $this->address_line_one . ', ' : null) . ($this->address_line_two ? $this->address_line_two . ', ' : null) . ($this->city ? $this->city . ', ' : null) . ($this->state ? $this->state . ', ' : null) . ($this->country ? $this->country . '.' : null) == null ? null : ($this->address_line_one ? $this->address_line_one . ', ' : null) . ($this->address_line_two ? $this->address_line_two . ', ' : null) . ($this->city ? $this->city . ', ' : null) . ($this->state ? $this->state . ', ' : null) . ($this->country ? $this->country . '.' : null));
     }

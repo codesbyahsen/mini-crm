@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
@@ -7,7 +8,7 @@ use Illuminate\Support\Facades\Storage;
 /**
  * Upload image files in storage directory
  */
-if (! function_exists('saveResizeImage')) {
+if (!function_exists('saveResizeImage')) {
     function saveResizeImage(object $file, string $directory, int|string $width, int|string|null $height = null, string $type = 'jpg')
     {
         $fileName = uniqid() . '_' . time() . '.' . $type;
@@ -28,9 +29,16 @@ if (! function_exists('saveResizeImage')) {
  * It returns the initial characters of name
  * from the users table accessing from auth
  */
-if (! function_exists('getNameInitials')) {
-    function getNameInitials(): string {
-        $name = explode(' ', auth()->user()->name);
-        return strtoupper($name[0][0] . $name[1][0]);
+if (!function_exists('getNameInitials')) {
+    function getNameInitials(): ?string
+    {
+        switch (Auth::check()) {
+            case Auth::guard('employee')->check():
+                return strtoupper(Auth::guard('employee')->user()->first_name[0] . Auth::guard('employee')->user()->last_name[0]);
+            case Auth::guard('web')->check():
+                return strtoupper(Auth::guard('web')->user()->first_name[0] . Auth::guard('web')->user()->last_name[0]);
+            default:
+                return null;
+        }
     }
 }
