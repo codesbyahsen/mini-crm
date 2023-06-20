@@ -103,8 +103,9 @@
                                         <em class="passcode-icon icon-show icon ni ni-eye"></em>
                                         <em class="passcode-icon icon-hide icon ni ni-eye-off"></em>
                                     </a>
-                                    <input type="password" name="password_confirmation" class="form-control form-control-lg"
-                                        id="password-confirmation" placeholder="Retype your password">
+                                    <input type="password" name="password_confirmation"
+                                        class="form-control form-control-lg" id="password-confirmation"
+                                        placeholder="Retype your password">
                                 </div>
                                 @error('password_confirmation')
                                     <span class="text-danger small">{{ $message }}</span>
@@ -180,8 +181,9 @@
                                         <em class="passcode-icon icon-show icon ni ni-eye"></em>
                                         <em class="passcode-icon icon-hide icon ni ni-eye-off"></em>
                                     </a>
-                                    <input type="password" name="password_confirmation" class="form-control form-control-lg"
-                                        id="password-confirmation" placeholder="Retype your password">
+                                    <input type="password" name="password_confirmation"
+                                        class="form-control form-control-lg" id="password-confirmation"
+                                        placeholder="Retype your password">
                                 </div>
                                 @error('password_confirmation')
                                     <span class="text-danger small">{{ $message }}</span>
@@ -203,19 +205,8 @@
                                 href="{{ route('login') }}"><strong>Sign in instead</strong></a>
                         </div>
                     </div>
-
-                    {{-- <ul class="nav nav-tabs mt-n3">
-                        <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab" href="#tabItem1">Employee</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tabItem2">Company</a>
-                        </li>
-                    </ul> --}}
-
                 </div>
             </div>
-
         </div>
     </div>
 @endsection
