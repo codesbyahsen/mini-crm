@@ -23,9 +23,7 @@
                                                         data-placement="left" title="Total Companies"></em>
                                                 </div>
                                             </div>
-                                            <div class="card">
-                                                <span class=""> {{ $totalCompanies ?? '' }}</span>
-                                            </div>
+                                            <span class=""> {{ $totalCompanies ?? '' }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -42,9 +40,7 @@
                                                         data-placement="left" title="Total Employees"></em>
                                                 </div>
                                             </div>
-                                            <div class="card">
-                                                <span class=""> {{ $totalEmployees ?? '' }}</span>
-                                            </div>
+                                            <span class=""> {{ $totalEmployees ?? '' }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -61,9 +57,7 @@
                                                         data-placement="left" title="Total Projects"></em>
                                                 </div>
                                             </div>
-                                            <div class="card">
-                                                <span class=""> {{ $totalProjects ?? '' }}</span>
-                                            </div>
+                                            <span class=""> {{ $totalProjects ?? '' }}</span>
                                         </div>
                                     </div>
                                 </div>
