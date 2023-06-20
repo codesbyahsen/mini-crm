@@ -3,14 +3,19 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Notifications\ResetPassword;
+use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Auth\Access\Authorizable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements Authorizable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -18,9 +23,21 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'avatar',
+        'first_name',
+        'last_name',
+        'display_name',
         'email',
-        'password',
+        'phone',
+        'mobile',
+        'gender',
+        'date_of_birth',
+        'address_line_one',
+        'address_line_two',
+        'city',
+        'state',
+        'country',
+        'password'
     ];
 
     /**
@@ -42,4 +59,36 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function avatar(): Attribute
+    {
+        return new Attribute(
+            get: fn ($value) => isset($value) && !empty($value) ? asset('storage/' . $value) : null
+        );
+    }
+
+    public function displayName(): Attribute
+    {
+        $titles = ['Male' => 'Mr.', 'Female' => 'Ms.', 'Other' => null];
+        return new Attribute(
+            get: fn ($value) => $titles[$this->gender] . ' ' . $value
+        );
+    }
+
+    public function dateOfBirth(): Attribute
+    {
+        return new Attribute(
+            get: fn ($value) => date('Y-m-d', strtotime($value))
+        );
+    }
+
+    public function getFullAddress(): ?string
+    {
+        return (($this->address_line_one ? $this->address_line_one . ', ' : null) . ($this->address_line_two ? $this->address_line_two . ', ' : null) . ($this->city ? $this->city . ', ' : null) . ($this->state ? $this->state . ', ' : null) . ($this->country ? $this->country . '.' : null) == null ? null : ($this->address_line_one ? $this->address_line_one . ', ' : null) . ($this->address_line_two ? $this->address_line_two . ', ' : null) . ($this->city ? $this->city . ', ' : null) . ($this->state ? $this->state . ', ' : null) . ($this->country ? $this->country . '.' : null));
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify((new ResetPassword($token)));
+    }
 }

@@ -1,0 +1,278 @@
+@extends('layouts.app')
+@section('title', 'Projects - Mini-CRM')
+
+@section('page-content')
+
+    <div class="nk-content ">
+        <div class="container-fluid">
+            <div class="nk-content-inner">
+                <div class="nk-content-body">
+                    <div class="components-preview wide-md mx-auto">
+                        <div class="nk-block nk-block-lg">
+                            <div class="nk-block-head nk-block-head-sm">
+                                <div class="nk-block-between">
+                                    <div class="nk-block-head-content">
+                                        <h3 class="nk-block-title page-title">Projects</h3>
+                                        <div class="nk-block-des text-soft">
+                                            <p id="total-projects-url"
+                                                data-total-projects-url="{{ route('projects.total') }}">You have total
+                                                <span class="total-projects"></span> projects.
+                                            </p>
+                                        </div>
+                                    </div><!-- .nk-block-head-content -->
+                                    <div class="nk-block-head-content">
+                                        <div class="toggle-wrap nk-block-tools-toggle">
+                                            <a href="#" class="btn btn-icon btn-trigger toggle-expand mr-n1"
+                                                data-target="pageMenu"><em class="icon ni ni-menu-alt-r"></em></a>
+                                            <div class="toggle-expand-content" data-content="pageMenu">
+                                                <ul class="nk-block-tools g-3">
+                                                    <li class="nk-block-tools-opt">
+                                                        <div class="drodown">
+                                                            <a href="javascript:void(0)" data-toggle="modal"
+                                                                data-target="#create-project"
+                                                                class="btn btn-icon btn-primary"><em
+                                                                    class="icon ni ni-plus"></em></a>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card card-preview">
+                                <div class="card-inner">
+                                    <table class="nowrap table" id="init-project-datatable"
+                                        data-url="{{ route('projects.index') }}">
+                                        <thead>
+                                            <tr>
+                                                <th>Project Name</th>
+                                                <th>Client Name</th>
+                                                <th>Deadline</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('modals')
+    <!-- Create Project Modal Form -->
+    <div class="modal fade" id="create-project" data-backdrop="static">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create Project</h5>
+                    <a href="#" class="close cancel-create-project-form" data-dismiss="modal" aria-label="Close">
+                        <em class="icon ni ni-cross"></em>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('projects.store') }}" class="form-validate is-alter">
+                        <div class="form-group">
+                            <label class="form-label" for="project-name">Project Name</label>
+                            <div class="form-control-wrap">
+                                <input type="text" class="form-control field-name" id="project-name" name="name"
+                                    value="{{ old('name') }}" />
+                            </div>
+                            <span class="text-danger small error-name"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="project-detail">Project Detail</label>
+                            <div class="form-control-wrap">
+                                <textarea class="form-control form-control-sm field-detail summernote" id="project-detail" name="detail"
+                                    placeholder="Write your message"></textarea>
+                            </div>
+                            <span class="text-danger small error-detail"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="client-name">Client Name</label>
+                            <div class="form-control-wrap">
+                                <input type="text" class="form-control field-client-name" id="client-name"
+                                    name="client_name" value="{{ old('client_name') }}" />
+                            </div>
+                            <span class="text-danger small error-client-name"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="total-cost">Total Cost</label>
+                            <div class="form-control-wrap">
+                                <input type="text" class="form-control field-total-cost" id="total-cost"
+                                    name="total_cost" value="{{ old('total_cost') }}" />
+                            </div>
+                            <span class="text-danger small error-total-cost"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="deadline">Deadline</label>
+                            <div class="form-control-wrap">
+                                <input type="date" class="form-control field-deadline" id="deadline" name="deadline"
+                                    value="{{ old('deadline') }}" />
+                            </div>
+                            <span class="text-danger small error-deadline"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Employees</label>
+                            <div class="form-control-wrap">
+                                <select class="form-select field-employee-id" multiple="multiple" name="employee_id[]"
+                                data-placeholder="Select Employees">
+                                    @foreach ($employees as $employee)
+                                        <option value="{{ $employee?->id }}">{{ $employee?->fullName() }}</option>
+                                    @endforeach
+                                </select>
+                                <span class="text-danger small error-employee-id"></span>
+                            </div>
+                        </div>
+                        <div class="form-group float-right">
+                            <button type="reset" class="btn btn-lg btn-light mr-1 cancel-create-project-form"
+                                data-dismiss="modal" aria-label="Close">Cancel</button>
+                            <button type="submit" class="btn btn-lg btn-primary">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Project Modal Form -->
+    <div class="modal fade" id="edit-project" data-backdrop="static">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Project</h5>
+                    <a href="#" class="close cancel-edit-project-form" data-dismiss="modal" aria-label="Close">
+                        <em class="icon ni ni-cross"></em>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <form class="form-validate is-alter">
+                        <div class="form-group">
+                            <label class="form-label" for="project-name">Project Name</label>
+                            <div class="form-control-wrap">
+                                <input type="text" class="form-control field-name" id="project-name" name="name"
+                                    value="{{ old('name') }}" />
+                            </div>
+                            <span class="text-danger small error-name"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="project-detail">Project Detail</label>
+                            <div class="form-control-wrap">
+                                <textarea class="form-control form-control-sm field-detail summernote" id="project-detail" name="detail"
+                                    placeholder="Write your message"></textarea>
+                            </div>
+                            <span class="text-danger small error-detail"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="client-name">Client Name</label>
+                            <div class="form-control-wrap">
+                                <input type="text" class="form-control field-client-name" id="client-name"
+                                    name="client_name" value="{{ old('client_name') }}" />
+                            </div>
+                            <span class="text-danger small error-client-name"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="total-cost">Total Cost</label>
+                            <div class="form-control-wrap">
+                                <input type="text" class="form-control field-total-cost" id="total-cost"
+                                    name="total_cost" value="{{ old('total_cost') }}" />
+                            </div>
+                            <span class="text-danger small error-total-cost"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="deadline">Deadline</label>
+                            <div class="form-control-wrap">
+                                <input type="date" class="form-control field-deadline" id="deadline" name="deadline"
+                                    value="{{ old('deadline') }}" />
+                            </div>
+                            <span class="text-danger small error-deadline"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Employees</label>
+                            <div class="form-control-wrap">
+                                <select class="form-select field-employee-id" multiple="multiple" name="employee_id[]"
+                                    data-placeholder="Select Employees">
+                                    @foreach ($employees as $employee)
+                                        <option value="{{ $employee?->id }}">{{ $employee?->fullName() }}</option>
+                                    @endforeach
+                                </select>
+                                <span class="text-danger small error-employee-id"></span>
+                            </div>
+                        </div>
+                        <div class="form-group float-right">
+                            <button type="reset" class="btn btn-lg btn-light mr-1 cancel-edit-project-form"
+                                data-dismiss="modal" aria-label="Close">Cancel</button>
+                            <button type="submit" class="btn btn-lg btn-primary">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade zoom" tabindex="-1" id="view-project" data-backdrop="static">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">View Project Details</h5>
+                    <a href="#" class="close close-view-project" data-dismiss="modal" aria-label="Close">
+                        <em class="icon ni ni-cross"></em>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <div class="card card-bordered">
+                        <div class="card-aside-wrap">
+                            <div class="card-content">
+                                <div class="card-inner">
+                                    <div class="nk-block">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <label class="mb-0 pb-0 text-muted">Project Name:</label>
+                                                <div class="fw-bold show-name"></div>
+                                            </div>
+                                            <div class="col-12 mt-3">
+                                                <label class="mb-0 pb-0 text-muted">Client Name:</label>
+                                                <div class="fw-bold show-client-name"></div>
+                                            </div>
+                                            <div class="col-12 mt-3">
+                                                <label class="mb-0 pb-0 text-muted">Total Cost:</label>
+                                                <div class="fw-bold show-total-cost"></div>
+                                            </div>
+                                            <div class="col-12 mt-3">
+                                                <label class="mb-0 pb-0 text-muted">Deadline:</label>
+                                                <div class="fw-bold show-deadline"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="nk-divider divider md"></div>
+                                    <div class="nk-block">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <label class="mb-0 pb-0 text-muted">Detail:</label>
+                                                <div class="show-detail"></div>
+                                            </div>
+                                            <div class="col-12 mt-3">
+                                                <label class="mb-0 pb-0 text-muted">Employees Working On:</label>
+                                                <div class="show-employees"></div>
+                                            </div>
+                                            <div class="col-12 mt-3">
+                                                <label class="mb-0 pb-0 text-muted">Employee Detail:</label>
+                                                <div class="show-company"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
