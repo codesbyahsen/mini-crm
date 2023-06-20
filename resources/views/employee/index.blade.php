@@ -135,6 +135,27 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-12 mt-3">
+                                <div class="form-group">
+                                    <div class="form-label-group">
+                                        <label class="form-label" for="password">Password</label>
+                                        <a class="link link-primary link-sm" data-toggle="modal"
+                                            data-target="#generate-password-modal"
+                                            href="javascript:void(0)">{{ __('Generate password') }}</a>
+                                    </div>
+                                    <div class="form-control-wrap">
+                                        <a href="#" class="form-icon form-icon-right passcode-switch lg"
+                                            data-target="password">
+                                            <em class="passcode-icon icon-show icon ni ni-eye"></em>
+                                            <em class="passcode-icon icon-hide icon ni ni-eye-off"></em>
+                                        </a>
+                                        <input type="password" name="password" class="form-control form-control-lg field-password"
+                                            id="password" placeholder="Enter the new password"
+                                            autocomplete="new-password" />
+                                    </div>
+                                    <span class="text-danger small error-password"></span>
+                                </div>
+                            </div>
                             <div class="col-12 mt-2">
                                 <div class="form-group float-right">
                                     <button type="reset" class="btn btn-lg btn-light mr-1 cancel-create-employee-form"
@@ -161,12 +182,15 @@
                 </div>
                 <div class="modal-body">
                     <form class="form-validate is-alter edit-employee" id="edit-employee-form">
+                        <div class="text-center mb-3">
+                            <img src="" alt="" class="display-employee-avatar" width="100" />
+                        </div>
                         <div class="row">
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
-                                    <label class="form-label" for="first-name">First Name</label>
+                                    <label class="form-label" for="edit-first-name">First Name</label>
                                     <div class="form-control-wrap">
-                                        <input type="text" class="form-control field-first-name" id="first-name"
+                                        <input type="text" class="form-control field-first-name" id="edit-first-name"
                                             name="first_name" />
                                     </div>
                                     <span class="text-danger small error-first-name"></span>
@@ -174,9 +198,9 @@
                             </div>
                             <div class="col-md-6 col-12">
                                 <div class="form-group">
-                                    <label class="form-label" for="last-name">Last Name</label>
+                                    <label class="form-label" for="edit-last-name">Last Name</label>
                                     <div class="form-control-wrap">
-                                        <input type="text" class="form-control field-last-name" id="last-name"
+                                        <input type="text" class="form-control field-last-name" id="edit-last-name"
                                             name="last_name" />
                                     </div>
                                     <span class="text-danger small error-last-name"></span>
@@ -184,9 +208,9 @@
                             </div>
                             <div class="col-12 mt-2">
                                 <div class="form-group">
-                                    <label class="form-label" for="email-address">Email Address</label>
+                                    <label class="form-label" for="edit-email-address">Email Address</label>
                                     <div class="form-control-wrap">
-                                        <input type="email" class="form-control field-email" id="email-address"
+                                        <input type="email" class="form-control field-email" id="edit-email-address"
                                             name="email" value="{{ old('email') }}" />
                                     </div>
                                     <span class="text-danger small error-email"></span>
@@ -194,9 +218,9 @@
                             </div>
                             <div class="col-12 mt-2">
                                 <div class="form-group">
-                                    <label class="form-label" for="phone-number">Phone Number</label>
+                                    <label class="form-label" for="edit-phone-number">Phone Number</label>
                                     <div class="form-control-wrap">
-                                        <input type="text" class="form-control field-phone" id="phone-number"
+                                        <input type="text" class="form-control field-phone" id="edit-phone-number"
                                             name="phone" value="{{ old('phone') }}" />
                                     </div>
                                     <span class="text-danger small error-phone"></span>

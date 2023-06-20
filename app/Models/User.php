@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Notifications\ResetPassword;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
@@ -22,7 +24,8 @@ class User extends Authenticatable implements Authorizable
      */
     protected $fillable = [
         'avatar',
-        'name',
+        'first_name',
+        'last_name',
         'display_name',
         'email',
         'phone',
@@ -34,7 +37,7 @@ class User extends Authenticatable implements Authorizable
         'city',
         'state',
         'country',
-        'password',
+        'password'
     ];
 
     /**
@@ -72,15 +75,20 @@ class User extends Authenticatable implements Authorizable
         );
     }
 
-    public function dateOfBirth() : Attribute
+    public function dateOfBirth(): Attribute
     {
         return new Attribute(
             get: fn ($value) => date('Y-m-d', strtotime($value))
         );
     }
 
-    public function getFullAddress()
+    public function getFullAddress(): ?string
     {
         return (($this->address_line_one ? $this->address_line_one . ', ' : null) . ($this->address_line_two ? $this->address_line_two . ', ' : null) . ($this->city ? $this->city . ', ' : null) . ($this->state ? $this->state . ', ' : null) . ($this->country ? $this->country . '.' : null) == null ? null : ($this->address_line_one ? $this->address_line_one . ', ' : null) . ($this->address_line_two ? $this->address_line_two . ', ' : null) . ($this->city ? $this->city . ', ' : null) . ($this->state ? $this->state . ', ' : null) . ($this->country ? $this->country . '.' : null));
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify((new ResetPassword($token)));
     }
 }

@@ -7,9 +7,11 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class NewCompanyCreation extends Notification
+class NewCompanyCreation extends Notification implements ShouldQueue
 {
     use Queueable;
+
+    public $tries = 3;
 
     /**
      * Create a new notification instance.
@@ -36,7 +38,6 @@ class NewCompanyCreation extends Notification
     {
         return (new MailMessage)
                     ->line($this->message)
-                    ->action('Notification Action', route('companies.index'))
                     ->line('Thank you for using our application!');
     }
 
@@ -50,5 +51,13 @@ class NewCompanyCreation extends Notification
         return [
             //
         ];
+    }
+
+    /**
+     * Retry after defined number of seconds.
+     */
+    public function retryAfter()
+    {
+        return 5;
     }
 }

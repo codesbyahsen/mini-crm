@@ -4,17 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Models\Company;
 use Illuminate\Http\Request;
-use App\Jobs\NewCompanyCreationJob;
 use App\Http\Requests\CompanyRequest;
+use App\Models\User;
+use App\Notifications\NewCompanyCreation;
 use App\Traits\AjaxResponse;
 use Illuminate\Database\QueryException;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Notification;
 use Symfony\Component\HttpFoundation\Response;
 
 class CompanyController extends Controller
 {
     use AjaxResponse;
+
+    public function __construct()
+    {
+        $this->middleware('role:admin');
+    }
 
     /**
      * Display a listing of the resource.
@@ -68,10 +75,13 @@ class CompanyController extends Controller
             }
 
             // replace logo value with custom logo name
-            $company = array_replace($request->validated(), array('logo' => $logoName));
+            $company = array_replace($request->validated(), array('logo' => $logoName, 'display_name' => $request->name));
             $result = Company::create($company);
+            $result->assignRole('company');
 
-            dispatch(new NewCompanyCreationJob($result, 'The company ' . $result->name . ' has been created.'));
+            // send notfication to admin
+            $admin = User::role('admin')->first();
+            Notification::send($admin, new NewCompanyCreation('The company ' . strtoupper($result->name) . ' has been created.'));
 
             return $this->success('The company created successfully.', $result, Response::HTTP_CREATED);
         } catch (QueryException $exception) {
@@ -105,7 +115,7 @@ class CompanyController extends Controller
             }
 
             // replace logo value with custom logo name
-            $companyDetails = array_replace($request->validated(), array('logo' => $logoName));
+            $companyDetails = array_replace($request->validated(), array('logo' => $logoName, 'display_name' => $request->name));
             $company->update($companyDetails);
             return $this->success('The company updated successfully.');
         } catch (ModelNotFoundException $exception) {

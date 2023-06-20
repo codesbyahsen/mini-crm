@@ -10,38 +10,55 @@ use App\Traits\AjaxResponse;
 use Illuminate\Database\QueryException;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class EmployeeController extends Controller
 {
     use AjaxResponse;
 
+    public function __construct()
+    {
+        $this->middleware(['role:admin|sub-admin']);
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
+        // dd(Auth::user()->hasRole('admin'));
         $employees = Employee::with('company')->get();
         if ($request->ajax()) {
-            return Datatables::of($employees)
-                ->addIndexColumn()
-                ->editColumn('fullname', function ($row) {
+            $dataTable = Datatables::of($employees)
+                ->addIndexColumn()->editColumn('fullname', function ($row) {
                     return $row->fullName();
-                })
-                ->addColumn('action', function ($row) {
+                })->rawColumns(['fullname']);
 
+            $dataTable->addColumn('action', function ($row) {
+                if (Auth::user()->hasRole('admin')) {
+                    return '<div class="drodown">
+                                    <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <ul class="link-list-opt no-bdr">
+                                            <li><a href="javascript:void(0)" data-toggle="modal" class="edit-button" data-url="' . route('employees.edit', $row->id) . '" data-update-url="' . route('employees.update', $row->id) . '"><em class="icon ni ni-repeat"></em><span>Edit</span></a></li>
+                                            <li><a href="javascript:void(0)" class="delete-button" data-url="' . route('employees.destroy', $row->id) . '"><em class="icon ni ni-activity-round"></em><span>Delete</span></a></li>
+                                        </ul>
+                                    </div>
+                                </div>';
+                } else {
                     return '<div class="drodown">
                                 <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
                                 <div class="dropdown-menu dropdown-menu-right">
                                     <ul class="link-list-opt no-bdr">
-                                        <li><a href="javascript:void(0)" data-toggle="modal" class="edit-button" data-url="' . route('employees.edit', $row->id) . '" data-update-url="' . route('employees.update', $row->id) . '"><em class="icon ni ni-repeat"></em><span>Edit</span></a></li>
                                         <li><a href="javascript:void(0)" class="delete-button" data-url="' . route('employees.destroy', $row->id) . '"><em class="icon ni ni-activity-round"></em><span>Delete</span></a></li>
                                     </ul>
                                 </div>
                             </div>';
-                })
-                ->rawColumns(['fullname', 'action'])
-                ->make(true);
+                }
+            })->rawColumns(['action']);
+
+            return $dataTable->make(true);
         }
 
         $companies = Company::get(['id', 'name']);
@@ -63,8 +80,9 @@ class EmployeeController extends Controller
     public function store(EmployeeRequest $request)
     {
         try {
-            $employee = Employee::create($request->validated());
-
+            $employee = $request->validated() + ['display_name' => $request->first_name . ' ' . $request->last_name];
+            $employee = Employee::create($employee);
+            $employee->assignRole('employee');
             return $this->success('The employee created successfully.', $employee, Response::HTTP_CREATED);
         } catch (QueryException $exception) {
             return $this->error('failed_query', Response::HTTP_INTERNAL_SERVER_ERROR);

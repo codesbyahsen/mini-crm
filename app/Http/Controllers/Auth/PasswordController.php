@@ -16,10 +16,16 @@ class PasswordController extends Controller
     public function update(Request $request)
     {
         try {
-            $validated = $request->validateWithBag('updatePassword', [
-                'current_password' => ['required', 'current_password'],
-                'password' => ['required', Password::defaults(), 'confirmed'],
-            ]);
+            $validated = $request->validateWithBag(
+                'updatePassword',
+                [
+                    'current_password' => ['required', 'current_password'],
+                    'password' => ['required', Password::defaults(), 'confirmed'],
+                ],
+                [
+                    'password.required' => 'The new password field is required.'
+                ]
+            );
 
             $request->user()->update([
                 'password' => Hash::make($validated['password']),

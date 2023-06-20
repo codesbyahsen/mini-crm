@@ -25,6 +25,18 @@ class RoleSeeder extends Seeder
                 'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now()
+            ],
+            [
+                'name' => 'company',
+                'guard_name' => 'company',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'name' => 'employee',
+                'guard_name' => 'employee',
+                'created_at' => now(),
+                'updated_at' => now()
             ]
         );
 

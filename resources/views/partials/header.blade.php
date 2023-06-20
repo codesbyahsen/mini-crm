@@ -7,7 +7,7 @@
             </div>
             <!-- .nk-header-brand -->
             <div class="nk-header-brand d-xl-none">
-                <a href="html/index.html" class="logo-link">
+                <a href="{{ route('dashboard') }}" class="logo-link">
                     <img class="logo-light logo-img" src="./images/logo.png" srcset="./images/logo2x.png 2x"
                         alt="logo">
                     <img class="logo-dark logo-img" src="./images/logo-dark.png" srcset="./images/logo-dark2x.png 2x"
@@ -29,9 +29,15 @@
                                 </div>
                                 <div class="user-info d-none d-md-block">
                                     <div class="user-status">
-                                        @if (auth()?->user()?->roles()?->value('name') === 'admin')
+                                        @if (auth()
+                                                ?->user()
+                                                ?->roles()
+                                                ?->value('name') === 'admin')
                                             Administrator
-                                        @elseif (auth()?->user()?->roles()?->value('name') === 'sub-admin')
+                                        @elseif (auth()
+                                                ?->user()
+                                                ?->roles()
+                                                ?->value('name') === 'sub-admin')
                                             Sub Admin
                                         @endif
                                     </div>
@@ -66,11 +72,25 @@
                             <div class="dropdown-inner">
                                 <ul class="link-list">
                                     <li>
-                                        <form method="POST" action="{{ route('logout') }}">
-                                            @csrf
-                                            <button type="submit" class="bg-transparent border-0"><em
-                                                    class="icon ni ni-signout"></em><span>{{ __('Sign out') }}</span></button>
-                                        </form>
+                                        @if (auth()->guard('employee')->check())
+                                            <form method="POST" action="{{ route('employees.logout') }}">
+                                                @csrf
+                                                <button type="submit" class="bg-transparent border-0"><em
+                                                        class="icon ni ni-signout"></em><span>{{ __('Sign out') }}</span></button>
+                                            </form>
+                                        @elseif (auth()->guard('company')->check())
+                                            <form method="POST" action="{{ route('companies.logout') }}">
+                                                @csrf
+                                                <button type="submit" class="bg-transparent border-0"><em
+                                                        class="icon ni ni-signout"></em><span>{{ __('Sign out') }}</span></button>
+                                            </form>
+                                        @else
+                                            <form method="POST" action="{{ route('logout') }}">
+                                                @csrf
+                                                <button type="submit" class="bg-transparent border-0"><em
+                                                        class="icon ni ni-signout"></em><span>{{ __('Sign out') }}</span></button>
+                                            </form>
+                                        @endif
                                     </li>
                                 </ul>
                             </div>

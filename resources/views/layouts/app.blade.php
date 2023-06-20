@@ -17,9 +17,9 @@
 </head>
 
 <body class="nk-body bg-lighter npc-general has-sidebar ">
-    <div id="preloader">
+    {{-- <div id="preloader">
         <img src="{{ asset('images/preloader.gif') }}" alt="loading">
-    </div>
+    </div> --}}
     <div class="nk-app-root">
         <div class="nk-main ">
             @include('partials.sidebar')
@@ -35,6 +35,28 @@
     </div>
 
     @yield('modals')
+
+    {{-- Generate random password modal --}}
+    <div class="modal fade" tabindex="-1" id="generate-password-modal">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Generate Password</h5>
+                    <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                        <em class="icon ni ni-cross"></em>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input type="text" class="form-control form-control-lg" id="get-random-password" />
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-lg btn-primary" id="generate-password">Generate Password</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     @include('partials.scripts')
 </body>

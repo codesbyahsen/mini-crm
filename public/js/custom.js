@@ -2,25 +2,22 @@
 
 /**
  | ----------------------------------------------------------------
- |  Preloader
- | ----------------------------------------------------------------
- */
-$(document).ready(function () {
-    $("#preloader").show();
-
-    setTimeout(() => {
-        $("#preloader").hide();
-    }, 2000);
-});
-
-/**
- | ----------------------------------------------------------------
  |  Initialize summernote
  | ----------------------------------------------------------------
  */
 $(document).ready(function () {
     $('.summernote').summernote({
-        height: 120
+        height: 120,
+        toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
+            ['fontname', ['fontname']],
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['para', ['ol', 'ul', 'paragraph', 'height']],
+            ['table', ['table']],
+            ['view', ['fullscreen', 'codeview', 'help']]
+        ]
     });
 });
 
@@ -29,12 +26,17 @@ $(document).ready(function () {
  |  Change the format of date
  | ----------------------------------------------------------------
  |
- | It changes the date format and return as ISO 8601
+ | It changes the date format and return as ISO 8601 formated
  |
  */
-const changeDateFormat = (date) => {
+const changeDateFormat = (date, format = 'iso-8601') => {
     var date = new Date(date);
-    return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+
+    if (format == 'iso-8601') {
+        return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+    } else {
+        return date.toLocaleDateString();
+    }
 }
 
 /**
@@ -76,6 +78,70 @@ $(document).ready(function () {
         $("body").removeClass("dark-mode");
     }
 });
+
+/**
+ | ----------------------------------------------------------------
+ |  Generate random string
+ | ----------------------------------------------------------------
+ |
+ | It generate rondom string use for multi purpose
+ |
+ */
+const random = (length = 12) => {
+    let chars = "0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&_ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    let randomString = '';
+
+    for (var i = 0; i <= length; i++) {
+        let randomNumber = Math.floor(Math.random() * chars.length);
+        randomString += chars.substring(randomNumber, randomNumber + 1);
+    }
+    return randomString;
+}
+
+/**
+ | ----------------------------------------------------------------
+ |  Copy to clipboard
+ | ----------------------------------------------------------------
+ |
+ | It writes the data on clipboard to available for reuse
+ | by pasting
+ |
+ */
+const copyToClipboard = (data) => {
+    navigator.clipboard.writeText(data);
+}
+
+/**
+ | ----------------------------------------------------------------
+ |  Get random string as a password
+ | ----------------------------------------------------------------
+ |
+ | It shows random string for password generating modal
+ |
+ */
+$(document).ready(function () {
+    $('#get-random-password').val(random());
+});
+
+$('#generate-password').click(function (e) {
+    $('#get-random-password').val(random());
+});
+
+/**
+ | ----------------------------------------------------------------
+ |  Copy input from "generate random password modal"
+ | ----------------------------------------------------------------
+ |
+ | It takes the value for copy from generate random password
+ | modal
+ |
+ */
+$('#get-random-password').click(function () {
+    let value = $('#get-random-password').val();
+    copyToClipboard(value);
+    toastr['success']('', 'Copied to clipboard!');
+});
+
 
 // ============================== |> User Profile Module <| ============================== //
 
@@ -191,13 +257,25 @@ const fetchUserProfile = () => {
         type: 'GET',
         success: function (response) {
             if (response.success === true) {
-                $('.profile-name').html(response?.data?.name);
-                $('.profile-display-name').html(response?.data?.display_name);
+                $('.profile-name').html((response?.data?.name) ? (response?.data?.name) : (response?.data?.first_name + ' ' + response?.data?.last_name));
+                if (response?.data?.display_name) {
+                    $('.profile-display-name').html(response?.data?.display_name);
+                } else {
+                    $('.profile-display-name').html(response.data.name ?? response.data.first_name + ' ' + response.data.last_name);
+                }
                 $('.profile-email').html(response?.data?.email);
-                $('.profile-phone').html(response?.data?.phone);
-                $('.profile-gender').html(response?.data?.gender);
-                $('.profile-date-of-birth').html(response?.data?.date_of_birth);
-                $('.profile-address').html(response?.data?.full_address);
+                $('.profile-phone').html(response?.data?.phone ?? 'Not added yet');
+                if (response?.data?.hasOwnProperty('gender')) {
+                    $('.profile-gender').html(response?.data?.gender ?? 'Not added yet');
+                } else {
+                    $('.profile-founded-in').html(response?.data?.founded_in ?? 'Not added yet');
+                }
+                if (response?.data?.hasOwnProperty('date_of_birth')) {
+                    $('.profile-date-of-birth').html(response?.data?.date_of_birth ?? 'Not added yet');
+                } else {
+                    $('.profile-website').html(response?.data?.website ?? 'Not added yet');
+                }
+                $('.profile-address').html(response?.data?.full_address ?? 'Not added yet');
             } else {
                 console.log(response);
             }
@@ -205,6 +283,22 @@ const fetchUserProfile = () => {
     });
 }
 fetchUserProfile();
+
+/**
+ | ----------------------------------------------------------------
+ |  Clear password fields error
+ | ----------------------------------------------------------------
+ |
+ | When click on personal profile tab it will clear the
+ | password fields error
+ |
+ */
+$('.tab-profile-settings').click(function (e) {
+    e.preventDefault();
+
+    $('#security-settings .error-current-password').html(null);
+    $('#security-settings .error-new-password').html(null);
+});
 
 /**
  | ----------------------------------------------------------------
@@ -216,11 +310,27 @@ fetchUserProfile();
  |
  */
 const showPersonalProfileErrors = (response) => {
-    $('#edit-profile .error-name').html(response.errors.name ?? null);
+    if (response?.errors?.name) {
+        $('#edit-profile .error-name').html(response.errors.name ?? null);
+    } else {
+        $('#edit-profile .error-first-name').html(response.errors.first_name ?? null);
+        $('#edit-profile .error-last-name').html(response.errors.last_name ?? null);
+    }
+
     $('#edit-profile .error-display-name').html(response.errors.display_name ?? null);
     $('#edit-profile .error-phone').html(response.errors.phone ?? null);
-    $('#edit-profile .error-gender').html(response.errors.gender ?? null);
-    $('#edit-profile .error-date-of-birth').html(response.errors.date_of_birth ?? null);
+
+    if (response?.errors?.hasOwnProperty('gender')) {
+        $('#edit-profile .error-gender').html(response.errors.gender ?? null);
+    } else {
+        $('#edit-profile .error-founded-in').html(response.errors.founded_in ?? null);
+    }
+
+    if (response?.errors?.hasOwnProperty('date_of_birth')) {
+        $('#edit-profile .error-date-of-birth').html(response.errors.date_of_birth ?? null);
+    } else {
+        $('#edit-profile .error-website').val(response.errors.website ?? null);
+    }
 }
 
 /**
@@ -233,10 +343,14 @@ const showPersonalProfileErrors = (response) => {
  */
 const resetPersonalProfileErrors = () => {
     $('#edit-profile .error-name').html(null);
+    $('#edit-profile .error-first-name').html(null);
+    $('#edit-profile .error-last-name').html(null);
     $('#edit-profile .error-display-name').html(null);
     $('#edit-profile .error-phone').html(null);
     $('#edit-profile .error-gender').html(null);
     $('#edit-profile .error-date-of-birth').html(null);
+    $('#edit-profile .error-founded-in').html(null);
+    $('#edit-profile .error-website').val(null);
 }
 
 /**
@@ -282,11 +396,25 @@ const resetProfileAddressErrors = () => {
  |
  */
 const showProfileFields = (response) => {
-    $('#edit-profile .field-name').val(response?.data?.name);
+    if (response?.data?.name) {
+        $('#edit-profile .field-name').val(response?.data?.name);
+    } else {
+        $('#edit-profile .field-first-name').val(response?.data?.first_name);
+        $('#edit-profile .field-last-name').val(response?.data?.last_name);
+    }
     $('#edit-profile .field-display-name').val(response?.data?.display_name);
+    $('#edit-profile .field-display-name').attr('value', response?.data?.display_name);
     $('#edit-profile .field-phone').val(response?.data?.phone);
-    $('#edit-profile .field-gender').val(response?.data?.gender).trigger('change');
-    $('#edit-profile .field-date-of-birth').val(response?.data?.date_of_birth);
+    if (response?.data?.hasOwnProperty('gender')) {
+        $('#edit-profile .field-gender').val(response?.data?.gender).trigger('change');
+    } else {
+        $('#edit-profile .field-founded-in').val(response?.data?.founded_in);
+    }
+    if (response?.data?.hasOwnProperty('date_of_birth')) {
+        $('#edit-profile .field-date-of-birth').val(response?.data?.date_of_birth);
+    } else {
+        $('#edit-profile .field-website').val(response?.data?.website);
+    }
     $('#edit-profile .field-address-line-one').val(response?.data?.address_line_one);
     $('#edit-profile .field-address-line-two').val(response?.data?.address_line_two);
     $('#edit-profile .field-city').val(response?.data?.city);
@@ -355,6 +483,8 @@ $('#edit-profile form').submit(function (e) {
         success: function (response) {
             if (response.success === true) {
                 $('#edit-profile').modal('hide');
+                resetPersonalProfileErrors();
+                resetProfileAddressErrors();
                 fetchUserProfile();
             } else {
                 showPersonalProfileErrors(response);
@@ -394,6 +524,8 @@ $('#edit-profile-address').submit(function (e) {
         success: function (response) {
             if (response.success === true) {
                 $('#edit-profile').modal('hide');
+                resetPersonalProfileErrors();
+                resetProfileAddressErrors();
                 fetchUserProfile();
             } else {
                 showProfileAddressErrors(response);
@@ -436,13 +568,13 @@ $('#security-settings').submit(function (e) {
                 $('#security-settings #current_password').val(null);
                 $('#security-settings #password').val(null);
                 $('#security-settings #password_confirmation').val(null);
+                toastr.options.preventDuplicates = true;
                 toastr['success']('Successfully', response.message, {
                     closeButton: true,
                     progressBar: true,
                     tapToDismiss: false,
                     positionClass: 'toast-top-right',
                 });
-                toastr.options.preventDuplicates = true;
             } else {
                 $('#security-settings .error-current-password').html(response.errors.current_password ?? null);
                 $('#security-settings .error-new-password').html(response.errors.password ?? null);
@@ -466,6 +598,7 @@ $('#security-settings').submit(function (e) {
 var compantTable = $('#init-company-datatable').DataTable({
     processing: true,
     serverSide: true,
+    dom: "<'row'<'col-sm-12 col-md-6 float-left'f><'col-sm-12 col-md-6'<'float-right'l>>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-12 col-md-7 float-left'p><'col-sm-12 col-md-5'<'float-right'i>>>",
     ajax: {
         type: "GET",
         url: $(this).data('url'),
@@ -526,6 +659,7 @@ const showCompanyErrors = (response) => {
     $('.error-name').html(response.errors.name ?? '');
     $('.error-email').html(response.errors.email ?? '');
     $('.error-website').html(response.errors.website ?? '');
+    $('.error-password').html(response.errors.password ?? '');
 }
 
 /**
@@ -541,6 +675,7 @@ const resetCompanyErrors = () => {
     $('.error-name').html(null);
     $('.error-email').html(null);
     $('.error-website').html(null);
+    $('.error-password').html(null);
 }
 
 /**
@@ -601,9 +736,9 @@ $('#create-company form').submit(function (e) {
         processData: false,
         success: function (response) {
             if (response.success === true) {
+                $('#create-company').modal('hide');
                 resetCompanyFields();
                 resetCompanyErrors();
-                $('#create-company').modal('hide');
                 fetchTotalCompanies();
                 compantTable.ajax.reload();
             } else {
@@ -620,6 +755,21 @@ $('#create-company form').submit(function (e) {
             console.log(error);
         }
     });
+});
+
+/**
+ | ----------------------------------------------------------------
+ |  Make create company modal scrollable
+ | ----------------------------------------------------------------
+ |
+ | When opens a modal on modal it prevent the scrolling for
+ | main modal so it make main modal scrollable again
+ |
+ */
+$(document).on('hidden.bs.modal', function (event) {
+    if ($('#create-company:visible').length) {
+        $('body').addClass('modal-open');
+    }
 });
 
 /**
@@ -692,8 +842,8 @@ $('#edit-company form').submit(function (e) {
         processData: false,
         success: function (response) {
             if (response.success === true) {
-                resetCompanyErrors();
                 $('#edit-company').modal('hide');
+                resetCompanyErrors();
                 compantTable.ajax.reload();
             } else {
                 if (response.errors) {
@@ -789,6 +939,7 @@ $('#init-company-datatable').on('click', '.delete-button', function () {
 var employeeTable = $('#init-employee-datatable').DataTable({
     processing: true,
     serverSide: true,
+    dom: "<'row'<'col-sm-12 col-md-6 float-left'f><'col-sm-12 col-md-6'<'float-right'l>>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-12 col-md-7 float-left'p><'col-sm-12 col-md-5'<'float-right'i>>>",
     ajax: {
         type: "GET",
         url: $('#init-employee-datatable').data('url'),
@@ -798,7 +949,7 @@ var employeeTable = $('#init-employee-datatable').DataTable({
         { data: 'email', name: 'email' },
         { data: 'phone', name: 'phone' },
         { data: 'company.name', name: 'company.name' },
-        { data: 'action', name: 'action', orderable: false, searchable: false },
+        { data: 'action', name: 'action', orderable: false, searchable: false }
     ]
 });
 
@@ -850,6 +1001,7 @@ const showEmployeeErrors = (response) => {
     $('.error-phone').html(response.errors.phone ?? '');
     $('.error-email').html(response.errors.email ?? '');
     $('.error-company').html(response.errors.company_id ?? '');
+    $('.error-password').html(response.errors.password ?? '');
 }
 
 /**
@@ -866,6 +1018,7 @@ const resetEmployeeErrors = () => {
     $('.error-phone').html(null);
     $('.error-email').html(null);
     $('.error-company').html(null);
+    $('.error-password').html(null);
 }
 
 /**
@@ -878,6 +1031,7 @@ const resetEmployeeErrors = () => {
  |
  */
 const showEmployeeFields = (response) => {
+    $('#edit-employee .display-employee-avatar').attr('src', response?.data?.avatar);
     $('#edit-employee .field-first-name').val(response?.data?.first_name);
     $('#edit-employee .field-last-name').val(response?.data?.last_name);
     $('#edit-employee .field-phone').val(response?.data?.phone);
@@ -899,6 +1053,7 @@ const resetEmployeeFields = () => {
     $('#create-employee .field-phone').val(null);
     $('#create-employee .field-email').val(null);
     $('#create-employee .field-company').val(null).trigger('change');
+    $('#create-employee .field-password').val(null);
 }
 
 /**
@@ -925,9 +1080,9 @@ $('#create-employee form').submit(function (e) {
         data: $(this).serialize(),
         success: function (response) {
             if (response.success === true) {
+                $('#create-employee').modal('hide');
                 resetEmployeeErrors();
                 resetEmployeeFields();
-                $('#create-employee').modal('hide');
                 fetchTotalEmployees();
                 employeeTable.ajax.reload();
             } else {
@@ -944,6 +1099,21 @@ $('#create-employee form').submit(function (e) {
             console.log(error);
         }
     });
+});
+
+/**
+ | ----------------------------------------------------------------
+ |  Make create employee modal scrollable
+ | ----------------------------------------------------------------
+ |
+ | When opens a modal on modal it prevent the scrolling for
+ | main modal so it make main modal scrollable again
+ |
+ */
+$(document).on('hidden.bs.modal', function (event) {
+    if ($('#create-employee:visible').length) {
+        $('body').addClass('modal-open');
+    }
 });
 
 /**
@@ -1014,8 +1184,8 @@ $('#edit-employee form').submit(function (e) {
         data: $(this).serialize(),
         success: function (response) {
             if (response.success === true) {
-                resetEmployeeErrors();
                 $('#edit-employee').modal('hide');
+                resetEmployeeErrors();
                 employeeTable.ajax.reload();
             } else {
                 if (response.errors) {
@@ -1043,6 +1213,7 @@ $('#edit-employee form').submit(function (e) {
  */
 $('.cancel-edit-employee-form').click(function () {
     resetEmployeeErrors();
+    $('#edit-employee .field-password').val(null);
 });
 
 /**
@@ -1116,6 +1287,7 @@ $('#init-employee-datatable').on('click', '.delete-button', function () {
 var projectTable = $('#init-project-datatable').DataTable({
     processing: true,
     serverSide: true,
+    dom: "<'row'<'col-sm-12 col-md-6 float-left'f><'col-sm-12 col-md-6'<'float-right'l>>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-12 col-md-7 float-left'p><'col-sm-12 col-md-5'<'float-right'i>>>",
     ajax: {
         type: "GET",
         url: $(this).attr('data-url'),
@@ -1229,6 +1401,7 @@ const showProjectFields = (response) => {
 const resetProjectFields = () => {
     $('#create-project .field-name').val(null);
     $('#create-project .field-detail').val(null);
+    $('#create-project .field-detail').summernote('reset');
     $('#create-project .field-client-name').val(null);
     $('#create-project .field-total-cost').val(null);
     $('#create-project .field-deadline').val(null);
@@ -1254,6 +1427,7 @@ const showProjectAttributes = (response) => {
     employees.map(function (employee, index) {
         $('.show-employees').append(employee?.first_name + ' ' + employee.last_name + ((employees.length - 1) == index ? '.' : ', '));
     });
+    $('.show-company').html(response?.data?.detail);
 }
 
 /**
@@ -1297,8 +1471,9 @@ $('#create-project form').submit(function (e) {
         data: $(this).serialize(),
         success: function (response) {
             if (response.success === true) {
-                resetProjectFields();
                 $('#create-project').modal('hide');
+                resetProjectFields();
+                resetProjectErrors();
                 fetchTotalProjects();
                 projectTable.ajax.reload();
             } else {
@@ -1423,8 +1598,8 @@ $('#edit-project form').submit(function (e) {
         data: $(this).serialize(),
         success: function (response) {
             if (response.success === true) {
-                resetProjectErrors();
                 $('#edit-project').modal('hide');
+                resetProjectErrors();
                 projectTable.ajax.reload();
             } else {
                 showProjectErrors(response);

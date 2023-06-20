@@ -3,10 +3,11 @@
 namespace App\Http\Requests;
 
 use App\Models\User;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class ProfileUpdateRequest extends FormRequest
 {
@@ -17,15 +18,25 @@ class ProfileUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name' => ['string', 'max:150'],
-            'display_name' => ['required', 'string', 'max:150'],
-            'email' => ['email', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],
-            'phone' => ['string', 'max:20'],
-            'phone' => ['string', 'max:20'],
-            'gender' => ['required', 'string', 'in:Male,Female,Other'],
-            'date_of_birth' => ['date'],
-        ];
+        switch (Auth::check()) {
+            case Auth::guard('company')->check():
+                return [
+                    'name' => ['required', 'string', 'max:150'],
+                    'display_name' => ['required', 'string', 'max:150'],
+                    'phone' => ['required', 'numeric', 'digits:11'],
+                    'founded_in' => ['required', 'string', 'max:4'],
+                    'website' => ['nullable', 'string'],
+                ];
+            default:
+                return [
+                    'first_name' => ['required', 'string', 'max:120'],
+                    'last_name' => ['required', 'string', 'max:120'],
+                    'display_name' => ['required', 'string', 'max:150'],
+                    'phone' => ['nullable', 'numeric', 'digits:11'],
+                    'gender' => ['required', 'string', 'in:Male,Female,Other'],
+                    'date_of_birth' => ['nullable', 'date'],
+                ];
+        }
     }
 
     protected function failedValidation(Validator $validator)

@@ -13,10 +13,22 @@ return new class extends Migration
     {
         Schema::create('companies', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 120)->nullable();
-            $table->string('email')->unique()->nullable();
             $table->string('logo')->nullable();
+            $table->string('name');
+            $table->string('display_name')->nullable();
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('phone', 20)->nullable();
+            $table->string('mobile', 20)->nullable();
+            $table->string('founded_in', 10)->nullable();
             $table->string('website')->nullable();
+            $table->string('address_line_one')->nullable();
+            $table->string('address_line_two')->nullable();
+            $table->string('city', 120)->nullable();
+            $table->string('state', 120)->nullable();
+            $table->string('country')->nullable();
+            $table->string('password');
+            $table->rememberToken();
             $table->timestamps();
         });
     }

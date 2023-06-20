@@ -28,7 +28,7 @@ class ProfileAddressUpdateRequest extends FormRequest
             'address_line_two' => ['nullable', 'string', 'max:250'],
             'city' => ['required', 'string', 'max:150'],
             'state' => ['required', 'string', 'max:150'],
-            'country' => ['required', 'string', 'max:255'],
+            'country' => ['required', 'string', 'max:250'],
         ];
     }
 

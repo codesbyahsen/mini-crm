@@ -2,8 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Validation\Rules\Password;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
 class EmployeeRequest extends FormRequest
@@ -26,22 +27,21 @@ class EmployeeRequest extends FormRequest
         switch ($this->getMethod()) {
             case 'POST':
                 return [
-                    'first_name' => ['required', 'max:120'],
-                    'last_name' => ['required', 'max:120'],
-                    'email' => ['required', 'email', 'unique:employees,email'],
-                    'phone' => ['nullable'],
-                    'company_id' => ['required']
+                    'first_name' => ['required', 'string', 'max:120'],
+                    'last_name' => ['required', 'string', 'max:120'],
+                    'email' => ['required', 'string', 'email', 'max:150', 'unique:employees,email'],
+                    'phone' => ['nullable', 'numeric', 'digits:11'],
+                    'company_id' => ['required', 'numeric'],
+                    'password' => ['required', Password::defaults()]
                 ];
             case 'PUT':
                 return [
-                    'first_name' => ['required', 'max:120'],
-                    'last_name' => ['required', 'max:120'],
-                    'email' => ['required', 'email', 'unique:employees,email,' . $this->employee->id],
-                    'phone' => ['nullable'],
-                    'company_id' => ['required']
+                    'first_name' => ['required', 'string', 'max:120'],
+                    'last_name' => ['required', 'string', 'max:120'],
+                    'email' => ['required', 'string', 'email', 'max:150', 'unique:employees,email,' . $this->employee->id],
+                    'phone' => ['nullable', 'numeric', 'digits:11'],
+                    'company_id' => ['required', 'numeric']
                 ];
-            default:
-                return [];
         }
     }
 

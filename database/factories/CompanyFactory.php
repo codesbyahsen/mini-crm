@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,10 +17,17 @@ class CompanyFactory extends Factory
      */
     public function definition(): array
     {
+        $name = fake()->company();
         return [
-            'name' => fake()->company(),
+            'name' => $name,
+            'display_name' => $name,
             'email' => fake()->unique()->safeEmail(),
-            'website' => fake()->domainName()
+            'email_verified_at' => now(),
+            'phone' => fake()->numerify('###########'),
+            'founded_in' => fake()->year(),
+            'website' => fake()->domainName(),
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'remember_token' => Str::random(10),
         ];
     }
 }

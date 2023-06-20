@@ -23,27 +23,36 @@
                     <li class="nk-menu-heading">
                         <h6 class="overline-title text-primary-alt">General</h6>
                     </li>
-                    <!-- .nk-menu-item -->
+                    <li class="nk-menu-item">
+                        <a href="{{ route('dashboard') }}" class="nk-menu-link">
+                            <span class="nk-menu-icon"><em class="icon ni ni-dashlite"></em></span>
+                            <span class="nk-menu-text">Dashboard</span>
+                        </a>
+                    </li>
+                    @role('admin')
                     <li class="nk-menu-item">
                         <a href="{{ route('companies.index') }}" class="nk-menu-link">
                             <span class="nk-menu-icon"><em class="icon ni ni-building"></em></span>
                             <span class="nk-menu-text">Companies</span>
                         </a>
                     </li>
-                    <!-- .nk-menu-item -->
+                    @endrole
+                    @role(['admin', 'sub-admin'])
                     <li class="nk-menu-item">
                         <a href="{{ route('employees.index') }}" class="nk-menu-link">
                             <span class="nk-menu-icon"><em class="icon ni ni-users"></em></span>
                             <span class="nk-menu-text">Employees</span>
                         </a>
                     </li>
-                    <!-- .nk-menu-item -->
+                    @endrole
+                    @role('admin')
                     <li class="nk-menu-item">
                         <a href="{{ route('projects.index') }}" class="nk-menu-link">
                             <span class="nk-menu-icon"><em class="icon ni ni-tile-thumb"></em></span>
                             <span class="nk-menu-text">Projects</span>
                         </a>
                     </li>
+                    @endrole
                 </ul>
             </div>
         </div>

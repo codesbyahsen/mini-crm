@@ -16,7 +16,7 @@ class PermissionSeeder extends Seeder
     {
         $permissions = array(
             [
-                'name' => 'Read Company',
+                'name' => 'View Company',
                 'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now()
@@ -41,7 +41,7 @@ class PermissionSeeder extends Seeder
             ],
 
             [
-                'name' => 'Read Employee',
+                'name' => 'View Employee',
                 'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now()
@@ -66,7 +66,7 @@ class PermissionSeeder extends Seeder
             ],
 
             [
-                'name' => 'Read Project',
+                'name' => 'View Project',
                 'guard_name' => 'web',
                 'created_at' => now(),
                 'updated_at' => now()
