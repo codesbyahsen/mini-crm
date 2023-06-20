@@ -23,7 +23,7 @@ class CompanyFactory extends Factory
             'display_name' => $name,
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'phone' => fake()->phoneNumber(),
+            'phone' => fake()->numerify('###########'),
             'founded_in' => fake()->year(),
             'website' => fake()->domainName(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password

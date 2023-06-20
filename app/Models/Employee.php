@@ -80,7 +80,7 @@ class Employee extends Authenticatable
     public function dateOfBirth(): Attribute
     {
         return new Attribute(
-            get: fn ($value) => date('Y-m-d', strtotime($value))
+            get: fn ($value) => !empty($value) ? date('Y-m-d', strtotime($value)) : null
         );
     }
 

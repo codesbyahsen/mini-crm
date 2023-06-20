@@ -181,14 +181,14 @@
                                             </div>
                                         </div>
                                     @endauth
-                                    <div class="col-12">
+                                    {{-- <div class="col-12">
                                         <div class="custom-control custom-switch">
                                             <input type="checkbox" class="custom-control-input" id="display-name-switch">
                                             <label class="custom-control-label" for="display-name-switch">Use full name to
                                                 display
                                             </label>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="col-12">
                                         <div class="form-group float-right">
                                             <button type="submit" class="btn btn-lg btn-primary">Update Profile</button>

@@ -115,7 +115,7 @@ class CompanyController extends Controller
             }
 
             // replace logo value with custom logo name
-            $companyDetails = array_replace($request->validated(), array('logo' => $logoName));
+            $companyDetails = array_replace($request->validated(), array('logo' => $logoName, 'display_name' => $request->name));
             $company->update($companyDetails);
             return $this->success('The company updated successfully.');
         } catch (ModelNotFoundException $exception) {

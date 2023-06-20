@@ -71,7 +71,7 @@ class Company extends Authenticatable
     public function website(): Attribute
     {
         return new Attribute(
-            set: fn ($value) => str_contains($value, 'http') ? $value : 'https://' . $value
+            set: fn ($value) => !empty($value) ? (str_contains($value, 'http') ? $value : 'https://' . $value) : null
         );
     }
 
