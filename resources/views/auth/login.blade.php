@@ -75,9 +75,9 @@
                     </div>
 
                 </form>
-                {{-- <div class="form-note-s2 text-center pt-4"> New on our platform? <a
-                            href="{{ route('register') }}">Create an account</a>
-                    </div> --}}
+                <div class="form-note-s2 text-center pt-4"> New on our platform? <a href="{{ route('register') }}">Create
+                        an account</a>
+                </div>
             </div>
         </div>
     </div>
