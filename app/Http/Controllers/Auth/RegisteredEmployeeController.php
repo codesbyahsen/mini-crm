@@ -36,6 +36,7 @@ class RegisteredEmployeeController extends Controller
         $employee = Employee::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
+            'display_name' => $request->first_name . ' ' .$request->last_name,
             'email' => $request->email,
             'company_id' => $request->company_id,
             'password' => Hash::make($request->password),

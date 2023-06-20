@@ -29,6 +29,7 @@ class RegisteredCompanyController extends Controller
 
         $company = Company::create([
             'name' => $request->name,
+            'display_name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);

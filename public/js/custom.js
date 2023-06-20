@@ -26,12 +26,17 @@ $(document).ready(function () {
  |  Change the format of date
  | ----------------------------------------------------------------
  |
- | It changes the date format and return as ISO 8601
+ | It changes the date format and return as ISO 8601 formated
  |
  */
-const changeDateFormat = (date) => {
+const changeDateFormat = (date, format = 'iso-8601') => {
     var date = new Date(date);
-    return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+
+    if (format == 'iso-8601') {
+        return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+    } else {
+        return date.toLocaleDateString();
+    }
 }
 
 /**
@@ -259,18 +264,18 @@ const fetchUserProfile = () => {
                     $('.profile-display-name').html(response.data.name ?? response.data.first_name + ' ' + response.data.last_name);
                 }
                 $('.profile-email').html(response?.data?.email);
-                $('.profile-phone').html(response?.data?.phone);
-                if (response?.data?.gender) {
-                    $('.profile-gender').html(response?.data?.gender);
+                $('.profile-phone').html(response?.data?.phone ?? 'Not added yet');
+                if (response?.data?.hasOwnProperty('gender')) {
+                    $('.profile-gender').html(response?.data?.gender ?? 'Not added yet');
                 } else {
-                    $('.profile-founded-in').html(response?.data?.founded_in);
+                    $('.profile-founded-in').html(response?.data?.founded_in ?? 'Not added yet');
                 }
-                if (response?.data?.date_of_birth) {
-                    $('.profile-date-of-birth').html(response?.data?.date_of_birth);
+                if (response?.data?.hasOwnProperty('date_of_birth')) {
+                    $('.profile-date-of-birth').html(response?.data?.date_of_birth ?? 'Not added yet');
                 } else {
-                    $('.profile-website').html(response?.data?.website);
+                    $('.profile-website').html(response?.data?.website ?? 'Not added yet');
                 }
-                $('.profile-address').html(response?.data?.full_address);
+                $('.profile-address').html(response?.data?.full_address ?? 'Not added yet');
             } else {
                 console.log(response);
             }
@@ -315,13 +320,13 @@ const showPersonalProfileErrors = (response) => {
     $('#edit-profile .error-display-name').html(response.errors.display_name ?? null);
     $('#edit-profile .error-phone').html(response.errors.phone ?? null);
 
-    if (response?.errors?.gender) {
+    if (response?.errors?.hasOwnProperty('gender')) {
         $('#edit-profile .error-gender').html(response.errors.gender ?? null);
     } else {
         $('#edit-profile .error-founded-in').html(response.errors.founded_in ?? null);
     }
 
-    if (response?.errors?.date_of_birth) {
+    if (response?.errors?.hasOwnProperty('date_of_birth')) {
         $('#edit-profile .error-date-of-birth').html(response.errors.date_of_birth ?? null);
     } else {
         $('#edit-profile .error-website').val(response.errors.website ?? null);
@@ -400,12 +405,12 @@ const showProfileFields = (response) => {
     $('#edit-profile .field-display-name').val(response?.data?.display_name);
     $('#edit-profile .field-display-name').attr('value', response?.data?.display_name);
     $('#edit-profile .field-phone').val(response?.data?.phone);
-    if (response?.data?.gender) {
+    if (response?.data?.hasOwnProperty('gender')) {
         $('#edit-profile .field-gender').val(response?.data?.gender).trigger('change');
     } else {
         $('#edit-profile .field-founded-in').val(response?.data?.founded_in);
     }
-    if (response?.data?.date_of_birth) {
+    if (response?.data?.hasOwnProperty('date_of_birth')) {
         $('#edit-profile .field-date-of-birth').val(response?.data?.date_of_birth);
     } else {
         $('#edit-profile .field-website').val(response?.data?.website);
